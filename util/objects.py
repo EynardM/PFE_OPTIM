@@ -109,6 +109,7 @@ class Tank:
         self.id = tank_id
         self.tank_status_id = tank_status_id
         self.fill_level = fill_level
+        self.maker = None
         self.mean_nonzeros_fill = None
         self.std_nonzeros_fill = None
         self.mean_zeros_fill_seq = None

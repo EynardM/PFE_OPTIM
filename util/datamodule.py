@@ -16,4 +16,9 @@ def get_data() -> Tuple[List[Measurement], List[Tank], List[Maker]] :
     tanks = create_tank_objects_from_dataframe(df_tanks)
     makers = create_maker_objects_from_dataframe(df_makers)
 
+    for tank in tanks: 
+        for maker in makers:
+            if tank.key_maker == maker.id:
+                tank.maker = maker
+
     return measurements, tanks, makers

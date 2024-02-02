@@ -9,3 +9,5 @@ measurements, tanks, makers = get_data()
 
 # Getting parameters
 optimization_parameters, storehouse, agent = parse_config('config.json')
+
+# Filter 
