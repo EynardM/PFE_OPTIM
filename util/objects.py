@@ -42,7 +42,7 @@ class Agent:
         self.name = name
         self.surname = surname
         self.working_days = working_days
-        self.begin_hour = begin_hour
+        self.begin_hour = datetime.combine(datetime.now().date(), datetime.min.time()) + timedelta(hours=begin_hour)
 
     def __str__(self):
         return f"Agent(id={self.id}, name={self.name}, surname={self.surname}, working_days={self.working_days}, begin_hour={self.begin_hour})"
@@ -137,7 +137,8 @@ class Maker:
             for hour in hour_range_str:
                 if hour == "24:00":
                     hour = "00:00"
-                hour_range_datetime.append(datetime.strptime(hour, '%H:%M'))
+                combined_datetime_str = f"{datetime.now().date()} {hour}"
+                hour_range_datetime.append(datetime.strptime(combined_datetime_str, '%Y-%m-%d %H:%M'))
             self.hours.append(hour_range_datetime)
         self.country = country
         self.name = name

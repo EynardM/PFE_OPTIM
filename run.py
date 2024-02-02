@@ -3,7 +3,7 @@ from util.objects import *
 from util.locations import *
 from util.helpers import *
 from util.datamodule import get_data
-from run_helpers import filter_days, filter_quantities, find_first_available_time
+from run_helpers import filter_days, filter_quantities, get_start_hour
 
 def run():
     # Getting the data
@@ -22,7 +22,8 @@ def run():
     print(f"Nombre de cuves post filtre quantités : {len(tanks)}")
     
     # Optimization 
-    first_available_time = find_first_available_time(tanks)
-    print(f"Premier créneau horaire disponible après minuit : {first_available_time}")
+    start_hour = get_start_hour(tanks=tanks, agent=agent)
+    print(f"Premier créneau horaire : {start_hour}")
+
 if __name__ == "__main__":
     run()

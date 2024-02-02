@@ -19,25 +19,15 @@ def filter_quantities(tanks : List[Tank], parameters: Parameters) -> List[Tank]:
             tanks_filtered_by_quantity.append(tank)
     return tanks_filtered_by_quantity
 
-def find_first_available_time(tanks):
-    # Initialiser une liste pour stocker toutes les heures de début des créneaux horaires
+def get_start_hour(tanks: List[Tank], agent: Agent):
+    print(agent.begin_hour)
     all_start_times = []
-
-    # Parcourir chaque réservoir
     for tank in tanks:
-        # Parcourir chaque plage horaire du fabricant du réservoir
         for hour_range in tank.maker.hours:
-            # Ajouter l'heure de début de chaque plage horaire à la liste
             all_start_times.append(hour_range[0])
-
-    # Filtrer les heures de début après minuit
     after_midnight_times = [start_time for start_time in all_start_times if start_time.time() > datetime.strptime('00:00', '%H:%M').time()]
-
-    # Trier les heures de début après minuit par ordre croissant
     sorted_after_midnight_times = sorted(after_midnight_times)
-
-    # Retourner la première heure disponible après minuit
     if sorted_after_midnight_times:
-        return sorted_after_midnight_times[0]
+        return max(sorted_after_midnight_times[0], agent.begin_hour)
     else:
         return None
