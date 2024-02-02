@@ -131,7 +131,14 @@ class Maker:
         self.days = days
         self.opening_vacation = opening_vacation
         self.address = address
-        self.hours = hours
+        self.hours = []
+        for hour_range_str in ast.literal_eval(hours):
+            hour_range_datetime = []
+            for hour in hour_range_str:
+                if hour == "24:00":
+                    hour = "00:00"
+                hour_range_datetime.append(datetime.strptime(hour, '%H:%M'))
+            self.hours.append(hour_range_datetime)
         self.country = country
         self.name = name
         self.post_code = post_code
