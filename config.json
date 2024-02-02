@@ -1,0 +1,29 @@
+{
+    "optimization_parameters": {
+        "simulation_deep": 61,
+        "working_time": 8,
+        "mobile_tank_volume": 330,
+        "vehicle_speed": 15,
+        "loading_time": 15,
+        "pumping_speed": 10, 
+        "draining_speed": 10,
+        "percentage_volume_threshold": 0.6,
+        "percentage_partial_collect_volume": 0.3,
+        "minimum_draining_volume": 100,
+        "average_cycle_time": 3
+    },
+    "storehouse": {
+        "id": "0",
+        "latitude": 43.6088647,
+        "longitude": 1.4494968,
+        "collector": "bincy"
+    },
+    "agent": {
+        "id": "0",
+        "name" : "Wilfried",
+        "surname": "Martin",
+        "working_days": [1, 1, 0, 1, 1, 0, 0],
+        "begin_hour": 7
+    }
+}
+  
