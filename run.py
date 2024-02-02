@@ -25,5 +25,7 @@ def run():
     start_hour = get_start_hour(tanks=tanks, agent=agent)
     print(f"Premier créneau horaire : {start_hour}")
 
+    # Iterate over tanks available + Implement the ruless
+
 if __name__ == "__main__":
     run()

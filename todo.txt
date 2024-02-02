@@ -1,0 +1,12 @@
+# Fichier run.py : 
+-> Iterate over tanks available + Implement the rules :
+
+Itérations : 
+fonction pour calculer le temps qu'on va mettre chez le prochain client depuis le point actuel et itérer pour rajouter au fur et à mesure
+
+On veut faire les règles suivantes : 
+fonction pour calculer une fois sur un point le temps qu'on va mettre pour rentrer au dépôt + vidanger
+Si pas de cuves dans prochain slot et qu'on a commencé une tournée -> Dépot si cuve mobile assez remplie sinon on relance un cycle sur la prochaine plage
+Si reste des cuves + en y allant le calcul du temps de retour NE fait PAS dépasser le temps total de l'agent de collecte -> on stop le cycle et on relance un cycle sur la prochaine plage
+Si reste des cuves mais que en y allant le calcul du temps de retour fait dépasser le temps total de l'agent de collecte -> on stop le tour
+
