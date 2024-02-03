@@ -1,12 +1,11 @@
-from util.imports import * 
-from util.objects import *
+from util.imports import *
 from util.locations import *
 from util.helpers import *
 from util.datamodule import get_data
-from run_helpers import filter_days, filter_quantities, get_start_hour
+from algorithms.random.run import run as algo_random_run
 
-def run():
-    # Getting the data
+def main():
+# Getting the data
     measurements, tanks, makers = get_data()
     print(f"Nombre de cuves totales : {len(tanks)}")
 
@@ -20,12 +19,13 @@ def run():
     # Filter by quantity 
     tanks = filter_quantities(tanks=tanks, parameters=parameters)
     print(f"Nombre de cuves post filtre quantités : {len(tanks)}")
+
+    #-----------------------------------------------------------#
+    #----------LAUNCHING ALGORITHMS IN PARALLEL BELLOW----------#
+    #-----------------------------------------------------------#
+    algo_random_tanks = [deepcopy(tank) for tank in tanks]
+    journey = algo_random_run(tanks=algo_random_tanks, parameters=parameters, storehouse=storehouse, agent=agent)
+    print(journey)
     
-    # Optimization 
-    start_hour = get_start_hour(tanks=tanks, agent=agent)
-    print(f"Premier créneau horaire : {start_hour}")
-
-    # Iterate over tanks available + Implement the ruless
-
 if __name__ == "__main__":
-    run()
+    main()

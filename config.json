@@ -7,7 +7,7 @@
         "loading_time": 15,
         "pumping_speed": 10, 
         "draining_speed": 10,
-        "percentage_volume_threshold": 0.6,
+        "percentage_volume_threshold": 0.4,
         "percentage_partial_collect_volume": 0.3,
         "minimum_draining_volume": 100,
         "average_cycle_time": 3
