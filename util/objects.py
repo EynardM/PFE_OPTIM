@@ -1,4 +1,5 @@
 from util.imports import * 
+from util.common import *
 
 class Parameters:
     def __init__(self, simulation_deep: int, working_time: int, mobile_tank_volume: int,
@@ -42,7 +43,7 @@ class Agent:
         self.name = name
         self.surname = surname
         self.working_days = working_days
-        self.begin_hour = begin_hour
+        self.begin_hour = datetime.combine(datetime.now().date(), datetime.min.time()) + timedelta(hours=begin_hour)
 
     def __str__(self):
         return f"Agent(id={self.id}, name={self.name}, surname={self.surname}, working_days={self.working_days}, begin_hour={self.begin_hour})"
@@ -109,36 +110,56 @@ class Tank:
         self.id = tank_id
         self.tank_status_id = tank_status_id
         self.fill_level = fill_level
+        self.maker = None
         self.mean_nonzeros_fill = None
         self.std_nonzeros_fill = None
         self.mean_zeros_fill_seq = None
         self.std_zeros_fill_seq = None
         self.filling_vector = None
+        self.time_to_go = None
+        self.collectable_volume = None
+        self.manoever_time = None
+        self.potential_ending_time = None
+        self.time_to_return = None
 
     def __str__(self):
         return f"Tank ID: {self.id}, Name: {self.tank_name}, Barcode: {self.barcode}, " \
                f"Collector: {self.collector}, Status: {self.tank_status_label}, " \
                f"Current Volume: {self.current_volume}, Fill Level: {self.fill_level}"
     
+    def is_available(self, dt: datetime):
+        for start, end in self.maker.hours:
+            if start <= dt <= end:
+                return True
+        return False
+    
 class Maker:
     def __init__(self, keys_tanks, collector, ending_vacation, days, opening_vacation,
                  address, hours, country, name, post_code, city, internal_name,
                  longitude, id, latitude):
+        self.id = id
+        self.longitude = longitude
+        self.latitude = latitude
         self.keys_tanks = keys_tanks
         self.collector = collector
         self.ending_vacation = ending_vacation
-        self.days = days
+        self.days = ast.literal_eval(days)
         self.opening_vacation = opening_vacation
         self.address = address
-        self.hours = hours
+        self.hours = []
+        for hour_range_str in ast.literal_eval(hours):
+            hour_range_datetime = []
+            for hour in hour_range_str:
+                if hour == "24:00":
+                    hour = "00:00"
+                combined_datetime_str = f"{datetime.now().date()} {hour}"
+                hour_range_datetime.append(datetime.strptime(combined_datetime_str, '%Y-%m-%d %H:%M'))
+            self.hours.append(hour_range_datetime)
         self.country = country
         self.name = name
         self.post_code = post_code
         self.city = city
         self.internal_name = internal_name
-        self.longitude = longitude
-        self.id = id
-        self.latitude = latitude
 
     def __str__(self):
         return f"Maker(keys_tanks={self.keys_tanks}, collector={self.collector}, " \
@@ -148,3 +169,64 @@ class Maker:
                f"post_code={self.post_code}, city={self.city}, " \
                f"internal_name={self.internal_name}, longitude={self.longitude}, " \
                f"id={self.id}, latitude={self.latitude})"
+
+class Cycle:
+    def __init__(self, starting_time):
+        self.starting_time = starting_time
+        self.ending_time = None
+        self.potential_ending_time = None
+
+        self.total_time = 0
+        self.total_volume = 0
+        self.selected_tanks = []
+        self.travel_times = []
+        self.manoever_times = []
+    
+    def __str__(self):
+        selected_tanks_ids = [tank.id for tank in self.selected_tanks]
+        return f"Cycle: starting_time={self.starting_time}, ending_time={self.ending_time}, total_volume={self.total_volume}, selected_tanks={selected_tanks_ids}"
+
+    def update(self, choice: Tank, parameters: Parameters):
+        # Ajout du réservoir
+        self.selected_tanks.append(choice)
+
+        # Mise à jour des quantités
+        self.total_volume += choice.collectable_volume
+        choice.current_volume -= choice.collectable_volume
+
+        # Mise à jour des temps
+        self.travel_times.append(choice.time_to_go)
+        self.manoever_times.append(choice.manoever_time)
+        self.total_time += choice.time_to_go + choice.manoever_time + parameters.loading_time
+
+    def is_empty(self):
+        return self.selected_tanks == []
+    
+    def is_enough(self, parameters):
+        return self.total_volume >= parameters.minimum_draining_volume
+    
+    def storehouse_return(self, parameters: Parameters):
+        last_tank = self.selected_tanks[-1]
+        self.total_time += last_tank.time_to_return + last_tank.potential_ending_time + parameters.loading_time
+        self.travel_times.append(last_tank.time_to_return)
+        self.manoever_times.append(last_tank.potential_ending_time)
+        self.ending_time = self.starting_time + timedelta(minutes=self.total_time)
+
+    def __str__(self):
+        tanks_ids = ", ".join([f"Tank {tank.id}" for tank in self.selected_tanks])
+        colored(self.starting_time, "green", "starting_time")
+        colored(self.total_time, "green", "total_time")
+        colored(self.ending_time, "green", "ending_time")
+        colored(tanks_ids, "red")
+        colored(self.total_volume, "blue", "total_volume")
+        return ""
+class Journey:
+    def __init__(self):
+        self.cycles = []
+
+    def add(self, cycle):
+        self.cycles.append(cycle)
+        # colored(cycle.total_time, "green", variable_name="total_time", print=False)
+
+    def __str__(self):
+        return "\n".join([str(cycle) for cycle in self.cycles])
