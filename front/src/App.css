@@ -43,14 +43,12 @@
   }
 }
 
-/* Map container */
-.map-container {
-  height: 80%;
-  width: 60%;
-  position: absolute;
-  top: 50%;
-  left: 35%;
-  transform: translate(-50%, -50%);
+.tank{
+  margin-right: 50px;
+}
+
+.slider-box{
+  margin-left: 50px;
 }
 
 
