@@ -25,7 +25,8 @@ def main():
     #-----------------------------------------------------------#
     algo_random_tanks = [deepcopy(tank) for tank in tanks]
     journey = algo_random_run(tanks=algo_random_tanks, parameters=parameters, storehouse=storehouse, agent=agent)
-    print(journey)
+    for cycle in journey.cycles:
+        print(cycle)
     
 if __name__ == "__main__":
     main()

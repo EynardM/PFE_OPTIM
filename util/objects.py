@@ -1,4 +1,5 @@
 from util.imports import * 
+from util.common import *
 
 class Parameters:
     def __init__(self, simulation_deep: int, working_time: int, mobile_tank_volume: int,
@@ -180,6 +181,10 @@ class Cycle:
         self.selected_tanks = []
         self.travel_times = []
         self.manoever_times = []
+    
+    def __str__(self):
+        selected_tanks_ids = [tank.id for tank in self.selected_tanks]
+        return f"Cycle: starting_time={self.starting_time}, ending_time={self.ending_time}, total_volume={self.total_volume}, selected_tanks={selected_tanks_ids}"
 
     def update(self, choice: Tank, parameters: Parameters):
         # Ajout du réservoir
@@ -194,6 +199,12 @@ class Cycle:
         self.manoever_times.append(choice.manoever_time)
         self.total_time += choice.time_to_go + choice.manoever_time + parameters.loading_time
 
+    def is_empty(self):
+        return self.selected_tanks == []
+    
+    def is_enough(self, parameters):
+        return self.total_volume >= parameters.minimum_draining_volume
+    
     def storehouse_return(self, parameters: Parameters):
         last_tank = self.selected_tanks[-1]
         self.total_time += last_tank.time_to_return + last_tank.potential_ending_time + parameters.loading_time
@@ -202,16 +213,20 @@ class Cycle:
         self.ending_time = self.starting_time + timedelta(minutes=self.total_time)
 
     def __str__(self):
-        tanks_str = ", ".join([f"Tank {tank.id}" for tank in self.selected_tanks])
-        return f"Cycle starting at {self.starting_time}, ending at {self.ending_time}.\
-                Selected tanks: {tanks_str}"
-
+        tanks_ids = ", ".join([f"Tank {tank.id}" for tank in self.selected_tanks])
+        colored(self.starting_time, "green", "starting_time")
+        colored(self.total_time, "green", "total_time")
+        colored(self.ending_time, "green", "ending_time")
+        colored(tanks_ids, "red")
+        colored(self.total_volume, "blue", "total_volume")
+        return ""
 class Journey:
     def __init__(self):
         self.cycles = []
 
     def add(self, cycle):
         self.cycles.append(cycle)
+        # colored(cycle.total_time, "green", variable_name="total_time", print=False)
 
     def __str__(self):
         return "\n".join([str(cycle) for cycle in self.cycles])
