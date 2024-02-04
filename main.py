@@ -1,6 +1,7 @@
 from util.imports import *
 from util.locations import *
 from util.helpers import *
+from util.objects import *
 from util.datamodule import get_data
 from algorithms.random.run import run as algo_random_run
 
@@ -11,7 +12,7 @@ def main():
 
     # Getting parameters
     parameters, storehouse, agent = parse_config('config.json')
-    
+    print(storehouse)
     # Filter by opening days
     tanks = filter_days(tanks=tanks)
     print(f"Nombre de cuves post filtre jours : {len(tanks)}")
@@ -25,8 +26,6 @@ def main():
     #-----------------------------------------------------------#
     algo_random_tanks = [deepcopy(tank) for tank in tanks]
     journey = algo_random_run(tanks=algo_random_tanks, parameters=parameters, storehouse=storehouse, agent=agent)
-    for cycle in journey.cycles:
-        print(cycle)
-    
-if __name__ == "__main__":
-    main()
+    evaluation = journey.evaluate(tanks=tanks)
+
+    return journey, evaluation, storehouse

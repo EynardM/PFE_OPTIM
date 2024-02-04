@@ -37,6 +37,14 @@ class Storehouse:
     def __str__(self):
         return f"Storehouse(id={self.id}, latitude={self.latitude}, longitude={self.longitude}, collector={self.collector})"
 
+    def to_dict(self):
+        return {
+            "id": self.id,
+            "latitude": self.latitude,
+            "longitude": self.longitude,
+            "collector": self.collector
+        }
+    
 class Agent:
     def __init__(self, id: str, name: str, surname: str, working_days: List[int], begin_hour: int):
         self.id = id
@@ -133,6 +141,21 @@ class Tank:
                 return True
         return False
     
+    def to_dict(self):
+        maker_data = {
+            "latitude": self.maker.latitude if self.maker else None,
+            "longitude": self.maker.longitude if self.maker else None,
+            "maker_name": self.maker.name if self.maker else None,
+            "hours": self.maker.hours if self.maker else None,
+            "days": self.maker.days if self.maker else None
+        }
+
+        return {
+            "id": self.id,
+            "current_volume": self.current_volume,
+            "overflow_capacity": self.overflow_capacity,
+            "maker": maker_data
+        }
 class Maker:
     def __init__(self, keys_tanks, collector, ending_vacation, days, opening_vacation,
                  address, hours, country, name, post_code, city, internal_name,
@@ -178,6 +201,7 @@ class Cycle:
 
         self.total_time = 0
         self.total_volume = 0
+        self.total_distance = 0
         self.selected_tanks = []
         self.travel_times = []
         self.manoever_times = []
@@ -209,6 +233,7 @@ class Cycle:
         last_tank = self.selected_tanks[-1]
         self.total_time += last_tank.time_to_return + last_tank.potential_ending_time + parameters.loading_time
         self.travel_times.append(last_tank.time_to_return)
+        self.total_distance = sum(self.travel_times)
         self.manoever_times.append(last_tank.potential_ending_time)
         self.ending_time = self.starting_time + timedelta(minutes=self.total_time)
 
@@ -220,13 +245,37 @@ class Cycle:
         colored(tanks_ids, "red")
         colored(self.total_volume, "blue", "total_volume")
         return ""
+    
+    def to_dict(self):
+        return {
+            "starting_time": self.starting_time.strftime("%Y-%m-%d %H:%M:%S"),
+            "ending_time": self.ending_time.strftime("%Y-%m-%d %H:%M:%S") if self.ending_time else None,
+            "total_volume": self.total_volume,
+            "total_time": self.total_time,
+            "selected_tanks": [tank.to_dict() for tank in self.selected_tanks]
+        }
+    
 class Journey:
     def __init__(self):
         self.cycles = []
 
     def add(self, cycle):
         self.cycles.append(cycle)
-        # colored(cycle.total_time, "green", variable_name="total_time", print=False)
 
-    def __str__(self):
-        return "\n".join([str(cycle) for cycle in self.cycles])
+    def to_dict(self):
+        return {
+            "cycles": [cycle.to_dict() for cycle in self.cycles]
+        }
+
+    def evaluate(self, tanks):
+        A = 0.5
+        B = 0.4
+        C = 0.1
+
+        total_collected = sum(cycle.total_volume for cycle in self.cycles)
+        total_distance = sum(cycle.total_distance for cycle in self.cycles)
+
+        max_ratio = max(tank.current_volume / tank.overflow_capacity for tank in tanks)
+        
+        evaluation = A * total_collected + B * total_distance + C * max_ratio
+        return evaluation
