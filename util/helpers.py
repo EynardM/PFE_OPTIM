@@ -104,3 +104,44 @@ def filter_quantities(tanks : List[Tank], parameters: Parameters) -> List[Tank]:
         if tank.current_volume / tank.overflow_capacity >= parameters.percentage_volume_threshold:
             tanks_filtered_by_quantity.append(tank)
     return tanks_filtered_by_quantity
+
+import matplotlib.pyplot as plt
+from mpl_toolkits.mplot3d import Axes3D
+import numpy as np
+
+def plot_pareto_front_3d(algorithm_data):
+    # Collecter les évaluations du front de Pareto
+    evaluations = [data["evaluation"] for data in algorithm_data.values()]
+    evaluations = np.array(evaluations)
+
+    # Trier les évaluations par ordre lexicographique
+    sorted_indices = np.lexsort((evaluations[:, 0], evaluations[:, 1], evaluations[:, 2]))
+    sorted_evaluations = evaluations[sorted_indices]
+
+    # Créer le graphique pour la tendance
+    fig = plt.figure()
+    ax = fig.add_subplot(111, projection='3d')
+
+    # Plot de la tendance en reliant les points
+    ax.plot(sorted_evaluations[:, 0], sorted_evaluations[:, 1], sorted_evaluations[:, 2], label='Trend', color='red')
+
+    # Ajouter les points de chaque solution
+    for name, data in algorithm_data.items():
+        evaluation = data["evaluation"]
+        ax.scatter(evaluation[0], evaluation[1], evaluation[2], label=name)
+
+    # Ajouter les étiquettes des axes
+    ax.set_xlabel('Total Volume')
+    ax.set_ylabel('Total Distance')
+    ax.set_zlabel('Maximum Emergency')
+
+    # Afficher le graphique
+    plt.title('Pareto Front 3D')
+    ax.legend()
+    plt.show()
+
+
+
+
+
+

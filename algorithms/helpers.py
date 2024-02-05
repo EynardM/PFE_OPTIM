@@ -1,7 +1,6 @@
 from util.imports import * 
 from util.objects import *
-
-K = 2
+from util.variables import *
 
 def get_starting_time(tanks: List[Tank], agent: Agent, starting_constraint: datetime) -> datetime:
     all_start_times = []
@@ -77,4 +76,15 @@ def check_storehouse_return(tanks: List[Tank], cycle: Cycle, storehouse: Storeho
             final_candidates.append(tank)
     return final_candidates
             
+def heuristical_choice(starting_point: Union[Tank, Storehouse], tanks: List[Tank], emergency=True) -> Tank:
+    scores = []
+    if emergency:
+        for tank in tanks: 
+            scores.append(weight_Q*tank.collectable_volume + weight_D*(calculate_distance(starting_point, tank)*K) - weight_E*(tank.current_volume/tank.overflow_capacity))
+    else :
+        for tank in tanks: 
+            scores.append(weight_Q*tank.collectable_volume + weight_D*(calculate_distance(starting_point, tank)*K))
+    return tanks[max(range(len(scores)), key=lambda i: scores[i])]
+
+
 

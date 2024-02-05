@@ -1,5 +1,6 @@
 from util.imports import * 
 from util.common import *
+from util.variables import *
 
 class Parameters:
     def __init__(self, simulation_deep: int, working_time: int, mobile_tank_volume: int,
@@ -226,6 +227,12 @@ class Cycle:
     def is_empty(self):
         return self.selected_tanks == []
     
+    def get_last_point(self, storehouse: Storehouse):
+        if self.is_empty():
+            return storehouse
+        else : 
+            return self.selected_tanks[-1]
+
     def is_enough(self, parameters):
         return self.total_volume >= parameters.minimum_draining_volume
     
@@ -258,6 +265,10 @@ class Cycle:
 class Journey:
     def __init__(self):
         self.cycles = []
+        self.total_volume = None
+        self.total_distance = None
+        self.global_emergency = None
+        self.maximum_emergency = None
 
     def add(self, cycle):
         self.cycles.append(cycle)
@@ -267,15 +278,13 @@ class Journey:
             "cycles": [cycle.to_dict() for cycle in self.cycles]
         }
 
-    def evaluate(self, tanks):
-        A = 0.5
-        B = 0.4
-        C = 0.1
+    def update(self, tanks:List[Tank]):
+        self.total_volume = sum(cycle.total_volume for cycle in self.cycles)
+        self.total_distance = sum(cycle.total_distance for cycle in self.cycles)
+        self.global_emergency = np.mean([(tank.current_volume / tank.overflow_capacity) for tank in tanks])
+        self.maximum_emergency = max([(tank.current_volume / tank.overflow_capacity) for tank in tanks])
 
-        total_collected = sum(cycle.total_volume for cycle in self.cycles)
-        total_distance = sum(cycle.total_distance for cycle in self.cycles)
-
-        max_ratio = max(tank.current_volume / tank.overflow_capacity for tank in tanks)
-        
-        evaluation = A * total_collected + B * total_distance + C * max_ratio
-        return evaluation
+    def evaluation(self):
+        global weight_Q, weight_D # , weight_U
+        # max_ratio = max(tank.current_volume / tank.overflow_capacity for tank in tanks  
+        return weight_Q * self.total_volume + weight_D * self.total_distance + weight_E * self.global_emergency

@@ -3,11 +3,11 @@ from util.objects import *
 from util.helpers import *
 from util.common import *
 
-from algorithms.random.helpers import get_starting_time, get_available_tanks, get_valid_choices, check_storehouse_return
+from algorithms.helpers import get_starting_time, get_available_tanks, get_valid_choices, check_storehouse_return, calculate_distance, heuristical_choice
 
 # Logs 
 logging.basicConfig(level=logging.INFO)
-file_handler = logging.FileHandler('logs/random.log')
+file_handler = logging.FileHandler('logs/run_Q.log')
 formatter = logging.Formatter('%(asctime)s - %(levelname)s - %(message)s')
 file_handler.setFormatter(formatter)
 
@@ -74,7 +74,8 @@ def run(tanks, parameters, storehouse, agent):
             
             else : 
                 # We choose a candidate (tank) to add to our cycle
-                tank = random.choice(final_candidates)
+                last_point = cycle.get_last_point(storehouse=storehouse)
+                tank = heuristical_choice(starting_point=last_point, tanks=final_candidates)
                 # We remove it from the candidates remaining
                 tanks.remove(tank)
                 # logging.info(f"update : tank id : {tank.id}, volume : {tank.current_volume}")
