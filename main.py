@@ -4,17 +4,8 @@ from util.helpers import *
 from util.objects import *
 from util.datamodule import get_data
 
-from algorithms.methods.basic import R, D, E, Q
-from algorithms.methods.heuristical import HQD, HQDE
-
-methods = {
-    "Random-choice": R,
-    "Quantity-choice": Q,
-    "Distance-choice": D,
-    "Emergency-choice": E,
-    "(H) Quantity-Distance-choice": HQD,
-    "(H) Quantity-Distance-Emergency-choice": HQDE
-}
+from algorithms.helpers import *
+from algorithms.run import run
 
 def main():
     # Récupération des données
@@ -32,20 +23,44 @@ def main():
     tanks = filter_quantities(tanks=tanks, parameters=parameters)
     print(f"Nombre de cuves post filtre quantités : {len(tanks)}")
 
-    # Initialisation des données pour chaque algorithme
-    algorithm_data = {}
-    for name, method in methods.items():
-        tanks_copy = [deepcopy(tank) for tank in tanks]
-        journey = method.run(tanks=tanks_copy, parameters=parameters, storehouse=storehouse, agent=agent)
-        journey.update(tanks=tanks_copy)  # Mettre à jour les données du voyage
-        evaluation = journey.evaluation()
-        # Assurez-vous que evaluation est un tuple (total_volume, total_distance, maximum_emergency, global_emergency)
-        evaluation_tuple = (journey.total_volume, journey.total_distance, journey.global_emergency)
-        algorithm_data[name] = {"journey": journey, "evaluation": evaluation_tuple}
+    # Obtention des time slots possibles sans et avec pause
+    time_slots_without_break, time_slots_with_break = generate_time_slots(tanks=tanks, parameters=parameters, agent=agent)
+    time_slots = time_slots_without_break + time_slots_with_break
 
-    print(algorithm_data)
-    plot_pareto_front_3d(algorithm_data=algorithm_data)
-    return algorithm_data
+    # Call the algorithm for each combation of time slots
+    plannings = []
+    method_scores = {}
+
+    for method in ["R", "Q", "D", "E", "HQD", "HQDE"]:
+        for time_slot in time_slots:
+            tanks_copy = [deepcopy(tank) for tank in tanks]
+            planning = Planning()
+
+            nb_slots = int(count_total_elements(time_slot)/2)
+            if nb_slots != 1: 
+                for i in range(nb_slots):
+                    start, end = time_slot[i]
+                    journey = run(start=start, end=end, tanks=tanks_copy, parameters=parameters, storehouse=storehouse, agent=agent, method=method)
+                    planning.add_journey(journey=journey, tanks=tanks_copy)
+                
+            else :
+                start, end = time_slot
+                journey = run(start=start, end=end, tanks=tanks_copy, parameters=parameters, storehouse=storehouse, agent=agent, method=method)
+                planning.add_journey(journey=journey, tanks=tanks_copy)
+
+            if verify_planning(planning=planning, tanks=tanks, parameters=parameters, storehouse=storehouse):
+                print(f"Compliance verified")
+            else:
+                print("Not compliant ")
+
+            plannings.append(planning)
+            score, volume, distance, emergency = planning.evaluation()
+            if method not in method_scores:
+                method_scores[method] = []
+            method_scores[method].append({"score": score, "volume": volume, "distance": distance, "emergency": emergency})
+            print(json.dumps(planning.to_dict(), indent=4)) 
+    
+    plot_pareto_front_3d(method_scores)
 
 if __name__ == "__main__":
     main()

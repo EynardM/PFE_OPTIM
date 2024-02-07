@@ -38,6 +38,12 @@ class Storehouse:
     def __str__(self):
         return f"Storehouse(id={self.id}, latitude={self.latitude}, longitude={self.longitude}, collector={self.collector})"
 
+    def get_coordinates(self, rad=True):
+        if rad: 
+            return radians(self.latitude), radians(self.longitude)
+        else: 
+            return self.latitude, self.longitude
+    
     def to_dict(self):
         return {
             "id": self.id,
@@ -56,7 +62,6 @@ class Agent:
 
     def __str__(self):
         return f"Agent(id={self.id}, name={self.name}, surname={self.surname}, working_days={self.working_days}, begin_hour={self.begin_hour})"
-
 
 class Measurement:
     def __init__(self, id, drainage, event_type_id, event_type_label, fill_level,
@@ -128,13 +133,19 @@ class Tank:
         self.time_to_go = None
         self.collectable_volume = None
         self.manoever_time = None
-        self.potential_ending_time = None
-        self.time_to_return = None
+        self.time_to_storehouse = None
+        self.return_time = None
 
     def __str__(self):
         return f"Tank ID: {self.id}, Name: {self.tank_name}, Barcode: {self.barcode}, " \
                f"Collector: {self.collector}, Status: {self.tank_status_label}, " \
                f"Current Volume: {self.current_volume}, Fill Level: {self.fill_level}"
+    
+    def get_coordinates(self, rad=True):
+        if rad: 
+            return radians(self.maker.latitude), radians(self.maker.longitude)
+        else: 
+            return self.maker.latitude, self.maker.longitude
     
     def is_available(self, dt: datetime):
         for start, end in self.maker.hours:
@@ -157,6 +168,7 @@ class Tank:
             "overflow_capacity": self.overflow_capacity,
             "maker": maker_data
         }
+    
 class Maker:
     def __init__(self, keys_tanks, collector, ending_vacation, days, opening_vacation,
                  address, hours, country, name, post_code, city, internal_name,
@@ -197,32 +209,42 @@ class Maker:
 class Cycle:
     def __init__(self, starting_time):
         self.starting_time = starting_time
+        self.current_time = starting_time
         self.ending_time = None
         self.potential_ending_time = None
 
-        self.total_time = 0
-        self.total_volume = 0
-        self.total_distance = 0
         self.selected_tanks = []
         self.travel_times = []
         self.manoever_times = []
-    
-    def __str__(self):
-        selected_tanks_ids = [tank.id for tank in self.selected_tanks]
-        return f"Cycle: starting_time={self.starting_time}, ending_time={self.ending_time}, total_volume={self.total_volume}, selected_tanks={selected_tanks_ids}"
 
-    def update(self, choice: Tank, parameters: Parameters):
-        # Ajout du réservoir
+        self.cycle_time = 0
+        self.cycle_volume = 0
+        self.cycle_distance = 0
+
+    def __str__(self):
+        tanks_ids = ", ".join([f"Tank {tank.id}" for tank in self.selected_tanks])
+        colored(self.starting_time, "green", "starting_time")
+        colored(self.ending_time, "green", "ending_time")
+        colored(self.cycle_time, "blue", "cycle_time")
+        colored(self.cycle_volume, "blue", "cycle_volume")
+        colored(tanks_ids, "red")
+        return ""
+    
+    def add_tank(self, choice: Tank, parameters: Parameters):
+        # Adding the tank
         self.selected_tanks.append(choice)
 
-        # Mise à jour des quantités
-        self.total_volume += choice.collectable_volume
+        # Updating quantities
+        self.cycle_volume += choice.collectable_volume
         choice.current_volume -= choice.collectable_volume
 
-        # Mise à jour des temps
+        # Updating times
         self.travel_times.append(choice.time_to_go)
         self.manoever_times.append(choice.manoever_time)
-        self.total_time += choice.time_to_go + choice.manoever_time + parameters.loading_time
+
+        self.cycle_time += choice.time_to_go + choice.manoever_time + parameters.loading_time
+        self.current_time = self.starting_time + timedelta(minutes=self.cycle_time)
+        self.potential_ending_time = self.current_time + timedelta(minutes=choice.return_time)
 
     def is_empty(self):
         return self.selected_tanks == []
@@ -234,57 +256,86 @@ class Cycle:
             return self.selected_tanks[-1]
 
     def is_enough(self, parameters):
-        return self.total_volume >= parameters.minimum_draining_volume
+        return self.cycle_volume >= parameters.minimum_draining_volume
     
     def storehouse_return(self, parameters: Parameters):
+        # Getting the last point
         last_tank = self.selected_tanks[-1]
-        self.total_time += last_tank.time_to_return + last_tank.potential_ending_time + parameters.loading_time
-        self.travel_times.append(last_tank.time_to_return)
-        self.total_distance = sum(self.travel_times)
-        self.manoever_times.append(last_tank.potential_ending_time)
-        self.ending_time = self.starting_time + timedelta(minutes=self.total_time)
 
-    def __str__(self):
-        tanks_ids = ", ".join([f"Tank {tank.id}" for tank in self.selected_tanks])
-        colored(self.starting_time, "green", "starting_time")
-        colored(self.total_time, "green", "total_time")
-        colored(self.ending_time, "green", "ending_time")
-        colored(tanks_ids, "red")
-        colored(self.total_volume, "blue", "total_volume")
-        return ""
-    
+        # Updating the travel times with the travel time to go from last point to storehouse
+        self.travel_times.append(last_tank.time_to_storehouse)
+        self.manoever_times.append(self.cycle_volume/parameters.draining_speed)
+
+        # Updating cycle values
+        self.cycle_time += last_tank.return_time
+        self.cycle_distance = sum(self.travel_times)
+        
+        # Updating the ending time of the cycle
+        self.ending_time = self.starting_time + timedelta(minutes=self.cycle_time)
+
     def to_dict(self):
         return {
             "starting_time": self.starting_time.strftime("%Y-%m-%d %H:%M:%S"),
-            "ending_time": self.ending_time.strftime("%Y-%m-%d %H:%M:%S") if self.ending_time else None,
-            "total_volume": self.total_volume,
-            "total_time": self.total_time,
-            "selected_tanks": [tank.to_dict() for tank in self.selected_tanks]
+            "ending_time": self.ending_time.strftime("%Y-%m-%d %H:%M:%S") ,
+            "selected_tanks": [tank.id for tank in self.selected_tanks],
+            "cycle_time": self.cycle_time,
+            "cycle_volume": self.cycle_volume,
+            "cycle_distance": self.cycle_distance
         }
     
 class Journey:
-    def __init__(self):
+    def __init__(self, start_time: datetime, end_time: datetime):
+        self.start_time = start_time
+        self.end_time = end_time
         self.cycles = []
-        self.total_volume = None
-        self.total_distance = None
-        self.global_emergency = None
-        self.maximum_emergency = None
 
-    def add(self, cycle):
-        self.cycles.append(cycle)
+        self.journey_time = 0
+        self.journey_volume = 0
+        self.journey_distance = 0
+
+    def add_cycle(self, cycle: Cycle) -> List[Cycle]:
+        self.journey_time += cycle.cycle_time
+        if not cycle.is_empty():
+            self.cycles.append(cycle)
+            self.journey_volume += cycle.cycle_volume
+            self.journey_distance += cycle.cycle_distance
 
     def to_dict(self):
         return {
-            "cycles": [cycle.to_dict() for cycle in self.cycles]
+            "start_time": self.start_time.strftime("%Y-%m-%d %H:%M:%S"),
+            "end_time": self.end_time.strftime("%Y-%m-%d %H:%M:%S"),
+            "cycles": [cycle.to_dict() for cycle in self.cycles],
+            "journey_time": self.journey_time,
+            "journey_volume": self.journey_volume,
+            "journey_distance": self.journey_distance
         }
+    
+class Planning:
+    def __init__(self):
+        self.journeys = []
 
-    def update(self, tanks:List[Tank]):
-        self.total_volume = sum(cycle.total_volume for cycle in self.cycles)
-        self.total_distance = sum(cycle.total_distance for cycle in self.cycles)
-        self.global_emergency = np.mean([(tank.current_volume / tank.overflow_capacity) for tank in tanks])
-        self.maximum_emergency = max([(tank.current_volume / tank.overflow_capacity) for tank in tanks])
+        self.planning_time = 0
+        self.planning_volume = 0
+        self.planning_distance = 0
+        self.planning_global_emergency = 0
+
+    def add_journey(self, journey: Journey, tanks: List[Tank]):
+        self.journeys.append(journey)  
+        self.planning_time = sum([journey.journey_time for journey in self.journeys])
+        self.planning_volume = sum([journey.journey_volume for journey in self.journeys])
+        self.planning_distance = sum([journey.journey_distance for journey in self.journeys])
+        self.planning_global_emergency = np.mean([(tank.current_volume / tank.overflow_capacity) for tank in tanks])
 
     def evaluation(self):
-        global weight_Q, weight_D # , weight_U
-        # max_ratio = max(tank.current_volume / tank.overflow_capacity for tank in tanks  
-        return weight_Q * self.total_volume + weight_D * self.total_distance + weight_E * self.global_emergency
+        global weight_Q, weight_D, weight_E 
+        score = weight_Q * self.planning_volume + weight_D * self.planning_distance + weight_E * self.planning_global_emergency
+        return score, self.planning_volume, self.planning_distance, self.planning_global_emergency
+
+    def to_dict(self):
+        return {
+            "journeys": [journey.to_dict() for journey in self.journeys],
+            "planning_time": self.planning_time,
+            "planning_volume": self.planning_volume,
+            "planning_distance": self.planning_distance,
+            "planning_global_emergency": self.planning_global_emergency
+        }
