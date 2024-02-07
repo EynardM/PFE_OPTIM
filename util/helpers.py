@@ -1,7 +1,7 @@
 from util.imports import * 
 from util.objects import *
 
-
+              
 def parse_config(filename: str):
     with open(filename, 'r') as file:
         config_data = json.load(file)

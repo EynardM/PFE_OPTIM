@@ -1,1 +1,6 @@
-Débug algo random
+- Tracer front de pareto 
+- Fonction de génération de voisin 
+
+- Méthode qui utilise config, génération de voisin type hc recuit 
+- Génétique
+- Extrapolation plusieurs dépôts et agents
