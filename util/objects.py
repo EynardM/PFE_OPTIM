@@ -289,9 +289,11 @@ class Journey:
         self.end_time = end_time
         self.cycles = []
 
+        self.break_time = 0
         self.journey_time = 0
         self.journey_volume = 0
         self.journey_distance = 0
+        self.journey_global_emergency = None
 
     def add_cycle(self, cycle: Cycle) -> List[Cycle]:
         self.journey_time += cycle.cycle_time
@@ -300,42 +302,25 @@ class Journey:
             self.journey_volume += cycle.cycle_volume
             self.journey_distance += cycle.cycle_distance
 
+    def evaluation(self, tanks: List[Tank]):
+        global weight_Q, weight_D, weight_E 
+        self.journey_global_emergency = np.mean([tank.current_volume / tank.overflow_capacity for tank in tanks]) # add mean or max filling of each tank in the ratio 
+        score = weight_Q * self.journey_volume + weight_D * self.journey_distance + weight_E * self.journey_global_emergency
+        return score, self.journey_volume, self.journey_distance, self.journey_global_emergency
+    
     def to_dict(self):
+        formatted_break_time = None
+        if self.break_time:
+            hours, remainder = divmod(self.break_time.seconds, 3600)
+            minutes, seconds = divmod(remainder, 60)
+            formatted_break_time = f"{hours:02}:{minutes:02}:{seconds:02}"
+
         return {
             "start_time": self.start_time.strftime("%Y-%m-%d %H:%M:%S"),
             "end_time": self.end_time.strftime("%Y-%m-%d %H:%M:%S"),
             "cycles": [cycle.to_dict() for cycle in self.cycles],
             "journey_time": self.journey_time,
             "journey_volume": self.journey_volume,
-            "journey_distance": self.journey_distance
-        }
-    
-class Planning:
-    def __init__(self):
-        self.journeys = []
-
-        self.planning_time = 0
-        self.planning_volume = 0
-        self.planning_distance = 0
-        self.planning_global_emergency = 0
-
-    def add_journey(self, journey: Journey, tanks: List[Tank]):
-        self.journeys.append(journey)  
-        self.planning_time = sum([journey.journey_time for journey in self.journeys])
-        self.planning_volume = sum([journey.journey_volume for journey in self.journeys])
-        self.planning_distance = sum([journey.journey_distance for journey in self.journeys])
-        self.planning_global_emergency = np.mean([(tank.current_volume / tank.overflow_capacity) for tank in tanks])
-
-    def evaluation(self):
-        global weight_Q, weight_D, weight_E 
-        score = weight_Q * self.planning_volume + weight_D * self.planning_distance + weight_E * self.planning_global_emergency
-        return score, self.planning_volume, self.planning_distance, self.planning_global_emergency
-
-    def to_dict(self):
-        return {
-            "journeys": [journey.to_dict() for journey in self.journeys],
-            "planning_time": self.planning_time,
-            "planning_volume": self.planning_volume,
-            "planning_distance": self.planning_distance,
-            "planning_global_emergency": self.planning_global_emergency
+            "journey_distance": self.journey_distance,
+            "break_time": formatted_break_time
         }
