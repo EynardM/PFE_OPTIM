@@ -235,8 +235,9 @@ def verify_journey(journey: Journey, tanks:List[Tank], parameters: Parameters, s
             return False
     return True
 
-def plot_pareto_front_3d(method_scores):
-    fig = plt.figure()
+def plot_pareto_front_3d(solutions):
+    print(solutions)
+"""    fig = plt.figure()
     ax = fig.add_subplot(111, projection='3d')
 
     # Plot chaque point de la couleur de la méthode auquel il correspond
@@ -249,4 +250,4 @@ def plot_pareto_front_3d(method_scores):
     ax.set_zlabel('Emergency')
     plt.title('Pareto Front 3D')
     ax.legend()
-    plt.show()
+    plt.show()"""

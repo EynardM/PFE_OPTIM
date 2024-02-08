@@ -29,7 +29,7 @@ def main():
 
     # Call the algorithm for each combation of time slots
     journeys = []
-    method_scores = {}
+    solutions = []
 
     for method in ["R", "Q", "D", "E", "HQD", "HQDE"]:
         for time_slot in time_slots:
@@ -54,12 +54,10 @@ def main():
 
             journeys.append(journey)
             score, volume, distance, emergency = journey.evaluation(tanks=tanks_copy)
-            if method not in method_scores:
-                method_scores[method] = []
-            method_scores[method].append({"score": score, "volume": volume, "distance": distance, "emergency": emergency})
+            solutions.append({"method": method, "score": score, "volume": volume, "distance": distance, "emergency": emergency})
             print(json.dumps(journey.to_dict(), indent=4)) 
     
-    plot_pareto_front_3d(method_scores)
+    plot_pareto_front_3d(solutions)
 
 if __name__ == "__main__":
     main()
