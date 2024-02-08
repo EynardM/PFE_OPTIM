@@ -144,6 +144,34 @@ def choice_function(starting_point: Union[Tank, Storehouse], tanks: List[Tank], 
     
     return tank_chosen
 
+def concatenate_journeys(journeys: List[Journey]) -> Journey:
+    # Sort the list of journeys by start time
+    sorted_journeys = sorted(journeys, key=lambda x: x.start_time)
+
+    # Determine start_time and end_time for the concatenated journey
+    start_time = sorted_journeys[0].start_time
+    end_time = sorted_journeys[-1].end_time
+
+    # Initialize concatenated journey attributes
+    concatenated_journey = Journey(start_time, end_time)
+    concatenated_journey.journey_time = sum(journey.journey_time for journey in sorted_journeys)
+    concatenated_journey.journey_volume = sum(journey.journey_volume for journey in sorted_journeys)
+    concatenated_journey.journey_distance = sum(journey.journey_distance for journey in sorted_journeys)
+
+    # Calculate break_time if needed
+    break_times = []
+    for i in range(len(sorted_journeys) - 1):
+        if sorted_journeys[i].end_time < sorted_journeys[i + 1].start_time:
+            break_times.append(sorted_journeys[i + 1].start_time - sorted_journeys[i].end_time)
+    if break_times:
+        concatenated_journey.break_time = sum(break_times, timedelta())
+
+    # Concatenate cycles
+    for journey in sorted_journeys:
+        concatenated_journey.cycles.extend(journey.cycles)
+
+    return concatenated_journey
+
 def get_tank_from_list(tanks: List[Tank], tank_cycle: Tank):
     for tank in tanks:
         if tank_cycle.id == tank.id:
@@ -207,20 +235,6 @@ def verify_journey(journey: Journey, tanks:List[Tank], parameters: Parameters, s
             return False
     return True
 
-def verify_planning(planning : Planning, tanks:List[Tank], parameters: Parameters, storehouse: Storehouse):
-    total_time = 0
-    for journey in planning.journeys:
-
-        if not verify_journey(journey, tanks, parameters, storehouse):
-            return False
-        
-        total_time += journey.journey_time
-
-        if not total_time <= parameters.working_time * 60:
-            return False
-    
-    return True
-        
 def plot_pareto_front_3d(method_scores):
     fig = plt.figure()
     ax = fig.add_subplot(111, projection='3d')

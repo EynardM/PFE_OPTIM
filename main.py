@@ -28,37 +28,36 @@ def main():
     time_slots = time_slots_without_break + time_slots_with_break
 
     # Call the algorithm for each combation of time slots
-    plannings = []
+    journeys = []
     method_scores = {}
 
     for method in ["R", "Q", "D", "E", "HQD", "HQDE"]:
         for time_slot in time_slots:
             tanks_copy = [deepcopy(tank) for tank in tanks]
-            planning = Planning()
-
+            
             nb_slots = int(count_total_elements(time_slot)/2)
             if nb_slots != 1: 
+                time_slot_journeys = []
                 for i in range(nb_slots):
                     start, end = time_slot[i]
                     journey = run(start=start, end=end, tanks=tanks_copy, parameters=parameters, storehouse=storehouse, agent=agent, method=method)
-                    planning.add_journey(journey=journey, tanks=tanks_copy)
-                
+                    time_slot_journeys.append(journey)
+                journey = concatenate_journeys(time_slot_journeys)
             else :
                 start, end = time_slot
                 journey = run(start=start, end=end, tanks=tanks_copy, parameters=parameters, storehouse=storehouse, agent=agent, method=method)
-                planning.add_journey(journey=journey, tanks=tanks_copy)
 
-            if verify_planning(planning=planning, tanks=tanks, parameters=parameters, storehouse=storehouse):
+            if verify_journey(journey=journey, tanks=tanks, parameters=parameters, storehouse=storehouse):
                 print(f"Compliance verified")
             else:
                 print("Not compliant ")
 
-            plannings.append(planning)
-            score, volume, distance, emergency = planning.evaluation()
+            journeys.append(journey)
+            score, volume, distance, emergency = journey.evaluation(tanks=tanks_copy)
             if method not in method_scores:
                 method_scores[method] = []
             method_scores[method].append({"score": score, "volume": volume, "distance": distance, "emergency": emergency})
-            print(json.dumps(planning.to_dict(), indent=4)) 
+            print(json.dumps(journey.to_dict(), indent=4)) 
     
     plot_pareto_front_3d(method_scores)
 
