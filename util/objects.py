@@ -130,6 +130,7 @@ class Tank:
         self.mean_zeros_fill_seq = None
         self.std_zeros_fill_seq = None
         self.filling_vector = None
+        
         self.time_to_go = None
         self.collectable_volume = None
         self.manoever_time = None
