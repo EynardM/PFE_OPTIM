@@ -11,7 +11,6 @@ formatter = logging.Formatter('%(asctime)s - %(levelname)s - %(message)s')
 file_handler.setFormatter(formatter)
 logging.getLogger().addHandler(file_handler)
 
-
 def run(start, end, tanks, parameters, storehouse, agent, method):    
     processing_journey = True
     starting_constraint = deepcopy(start)

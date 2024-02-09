@@ -126,19 +126,18 @@ def choice_function(starting_point: Union[Tank, Storehouse], tanks: List[Tank], 
 
     if method == "Random":
         method = random.choice(methods)
-
-    elif method == "R":
+    if method == "R":
         tank_chosen = random.choice(tanks)
-    elif method == "Q":
+    if method == "Q":
         tank_chosen = max(tanks, key=lambda tank: tank.collectable_volume)
-    elif method == "D":
+    if method == "D":
         tank_chosen = min(tanks, key=lambda tank: calculate_distance(starting_point, tank))
-    elif method == "E":
+    if method == "E":
         tank_chosen = max(tanks, key=lambda tank: (tank.current_volume / tank.overflow_capacity))
-    elif method == "HQD":
+    if method == "HQD":
         scores = [weight_Q*tank.collectable_volume + weight_D*(calculate_distance(starting_point, tank)) for tank in tanks]
         tank_chosen  = tanks[max(range(len(scores)), key=lambda i: scores[i])]
-    elif method == "HQDE":
+    if method == "HQDE":
         scores = [weight_Q*tank.collectable_volume + weight_D*(calculate_distance(starting_point, tank)) + weight_E*(tank.current_volume/tank.overflow_capacity) for tank in tanks]
         tank_chosen  = tanks[max(range(len(scores)), key=lambda i: scores[i])]
     
@@ -235,19 +234,185 @@ def verify_journey(journey: Journey, tanks:List[Tank], parameters: Parameters, s
             return False
     return True
 
-def plot_pareto_front_3d(solutions):
-    print(solutions)
-"""    fig = plt.figure()
+def plot_pareto_front_3d(solutions, filename="pareto_front_plot.png"):
+    fig = plt.figure()
     ax = fig.add_subplot(111, projection='3d')
-
-    # Plot chaque point de la couleur de la méthode auquel il correspond
-    for method, scores in method_scores.items():
-        scores_array = np.array([(score["volume"], score["distance"], score["emergency"]) for score in scores])
-        ax.scatter(scores_array[:, 0], scores_array[:, 1], -scores_array[:, 2], label=method)
 
     ax.set_xlabel('Volume')
     ax.set_ylabel('Distance')
     ax.set_zlabel('Emergency')
     plt.title('Pareto Front 3D')
-    ax.legend()
-    plt.show()"""
+
+    # Filtrer les solutions du front de Pareto
+    pareto_front = get_pareto_front(solutions)
+
+    # Créer une carte de couleur (colormap) pour les méthodes
+    unique_methods = sorted(set(sol['method'] for sol in solutions))
+    colormap = plt.cm.get_cmap('tab10', len(unique_methods))
+
+    # Tracer toutes les solutions
+    scatter_handles = []
+    for method_index, method in enumerate(unique_methods):
+        method_solutions = [sol for sol in solutions if sol['method'] == method]
+        method_solutions_sorted = sorted(method_solutions, key=lambda x: x['score'], reverse=True)
+
+        method_color = colormap(method_index / len(unique_methods))
+        scatter_handle = ax.scatter([sol['volume'] for sol in method_solutions],
+                                    [sol['distance'] for sol in method_solutions],
+                                    [sol['emergency'] for sol in method_solutions],
+                                    c=[method_color] * len(method_solutions),
+                                    label=method)
+        scatter_handles.append(scatter_handle)
+        print(f"Meilleures solutions pour la méthode {method}:")
+        for sol in method_solutions_sorted[:3]:
+            print(f"Score: {sol['score']}, Volume: {sol['volume']}, Distance: {sol['distance']}, Emergency: {sol['emergency']}")
+
+    # Tracer une couche pour le front de Pareto
+    pareto_front_volume = np.array([sol['volume'] for sol in pareto_front])
+    pareto_front_distance = np.array([sol['distance'] for sol in pareto_front])
+    pareto_front_emergency = np.array([sol['emergency'] for sol in pareto_front])
+    ax.plot_trisurf(pareto_front_volume, pareto_front_distance, pareto_front_emergency, color='red', alpha=0.5)
+
+    method_counts = {method: sum(1 for sol in pareto_front if sol['method'] == method) for method in unique_methods}
+    total_solutions = len(pareto_front)
+    for method, count in method_counts.items():
+        percentage = (count / total_solutions) * 100
+        print(f"Méthode {method}: {percentage:.2f}%")
+
+    # Ajouter une légende
+    ax.legend(handles=scatter_handles)
+
+    plt.savefig(filename)
+    plt.show()
+    return pareto_front
+
+def get_pareto_front(solutions):
+    pareto_front = []
+    for sol in solutions:
+        is_pareto = True
+        for other in solutions:
+            if (other['volume'] > sol['volume'] and other['distance'] <= sol['distance'] and other['emergency'] <= sol['emergency']) or \
+               (other['volume'] >= sol['volume'] and other['distance'] < sol['distance'] and other['emergency'] <= sol['emergency']) or \
+               (other['volume'] >= sol['volume'] and other['distance'] <= sol['distance'] and other['emergency'] < sol['emergency']):
+                is_pareto = False
+                break
+        if is_pareto:
+            pareto_front.append(sol)
+    return pareto_front
+
+def is_available(starting_time: datetime, cycle: Cycle, choice: Tank, storehouse: Storehouse, parameters: Parameters):
+    last_point = cycle.get_last_point(storehouse=storehouse)
+    time_to_go = ((calculate_distance(last_point, choice) * 60) / parameters.vehicle_speed) * K
+    ending_time = starting_time + timedelta(minutes=time_to_go)
+    if choice.is_available(dt=ending_time):
+        return True
+    return False
+
+def get_random_position(cycles_positions):
+    # Filtrer les sous-listes non vides
+    cycles_positions_tmp = [(index, cycle_position) for index, cycle_position in enumerate(cycles_positions) if cycle_position]
+
+    if cycles_positions_tmp:
+        # Choisir une sous-liste non vide au hasard
+        index, cycle_position_tmp = random.choice(cycles_positions_tmp)
+
+        # Choisir une position aléatoire à l'intérieur de la sous-liste sélectionnée
+        position = random.choice(cycle_position_tmp)
+
+        return index, position
+    else:
+        return None
+
+def check_choice(journey: Journey, choice: Tank, cycle: Cycle, cycles: List[Cycle], storehouse: Storehouse, parameters: Parameters) -> Tank:
+    # Time to go 
+    last_point = cycle.get_last_point(storehouse=storehouse)
+    choice.time_to_go = ((calculate_distance(last_point, choice) * 60) / parameters.vehicle_speed) * K
+    colored(choice.time_to_go, "cyan", "choice.time_to_go")
+
+    # Collectable volume 
+    if choice.current_volume <= parameters.mobile_tank_volume - cycle.cycle_volume:
+            choice.collectable_volume = choice.current_volume
+    else:
+            if (parameters.mobile_tank_volume - cycle.cycle_volume) / choice.overflow_capacity >= parameters.percentage_partial_collect_volume:
+                choice.collectable_volume = parameters.mobile_tank_volume - cycle.cycle_volume
+            else :
+                choice.collectable_volume = 0
+    colored(choice.collectable_volume, "cyan", "choice.collectable_volume")
+
+    # Manoever time
+    choice.manoever_time = choice.collectable_volume / parameters.pumping_speed
+    total_collect_time = choice.time_to_go + choice.manoever_time + parameters.loading_time
+    colored(total_collect_time, "cyan")
+
+    # Time to return 
+    choice.time_to_storehouse = ((calculate_distance(choice, storehouse) * 60) / parameters.vehicle_speed) * K
+    colored(choice.time_to_storehouse, "cyan", "choice.time_to_storehouse")
+
+    # Return time
+    choice.return_time = choice.time_to_storehouse + ((cycle.cycle_volume + choice.collectable_volume) / parameters.draining_speed) + parameters.loading_time
+    colored(choice.return_time, "cyan", "choice.return_time")
+
+    # Check remaining_time
+    actual_journey_time = sum([cycle.cycle_time for cycle in cycles])
+
+    remaining_time = (journey.end_time.hour - journey.start_time.hour)*60 - actual_journey_time
+    colored(remaining_time, "yellow")
+    yey = (cycle.cycle_time + total_collect_time + choice.return_time)
+    colored(yey, "red")
+    colored(cycle.cycle_time, "blue", "cycle.cycle_time")
+    if remaining_time - (cycle.cycle_time + total_collect_time + choice.return_time) > 0:
+        return True
+    else :
+        return False
+ 
+def permutation(journey: Journey, tanks : List[Tank], storehouse: Storehouse, parameters: Parameters):
+    unused_tanks = [tank for tank in tanks]
+    for cycle in journey.cycles:
+        for tank_cycle in cycle.selected_tanks:
+            for tank in unused_tanks:
+                if tank.id == tank_cycle.id : 
+                    unused_tanks.remove(tank)
+
+    # Choix du tank à rajouter
+    choice = random.choice(unused_tanks)
+    colored(choice, "yellow")
+    colored(choice.maker.hours, "magenta", "hours")
+    
+    # Parcours les cuves de chaque cycle et tester si la cuve choisie est atteignable depuis la cuve en cours
+    cycles_positions = []
+    cycles = []
+    for cycle in journey.cycles:
+        cycle_positions = []
+        current_time = cycle.starting_time
+        if is_available(starting_time=current_time, cycle=cycle, choice=choice, storehouse=storehouse, parameters=parameters):
+            cycle_positions.append(-1)
+        for i in range(len(cycle.selected_tanks)):
+            current_time += timedelta(minutes=cycle.travel_times[i]+cycle.manoever_times[i]+parameters.loading_time)
+            if is_available(starting_time=current_time, cycle=cycle, choice=choice, storehouse=storehouse, parameters=parameters):
+                cycle_positions.append(i)
+        cycles_positions.append(cycle_positions)
+    
+    # Choisir un index où ajouter la louloutte
+    cycle_index, choice_position = get_random_position(cycles_positions)
+
+    # Relancer un algo
+    """for i,cycle in enumerate(journey.cycles):
+        if i != index_sublist:
+            cycles.append(cycle)
+        else :
+            new_cycle = Cycle(starting_time=cycle.starting_time)
+            if position == -1:
+                if check_choice(journey=journey, choice=choice, cycle=new_cycle, cycles=cycles, storehouse=storehouse, parameters=parameters):
+                        new_cycle.add_tank(choice=choice, parameters=parameters)
+                        break
+            else :
+                for j,tank in enumerate(cycle.selected_tanks):
+                    if j-1 == position:
+                        if check_choice(journey=journey, choice=choice, cycle=new_cycle, cycles=cycles, storehouse=storehouse, parameters=parameters):
+                                print(f"added, j = {j}, position = {position}")
+                                new_cycle.add_tank(choice=choice, parameters=parameters)
+                                break
+                    else :
+                        new_cycle.add_tank(choice=tank, parameters=parameters) """
+
+    return cycle_index, choice_position, choice

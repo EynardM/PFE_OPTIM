@@ -1,6 +1,5 @@
-- Tracer front de pareto 
-- Fonction de génération de voisin 
-
-- Méthode qui utilise config, génération de voisin type hc recuit 
-- Génétique
-- Extrapolation plusieurs dépôts et agents
+- Tracer front de pareto : ok
+- Fonction de génération de voisin : en cours (vendredi)
+- Méthode qui utilise config, génération de voisin : hc recuit : à faire (samedi/dimanche)
+- Génétique : à voir 
+- Extrapolation plusieurs dépôts et agents : à voir (semaine prochaine)
