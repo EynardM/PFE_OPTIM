@@ -1,19 +1,21 @@
 from util.imports import * 
 from util.objects import *
              
-def parse_config(filename: str):
+def parse_config(filename: str) -> tuple:
     with open(filename, 'r') as file:
         config_data = json.load(file)
 
-    optimization_parameters = Parameters(**config_data['optimization_parameters'])
-    storehouse = Storehouse(**config_data['storehouse'])
-    agent = Agent(**config_data['agent'])
+    constraints_data = config_data['constraints']
+    vehicle_data = config_data['vehicule']
+    storehouse_data = config_data['storehouse']
+    agent_data = config_data['agent']
 
-    # print_colored(optimization_parameters, "yellow")
-    # print_colored(storehouse, "cyan")
-    # print_colored(agent, "magenta")
+    constraints = Constraints(**constraints_data)
+    vehicle = Vehicle(**vehicle_data)
+    storehouse = Storehouse(**storehouse_data)
+    agent = Agent(**agent_data)
 
-    return optimization_parameters, storehouse, agent
+    return constraints, vehicle, storehouse, agent
 
 def create_maker_objects_from_dataframe(df):
     makers_list = []
@@ -97,9 +99,9 @@ def filter_days(tanks : List[Tank]) -> List[Tank]:
             tanks_filtered_by_days.append(tank)
     return tanks_filtered_by_days
 
-def filter_quantities(tanks : List[Tank], parameters: Parameters) -> List[Tank]:
+def filter_quantities(tanks : List[Tank], constraints: Constraints) -> List[Tank]:
     tanks_filtered_by_quantity = []
     for tank in tanks: 
-        if tank.current_volume / tank.overflow_capacity >= parameters.percentage_volume_threshold:
+        if tank.current_volume / tank.overflow_capacity >= constraints.percentage_volume_threshold:
             tanks_filtered_by_quantity.append(tank)
     return tanks_filtered_by_quantity

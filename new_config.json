@@ -1,0 +1,31 @@
+{
+    "constraints": {
+        "max_working_time": 8,
+        "min_draining_volume": 100,
+        "max_simulation_deepness": 61,
+        "percentage_volume_threshold": 0.3
+    },
+    "vehicule": {
+        "id": "0",
+        "name": "bincycle",
+        "capacity": 330,
+        "speed": 15,
+        "loading_time": 15,
+        "pumping_speed": 10,
+        "draining_speed": 10 
+    },
+    "storehouse": {
+        "id": "0",
+        "latitude": 43.6088647,
+        "longitude": 1.4494968,
+        "collector": "bincy"
+    },
+    "agent": {
+        "id": "0",
+        "name" : "Wilfried",
+        "surname": "Martin",
+        "working_days": [1, 1, 0, 1, 1, 0, 0],
+        "begin_hour": 7
+    }
+}
+  
