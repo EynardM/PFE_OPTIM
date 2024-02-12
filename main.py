@@ -26,16 +26,34 @@ def main():
     # Génération des inputs de l'algo
     journeys = []
     solutions = []
+    visited_journeys = {}  
     optimization_parameters_list = generate_optimization_paremeters(tanks=tanks, constraints=constraints, vehicle=vehicle, storehouse=storehouse, agent=agent, time_slots=time_slots)
     for optimization_parameters in optimization_parameters_list:
         journey = run(optimization_parameters=optimization_parameters)
         
+        # Vérifier si le `journey` est déjà présent pour cette méthode
+        if optimization_parameters.method in visited_journeys:
+            found_match = False 
+            for journey_visited in visited_journeys[optimization_parameters.method]:
+                if journey_visited.journey_time == journey.journey_time:
+                    found_match = True
+                    break  
+
+            if found_match:
+                continue 
+            else:
+                visited_journeys[optimization_parameters.method].append(journey)
+        else:
+            visited_journeys[optimization_parameters.method] = [journey]
+
         journeys.append(journey)
-        score, volume, distance, emergency = journey.evaluation(optimization_parameters=optimization_parameters)
+        score, volume, distance, emergency = journey.evaluation(tanks=tanks)
         solutions.append({"method": optimization_parameters.method, "score": score, "volume": volume, "distance": distance, "emergency": emergency})
         print(json.dumps(journey.to_dict(), indent=4)) 
 
     plot_pareto_front_3d(solutions)
+
 # Appel de la fonction main
 if __name__ == "__main__":
     main()
+

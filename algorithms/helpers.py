@@ -79,8 +79,6 @@ def get_starting_time(journey: Journey, optimization_parameters: OptimizationPar
     after_midnight_times = [start_time for start_time in all_start_times if start_time.time() > datetime.strptime('00:00', '%H:%M').time()]
     sorted_after_midnight_times = sorted(after_midnight_times)
     if sorted_after_midnight_times:
-        colored(optimization_parameters.agent.begin_hour, "red", "optimization_parameters.agent.begin_hour")
-        colored(journey.current_time, "blue", "journey.current_time")
         return max(sorted_after_midnight_times[0], max(optimization_parameters.agent.begin_hour,journey.current_time))
     else:
         return None

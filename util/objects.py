@@ -275,6 +275,7 @@ class Cycle:
         self.potential_ending_time = None
 
         self.selected_tanks = []
+        self.collected_quantities = []
         self.travel_times = []
         self.manoever_times = []
 
@@ -283,12 +284,14 @@ class Cycle:
         self.cycle_distance = 0
 
     def __str__(self):
-        tanks_ids = ", ".join([f"Tank {tank.id}" for tank in self.selected_tanks])
+        tanks_ids = ", ".join([f"Tank : {tank.id}" for tank in self.selected_tanks])
+        tanks_collected_quantities = ", ".join([f"Collected quantity : {quantity}" for quantity in self.collected_quantities])
         colored(self.starting_time, "green", "starting_time")
         colored(self.ending_time, "green", "ending_time")
         colored(self.cycle_time, "blue", "cycle_time")
         colored(self.cycle_volume, "blue", "cycle_volume")
         colored(tanks_ids, "red")
+        colored(tanks_collected_quantities, "red")
         return ""
     
     def add_tank(self, choice: Tank, optimization_parameters: OptimizationParameters):
@@ -297,6 +300,7 @@ class Cycle:
 
         # Updating quantities
         self.cycle_volume += choice.collectable_volume
+        self.collected_quantities.append(choice.collectable_volume)
         choice.current_volume -= choice.collectable_volume
 
         # Updating times
@@ -339,6 +343,7 @@ class Cycle:
             "starting_time": self.starting_time.strftime("%Y-%m-%d %H:%M:%S"),
             "ending_time": self.ending_time.strftime("%Y-%m-%d %H:%M:%S") ,
             "selected_tanks": [tank.id for tank in self.selected_tanks],
+            "collected_quantities": [quantity for quantity in self.collected_quantities],
             "cycle_time": self.cycle_time,
             "cycle_volume": self.cycle_volume,
             "cycle_distance": self.cycle_distance
@@ -362,6 +367,16 @@ class Journey:
 
         return f"Start Time: {self.starting_time}, End Time: {self.ending_time}, Journey Time: {self.journey_time}, Journey Volume: {self.journey_volume}, Journey Distance: {self.journey_distance}, Break Time: {self.break_time}\nCycles:\n{cycle_details}"
     
+    def __eq__(self, other):
+        if not isinstance(other, Journey):
+            return False
+        
+        return (self.starting_time == other.starting_time and
+                self.ending_time == other.ending_time and
+                self.journey_time == other.journey_time and
+                self.journey_volume == other.journey_volume and
+                self.journey_distance == other.journey_distance)
+
     def add_cycle(self, cycle: Cycle) -> List[Cycle]:
         self.journey_time += cycle.cycle_time
         if not cycle.is_empty():
@@ -369,9 +384,15 @@ class Journey:
             self.journey_volume += cycle.cycle_volume
             self.journey_distance += cycle.cycle_distance
 
-    def evaluation(self, optimization_parameters: OptimizationParameters):
-        global weight_Q, weight_D, weight_E 
-        self.journey_global_emergency = np.mean([tank.current_volume / tank.overflow_capacity for tank in optimization_parameters.tanks]) # add mean or max filling of each tank in the ratio 
+    def evaluation(self, tanks: List[Tank]):
+        global weight_Q, weight_D, weight_E
+        tanks_copy = deepcopy(tanks)
+        for cycle in self.cycles:
+            for i,tank_cycle in enumerate(cycle.selected_tanks):
+                for tank in tanks_copy:
+                    if tank_cycle.id == tank.id:
+                        tank.current_volume -= cycle.collected_quantities[i]
+        self.journey_global_emergency = np.mean([tank.current_volume / tank.overflow_capacity for tank in tanks_copy]) # add mean or max filling of each tank in the ratio 
         score = weight_Q * self.journey_volume + weight_D * self.journey_distance + weight_E * self.journey_global_emergency
         return score, self.journey_volume, self.journey_distance, self.journey_global_emergency
     

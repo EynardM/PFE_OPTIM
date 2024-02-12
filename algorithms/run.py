@@ -67,8 +67,9 @@ def run_slot(journey: Journey, optimization_parameters: OptimizationParameters, 
             else : 
                 last_point = cycle.get_last_point(storehouse=optimization_parameters.storehouse)
                 tank = choice_function(starting_point=last_point, tanks=final_candidates, method=optimization_parameters.method)
-                optimization_parameters.tanks.remove(tank)
                 cycle.add_tank(choice=tank, optimization_parameters=optimization_parameters)
+                optimization_parameters.tanks.remove(tank)
+
     return journey 
       
 def run(optimization_parameters: OptimizationParameters):
@@ -80,7 +81,7 @@ def run(optimization_parameters: OptimizationParameters):
         for i,slot in enumerate(optimization_parameters.agent.daily_working_slot):
             if i == 0:
                 starting_time, ending_time = slot
-                journey = Journey(starting_time=starting_time, ending_time=ending_time)
+                journey = Journey(starting_time=starting_time, ending_time=ending_time)      
             journey = run_slot(journey=journey, optimization_parameters=optimization_parameters, slot=slot)
     return journey
             
