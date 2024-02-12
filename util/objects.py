@@ -358,15 +358,9 @@ class Journey:
         self.journey_global_emergency = None
 
     def __str__(self):
-        formatted_break_time = None
-        if self.break_time:
-            hours, remainder = divmod(self.break_time.seconds, 3600)
-            minutes, seconds = divmod(remainder, 60)
-            formatted_break_time = f"{hours:02}:{minutes:02}:{seconds:02}"
-
         cycle_details = "\n".join([str(cycle) for cycle in self.cycles])
 
-        return f"Start Time: {self.starting_time}, End Time: {self.ending_time}, Journey Time: {self.journey_time}, Journey Volume: {self.journey_volume}, Journey Distance: {self.journey_distance}, Break Time: {formatted_break_time}\nCycles:\n{cycle_details}"
+        return f"Start Time: {self.starting_time}, End Time: {self.ending_time}, Journey Time: {self.journey_time}, Journey Volume: {self.journey_volume}, Journey Distance: {self.journey_distance}, Break Time: {self.break_time}\nCycles:\n{cycle_details}"
     
     def add_cycle(self, cycle: Cycle) -> List[Cycle]:
         self.journey_time += cycle.cycle_time
@@ -375,25 +369,19 @@ class Journey:
             self.journey_volume += cycle.cycle_volume
             self.journey_distance += cycle.cycle_distance
 
-    def evaluation(self, tanks: List[Tank]):
+    def evaluation(self, optimization_parameters: OptimizationParameters):
         global weight_Q, weight_D, weight_E 
-        self.journey_global_emergency = np.mean([tank.current_volume / tank.overflow_capacity for tank in tanks]) # add mean or max filling of each tank in the ratio 
+        self.journey_global_emergency = np.mean([tank.current_volume / tank.overflow_capacity for tank in optimization_parameters.tanks]) # add mean or max filling of each tank in the ratio 
         score = weight_Q * self.journey_volume + weight_D * self.journey_distance + weight_E * self.journey_global_emergency
         return score, self.journey_volume, self.journey_distance, self.journey_global_emergency
     
     def to_dict(self):
-        formatted_break_time = None
-        if self.break_time:
-            hours, remainder = divmod(self.break_time.seconds, 3600)
-            minutes, seconds = divmod(remainder, 60)
-            formatted_break_time = f"{hours:02}:{minutes:02}:{seconds:02}"
-
         return {
-            "start_time": self.start_time.strftime("%Y-%m-%d %H:%M:%S"),
-            "end_time": self.end_time.strftime("%Y-%m-%d %H:%M:%S"),
+            "start_time": self.starting_time.strftime("%Y-%m-%d %H:%M:%S"),
+            "end_time": self.ending_time.strftime("%Y-%m-%d %H:%M:%S"),
             "cycles": [cycle.to_dict() for cycle in self.cycles],
             "journey_time": self.journey_time,
             "journey_volume": self.journey_volume,
             "journey_distance": self.journey_distance,
-            "break_time": formatted_break_time
+            "break_time": self.break_time
         }

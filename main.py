@@ -5,63 +5,37 @@ from util.objects import *
 from util.datamodule import get_data
 
 from algorithms.helpers import *
-from algorithms.run import run
-from algorithms.run_voisin import run_voisin
+from algorithms.run import *
 
 def main():
     # Récupération des données
     measurements, tanks, makers = get_data()
-    print(f"Nombre de cuves totales : {len(tanks)}")
 
-    # Récupération des paramètres
-    parameters, storehouse, agent = parse_config('config.json')
+    # Récupération de la config
+    constraints, vehicle, storehouse, agent = parse_config('config.json')
 
     # Filtrage par jours d'ouverture
     tanks = filter_days(tanks=tanks)
-    print(f"Nombre de cuves post filtre jours : {len(tanks)}")
     
     # Filtrage par quantité 
-    tanks = filter_quantities(tanks=tanks, parameters=parameters)
-    print(f"Nombre de cuves post filtre quantités : {len(tanks)}")
+    tanks = filter_quantities(tanks=tanks, constraints=constraints)
 
-    # Obtention des time slots possibles sans et avec pause
-    time_slots_without_break, time_slots_with_break = generate_time_slots(tanks=tanks, parameters=parameters, agent=agent)
-    time_slots = time_slots_without_break + time_slots_with_break
+    # Génération des slots
+    time_slots = generate_time_slots(tanks=tanks, constraints=constraints, agent=agent)
 
-    # Call the algorithm for each combation of time slots
+    # Génération des inputs de l'algo
     journeys = []
     solutions = []
+    optimization_parameters_list = generate_optimization_paremeters(tanks=tanks, constraints=constraints, vehicle=vehicle, storehouse=storehouse, agent=agent, time_slots=time_slots)
+    for optimization_parameters in optimization_parameters_list:
+        journey = run(optimization_parameters=optimization_parameters)
+        
+        journeys.append(journey)
+        score, volume, distance, emergency = journey.evaluation(optimization_parameters=optimization_parameters)
+        solutions.append({"method": optimization_parameters.method, "score": score, "volume": volume, "distance": distance, "emergency": emergency})
+        print(json.dumps(journey.to_dict(), indent=4)) 
 
-    for method in ["Random", "R", "Q", "D", "E", "HQD", "HQDE"]:
-        for time_slot in time_slots:
-            tanks_copy = [deepcopy(tank) for tank in tanks]
-            
-            nb_slots = int(count_total_elements(time_slot)/2)
-            if nb_slots != 1: 
-                time_slot_journeys = []
-                for i in range(nb_slots):
-                    start, end = time_slot[i]
-                    journey = run(start=start, end=end, tanks=tanks_copy, parameters=parameters, storehouse=storehouse, agent=agent, method=method)
-                    time_slot_journeys.append(journey)
-                journey = concatenate_journeys(time_slot_journeys)
-            else :
-                start, end = time_slot
-                journey = run(start=start, end=end, tanks=tanks_copy, parameters=parameters, storehouse=storehouse, agent=agent, method=method)
-
-            if verify_journey(journey=journey, tanks=tanks, parameters=parameters, storehouse=storehouse):
-                print(f"Compliance verified")
-            else:
-                print("Not compliant ")
-
-            journeys.append(journey)
-            score, volume, distance, emergency = journey.evaluation(tanks=tanks_copy)
-            solutions.append({"method": method, "score": score, "volume": volume, "distance": distance, "emergency": emergency})
-            # print(json.dumps(journey.to_dict(), indent=4)) 
-            # cycle_index, choice_position, choice = permutation(journey=journey, tanks=deepcopy(tanks), storehouse=storehouse, parameters=parameters)
-            # run_voisin(cycle_index, choice_position, choice, journey, deepcopy(tanks), parameters, storehouse, agent, method)
-        #     break
-        # break 
     plot_pareto_front_3d(solutions)
-
+# Appel de la fonction main
 if __name__ == "__main__":
     main()

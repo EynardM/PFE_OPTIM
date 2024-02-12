@@ -105,3 +105,69 @@ def filter_quantities(tanks : List[Tank], constraints: Constraints) -> List[Tank
         if tank.current_volume / tank.overflow_capacity >= constraints.percentage_volume_threshold:
             tanks_filtered_by_quantity.append(tank)
     return tanks_filtered_by_quantity
+
+def plot_pareto_front_3d(solutions, filename="pareto_front_plot.png"):
+    fig = plt.figure()
+    ax = fig.add_subplot(111, projection='3d')
+
+    ax.set_xlabel('Volume')
+    ax.set_ylabel('Distance')
+    ax.set_zlabel('Emergency')
+    plt.title('Pareto Front 3D')
+
+    # Filtrer les solutions du front de Pareto
+    pareto_front = get_pareto_front(solutions)
+
+    # Créer une carte de couleur (colormap) pour les méthodes
+    unique_methods = sorted(set(sol['method'] for sol in solutions))
+    colormap = plt.cm.get_cmap('tab10', len(unique_methods))
+
+    # Tracer toutes les solutions
+    scatter_handles = []
+    for method_index, method in enumerate(unique_methods):
+        method_solutions = [sol for sol in solutions if sol['method'] == method]
+        method_solutions_sorted = sorted(method_solutions, key=lambda x: x['score'], reverse=True)
+
+        method_color = colormap(method_index / len(unique_methods))
+        scatter_handle = ax.scatter([sol['volume'] for sol in method_solutions],
+                                    [sol['distance'] for sol in method_solutions],
+                                    [sol['emergency'] for sol in method_solutions],
+                                    c=[method_color] * len(method_solutions),
+                                    label=method)
+        scatter_handles.append(scatter_handle)
+        print(f"Meilleures solutions pour la méthode {method}:")
+        for sol in method_solutions_sorted[:3]:
+            print(f"Score: {sol['score']}, Volume: {sol['volume']}, Distance: {sol['distance']}, Emergency: {sol['emergency']}")
+
+    # Tracer une couche pour le front de Pareto
+    pareto_front_volume = np.array([sol['volume'] for sol in pareto_front])
+    pareto_front_distance = np.array([sol['distance'] for sol in pareto_front])
+    pareto_front_emergency = np.array([sol['emergency'] for sol in pareto_front])
+    ax.plot_trisurf(pareto_front_volume, pareto_front_distance, pareto_front_emergency, color='red', alpha=0.5)
+
+    method_counts = {method: sum(1 for sol in pareto_front if sol['method'] == method) for method in unique_methods}
+    total_solutions = len(pareto_front)
+    for method, count in method_counts.items():
+        percentage = (count / total_solutions) * 100
+        print(f"Méthode {method}: {percentage:.2f}%")
+
+    # Ajouter une légende
+    ax.legend(handles=scatter_handles)
+
+    plt.savefig(filename)
+    plt.show()
+    return pareto_front
+
+def get_pareto_front(solutions):
+    pareto_front = []
+    for sol in solutions:
+        is_pareto = True
+        for other in solutions:
+            if (other['volume'] > sol['volume'] and other['distance'] <= sol['distance'] and other['emergency'] <= sol['emergency']) or \
+               (other['volume'] >= sol['volume'] and other['distance'] < sol['distance'] and other['emergency'] <= sol['emergency']) or \
+               (other['volume'] >= sol['volume'] and other['distance'] <= sol['distance'] and other['emergency'] < sol['emergency']):
+                is_pareto = False
+                break
+        if is_pareto:
+            pareto_front.append(sol)
+    return pareto_front
