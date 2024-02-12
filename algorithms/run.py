@@ -11,61 +11,77 @@ formatter = logging.Formatter('%(asctime)s - %(levelname)s - %(message)s')
 file_handler.setFormatter(formatter)
 logging.getLogger().addHandler(file_handler)
 
-def run(start, end, tanks, parameters, storehouse, agent, method):    
-    processing_journey = True
-    starting_constraint = deepcopy(start)
-    journey = Journey(start_time=start, end_time=end)
+def run_slot(journey: Journey, optimization_parameters: OptimizationParameters, slot=Tuple[datetime,datetime]) -> List[Cycle]:
+    if journey.current_time != journey.starting_time:
+        journey.break_time += (slot[0] - journey.ending_time).total_seconds()/60
+        journey.current_time = slot[0]
+        journey.ending_time = slot[1]
 
+    processing_journey = True
     while(processing_journey):
-        starting_time = get_starting_time(tanks=tanks, agent=agent, starting_constraint=starting_constraint)
+        starting_time = get_starting_time(journey=journey, optimization_parameters=optimization_parameters)
+        
         processing_cycle = True
         cycle = Cycle(starting_time=starting_time)
         
         while(processing_cycle):
 
-            if starting_constraint >= journey.end_time:
+            if journey.current_time >= journey.ending_time:
                 processing_cycle = False
                 processing_journey = False
                 continue
 
-            available_tanks = get_available_tanks(starting_time=starting_time+timedelta(minutes=cycle.cycle_time), cycle=cycle, tanks=tanks, storehouse=storehouse, parameters=parameters)  
+            available_tanks = filter_hours(journey=journey, cycle=cycle, optimization_parameters=optimization_parameters)  
+           
             if not available_tanks:
                 if not cycle.is_empty():
-                    cycle.storehouse_return(parameters=parameters)
+                    cycle.storehouse_return(optimization_parameters=optimization_parameters)
                     journey.add_cycle(cycle=cycle)
-                    starting_constraint = cycle.starting_time + timedelta(minutes=cycle.cycle_time)
+                    journey.current_time += timedelta(minutes=cycle.cycle_time)
                 else :
-                    datetime_to_add = (starting_constraint + timedelta(hours=1)).replace(minute=0, second=0) - starting_constraint
+                    datetime_to_add = (journey.current_time + timedelta(hours=1)).replace(minute=0, second=0) - journey.current_time
                     cycle.cycle_time += datetime_to_add.total_seconds() / 60
                     journey.add_cycle(cycle=cycle)
-                    starting_constraint += datetime_to_add
+                    journey.current_time += timedelta(minutes=cycle.cycle_time)
                 processing_cycle = False
                 continue
 
-            valid_tanks = get_valid_choices(tanks=available_tanks, cycle=cycle, parameters=parameters)
-            if not valid_tanks:
-                cycle.storehouse_return(parameters=parameters)
+            filled_enough_tanks = filter_enough_filled(tanks=available_tanks, journey=journey, cycle=cycle, optimization_parameters=optimization_parameters)
+            if not filled_enough_tanks:
+                cycle.storehouse_return(optimization_parameters=optimization_parameters)
                 journey.add_cycle(cycle=cycle)
-                starting_constraint = cycle.starting_time + timedelta(minutes=cycle.cycle_time)
+                journey.current_time += timedelta(minutes=cycle.cycle_time)
                 processing_cycle = False
                 continue
 
-            final_candidates = check_storehouse_return(journey=journey, tanks=valid_tanks, cycle=cycle, storehouse=storehouse, parameters=parameters)
+            final_candidates = filter_return(tanks=filled_enough_tanks, journey=journey, cycle=cycle, optimization_parameters=optimization_parameters)
             if not final_candidates:
                 if not cycle.is_empty():
-                    cycle.storehouse_return(parameters=parameters)
+                    cycle.storehouse_return(optimization_parameters=optimization_parameters)
                     journey.add_cycle(cycle=cycle)
-                    starting_constraint = cycle.starting_time + timedelta(minutes=cycle.cycle_time)
+                    journey.current_time += timedelta(minutes=cycle.cycle_time)
                 processing_journey = False
                 processing_cycle = False
                 continue
             
             else : 
-                last_point = cycle.get_last_point(storehouse=storehouse)
-                tank = choice_function(starting_point=last_point, tanks=final_candidates, method=method)
-                tanks.remove(tank)
-                cycle.add_tank(choice=tank, parameters=parameters)
-            
-    for cycle in journey.cycles:
-        print(cycle)
+                last_point = cycle.get_last_point(storehouse=optimization_parameters.storehouse)
+                tank = choice_function(starting_point=last_point, tanks=final_candidates, method=optimization_parameters.method)
+                cycle.add_tank(choice=tank, optimization_parameters=optimization_parameters)
+                optimization_parameters.tanks.remove(tank)
+
     return journey 
+      
+def run(optimization_parameters: OptimizationParameters):
+    if optimization_parameters.agent.nb_of_slots() == 1:
+        starting_time, ending_time = optimization_parameters.agent.daily_working_slot
+        journey = Journey(starting_time=starting_time, ending_time=ending_time)
+        journey = run_slot(journey=journey, optimization_parameters=optimization_parameters, slot=optimization_parameters.agent.daily_working_slot)
+    else :
+        for i,slot in enumerate(optimization_parameters.agent.daily_working_slot):
+            if i == 0:
+                starting_time, ending_time = slot
+                journey = Journey(starting_time=starting_time, ending_time=ending_time)      
+            journey = run_slot(journey=journey, optimization_parameters=optimization_parameters, slot=slot)
+    return journey
+            

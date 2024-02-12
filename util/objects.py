@@ -2,32 +2,55 @@ from util.imports import *
 from util.common import *
 from util.variables import *
 
-class Parameters:
-    def __init__(self, simulation_deep: int, working_time: int, mobile_tank_volume: int,
-                 vehicle_speed: int, loading_time: int, pumping_speed: int,
-                 draining_speed: int, percentage_volume_threshold: float,
-                 percentage_partial_collect_volume: float, minimum_draining_volume: int,
-                 average_cycle_time: int):
-        self.simulation_deep = simulation_deep
-        self.working_time = working_time
-        self.mobile_tank_volume = mobile_tank_volume
-        self.vehicle_speed = vehicle_speed
-        self.loading_time = loading_time
-        self.pumping_speed = pumping_speed
-        self.draining_speed = draining_speed
+class Constraints:
+    def __init__(self, max_working_time, min_draining_volume, max_simulation_deepness, percentage_volume_threshold):
+        self.max_working_time = max_working_time
+        self.min_draining_volume = min_draining_volume
+        self.max_simulation_deepness = max_simulation_deepness
         self.percentage_volume_threshold = percentage_volume_threshold
-        self.percentage_partial_collect_volume = percentage_partial_collect_volume
-        self.minimum_draining_volume = minimum_draining_volume
-        self.average_cycle_time = average_cycle_time
 
     def __str__(self):
-        return f"Parameters(simulation_deep={self.simulation_deep}, working_time={self.working_time}, " \
-               f"mobile_tank_volume={self.mobile_tank_volume}, vehicle_speed={self.vehicle_speed}, " \
-               f"loading_time={self.loading_time}, pumping_speed={self.pumping_speed}, " \
-               f"draining_speed={self.draining_speed}, percentage_volume_threshold={self.percentage_volume_threshold}, " \
-               f"percentage_partial_collect_volume={self.percentage_partial_collect_volume}, " \
-               f"minimum_draining_volume={self.minimum_draining_volume}, average_cycle_time={self.average_cycle_time})"
+        return f"Constraints(max_working_time={self.max_working_time}, min_draining_volume={self.min_draining_volume}, " \
+               f"max_simulation_deepness={self.max_simulation_deepness}, " \
+               f"percentage_volume_threshold={self.percentage_volume_threshold})"
 
+
+    def to_dict(self):
+        return {
+            "max_working_time": self.max_working_time,
+            "min_draining_volume": self.min_draining_volume,
+            "max_simulation_deepness": self.max_simulation_deepness,
+            "percentage_volume_threshold": self.percentage_volume_threshold
+        }
+    
+class Vehicle:
+    def __init__(self, id: str, name: str, capacity: float, speed: float, loading_time: float, \
+            draining_speed: float, pumping_speed: float) -> None:
+        self.id = id
+        self.name = name
+        self.capacity = capacity
+        self.speed = speed
+        self.loading_time = loading_time
+        self.draining_speed = draining_speed
+        self.pumping_speed = pumping_speed
+
+
+    def __str__(self):
+        return f"Vehicle(id={self.id}, name={self.name}, capacity={self.capacity}, speed={self.speed}, " \
+               f"loading_time={self.loading_time}, draining_speed={self.draining_speed}, " \
+               f"pumping_speed={self.pumping_speed})"
+    
+    def to_dict(self):
+        return {
+            "id": self.id,
+            "name": self.name,
+            "capacity": self.capacity,
+            "speed": self.speed,
+            "loading_time": self.loading_time,
+            "draining_speed": self.draining_speed,
+            "pumping_speed": self.pumping_speed
+        }
+    
 class Storehouse:
     def __init__(self, id: str, latitude: float, longitude: float, collector: str):
         self.id = id
@@ -36,7 +59,8 @@ class Storehouse:
         self.collector = collector
 
     def __str__(self):
-        return f"Storehouse(id={self.id}, latitude={self.latitude}, longitude={self.longitude}, collector={self.collector})"
+        return f"Storehouse(id={self.id}, latitude={self.latitude}, longitude={self.longitude}, " \
+               f"collector={self.collector})"
 
     def get_coordinates(self, rad=True):
         if rad: 
@@ -53,15 +77,51 @@ class Storehouse:
         }
     
 class Agent:
-    def __init__(self, id: str, name: str, surname: str, working_days: List[int], begin_hour: int):
+    def __init__(self, id: str, name: str, surname: str, working_days: List[int], begin_hour: int, daily_working_slot=None):
         self.id = id
         self.name = name
         self.surname = surname
         self.working_days = working_days
         self.begin_hour = datetime.combine(datetime.now().date(), datetime.min.time()) + timedelta(hours=begin_hour)
+        self.daily_working_slot = daily_working_slot
+
+    def nb_of_slots(self):
+        return sum(2 if isinstance(slot, tuple) else 1 for slot in self.daily_working_slot)//2
+    
+    def __str__(self):
+        return f"Agent(id={self.id}, name={self.name}, surname={self.surname}, " \
+               f"working_days={self.working_days}, begin_hour={self.begin_hour}, " \
+               f"daily_working_slot={self.daily_working_slot})"
+    
+    def to_dict(self):
+        return {
+            "id": self.id,
+            "name": self.name,
+            "surname": self.surname,
+            "working_days": self.working_days,
+            "begin_hour": self.begin_hour.strftime("%Y-%m-%d %H:%M:%S") if self.begin_hour else None,
+            "daily_working_slot": self.daily_working_slot
+        }    
+    
+class OptimizationParameters:
+    def __init__(self, agent, storehouse, date, tanks, constraints, vehicle, collector=None, method=None):
+        self.agent = agent
+        self.vehicle = vehicle
+        self.storehouse = storehouse
+        self.date = date
+        self.tanks = tanks
+        self.constraints = constraints
+        self.collector = collector
+        self.method = method
 
     def __str__(self):
-        return f"Agent(id={self.id}, name={self.name}, surname={self.surname}, working_days={self.working_days}, begin_hour={self.begin_hour})"
+        colored(self.agent, "green", "agent")
+        colored(self.vehicle, "green", "vehicule")
+        colored(self.storehouse, "green", "storehouse")
+        colored(self.date, "green", "date")
+        colored(self.constraints, "green", "constraints")
+        colored(self.method, "green", "method")
+        return ""
 
 class Measurement:
     def __init__(self, id, drainage, event_type_id, event_type_label, fill_level,
@@ -215,6 +275,7 @@ class Cycle:
         self.potential_ending_time = None
 
         self.selected_tanks = []
+        self.collected_quantities = []
         self.travel_times = []
         self.manoever_times = []
 
@@ -223,27 +284,30 @@ class Cycle:
         self.cycle_distance = 0
 
     def __str__(self):
-        tanks_ids = ", ".join([f"Tank {tank.id}" for tank in self.selected_tanks])
+        tanks_ids = ", ".join([f"Tank : {tank.id}" for tank in self.selected_tanks])
+        tanks_collected_quantities = ", ".join([f"Collected quantity : {quantity}" for quantity in self.collected_quantities])
         colored(self.starting_time, "green", "starting_time")
         colored(self.ending_time, "green", "ending_time")
         colored(self.cycle_time, "blue", "cycle_time")
         colored(self.cycle_volume, "blue", "cycle_volume")
         colored(tanks_ids, "red")
+        colored(tanks_collected_quantities, "red")
         return ""
     
-    def add_tank(self, choice: Tank, parameters: Parameters):
+    def add_tank(self, choice: Tank, optimization_parameters: OptimizationParameters):
         # Adding the tank
         self.selected_tanks.append(choice)
 
         # Updating quantities
         self.cycle_volume += choice.collectable_volume
+        self.collected_quantities.append(choice.collectable_volume)
         choice.current_volume -= choice.collectable_volume
 
         # Updating times
         self.travel_times.append(choice.time_to_go)
         self.manoever_times.append(choice.manoever_time)
 
-        self.cycle_time += choice.time_to_go + choice.manoever_time + parameters.loading_time
+        self.cycle_time += choice.time_to_go + choice.manoever_time +  optimization_parameters.vehicle.loading_time
         self.current_time = self.starting_time + timedelta(minutes=self.cycle_time)
         self.potential_ending_time = self.current_time + timedelta(minutes=choice.return_time)
 
@@ -256,16 +320,16 @@ class Cycle:
         else : 
             return self.selected_tanks[-1]
 
-    def is_enough(self, parameters):
-        return self.cycle_volume >= parameters.minimum_draining_volume
+    def is_enough(self, constraints):
+        return self.cycle_volume >= constraints.minimum_draining_volume
     
-    def storehouse_return(self, parameters: Parameters):
+    def storehouse_return(self, optimization_parameters: OptimizationParameters):
         # Getting the last point
         last_tank = self.selected_tanks[-1]
 
         # Updating the travel times with the travel time to go from last point to storehouse
         self.travel_times.append(last_tank.time_to_storehouse)
-        self.manoever_times.append(self.cycle_volume/parameters.draining_speed)
+        self.manoever_times.append(self.cycle_volume/optimization_parameters.vehicle.draining_speed)
 
         # Updating cycle values
         self.cycle_time += last_tank.return_time
@@ -279,15 +343,17 @@ class Cycle:
             "starting_time": self.starting_time.strftime("%Y-%m-%d %H:%M:%S"),
             "ending_time": self.ending_time.strftime("%Y-%m-%d %H:%M:%S") ,
             "selected_tanks": [tank.id for tank in self.selected_tanks],
+            "collected_quantities": [quantity for quantity in self.collected_quantities],
             "cycle_time": self.cycle_time,
             "cycle_volume": self.cycle_volume,
             "cycle_distance": self.cycle_distance
         }
     
 class Journey:
-    def __init__(self, start_time: datetime, end_time: datetime):
-        self.start_time = start_time
-        self.end_time = end_time
+    def __init__(self, starting_time: datetime, ending_time: datetime):
+        self.starting_time = starting_time
+        self.current_time = starting_time
+        self.ending_time = ending_time
         self.cycles = []
 
         self.break_time = 0
@@ -295,6 +361,21 @@ class Journey:
         self.journey_volume = 0
         self.journey_distance = 0
         self.journey_global_emergency = None
+
+    def __str__(self):
+        cycle_details = "\n".join([str(cycle) for cycle in self.cycles])
+
+        return f"Start Time: {self.starting_time}, End Time: {self.ending_time}, Journey Time: {self.journey_time}, Journey Volume: {self.journey_volume}, Journey Distance: {self.journey_distance}, Break Time: {self.break_time}\nCycles:\n{cycle_details}"
+    
+    def __eq__(self, other):
+        if not isinstance(other, Journey):
+            return False
+        
+        return (self.starting_time == other.starting_time and
+                self.ending_time == other.ending_time and
+                self.journey_time == other.journey_time and
+                self.journey_volume == other.journey_volume and
+                self.journey_distance == other.journey_distance)
 
     def add_cycle(self, cycle: Cycle) -> List[Cycle]:
         self.journey_time += cycle.cycle_time
@@ -304,24 +385,24 @@ class Journey:
             self.journey_distance += cycle.cycle_distance
 
     def evaluation(self, tanks: List[Tank]):
-        global weight_Q, weight_D, weight_E 
-        self.journey_global_emergency = np.mean([tank.current_volume / tank.overflow_capacity for tank in tanks]) # add mean or max filling of each tank in the ratio 
+        global weight_Q, weight_D, weight_E
+        tanks_copy = deepcopy(tanks)
+        for cycle in self.cycles:
+            for i,tank_cycle in enumerate(cycle.selected_tanks):
+                for tank in tanks_copy:
+                    if tank_cycle.id == tank.id:
+                        tank.current_volume -= cycle.collected_quantities[i]
+        self.journey_global_emergency = np.mean([tank.current_volume / tank.overflow_capacity for tank in tanks_copy]) # add mean or max filling of each tank in the ratio 
         score = weight_Q * self.journey_volume + weight_D * self.journey_distance + weight_E * self.journey_global_emergency
         return score, self.journey_volume, self.journey_distance, self.journey_global_emergency
     
     def to_dict(self):
-        formatted_break_time = None
-        if self.break_time:
-            hours, remainder = divmod(self.break_time.seconds, 3600)
-            minutes, seconds = divmod(remainder, 60)
-            formatted_break_time = f"{hours:02}:{minutes:02}:{seconds:02}"
-
         return {
-            "start_time": self.start_time.strftime("%Y-%m-%d %H:%M:%S"),
-            "end_time": self.end_time.strftime("%Y-%m-%d %H:%M:%S"),
+            "start_time": self.starting_time.strftime("%Y-%m-%d %H:%M:%S"),
+            "end_time": self.ending_time.strftime("%Y-%m-%d %H:%M:%S"),
             "cycles": [cycle.to_dict() for cycle in self.cycles],
             "journey_time": self.journey_time,
             "journey_volume": self.journey_volume,
             "journey_distance": self.journey_distance,
-            "break_time": formatted_break_time
+            "break_time": self.break_time
         }
