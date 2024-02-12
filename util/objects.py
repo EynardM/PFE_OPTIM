@@ -190,7 +190,7 @@ class Tank:
         self.mean_zeros_fill_seq = None
         self.std_zeros_fill_seq = None
         self.filling_vector = None
-        
+        self.distance = None
         self.time_to_go = None
         self.collectable_volume = None
         self.manoever_time = None
@@ -276,6 +276,7 @@ class Cycle:
 
         self.selected_tanks = []
         self.collected_quantities = []
+        self.travel_distances = []
         self.travel_times = []
         self.manoever_times = []
 
@@ -304,6 +305,7 @@ class Cycle:
         choice.current_volume -= choice.collectable_volume
 
         # Updating times
+        self.travel_distances.append(choice.distance)
         self.travel_times.append(choice.time_to_go)
         self.manoever_times.append(choice.manoever_time)
 
@@ -333,7 +335,7 @@ class Cycle:
 
         # Updating cycle values
         self.cycle_time += last_tank.return_time
-        self.cycle_distance = sum(self.travel_times)
+        self.cycle_distance = sum(self.travel_distances)
         
         # Updating the ending time of the cycle
         self.ending_time = self.starting_time + timedelta(minutes=self.cycle_time)
