@@ -305,11 +305,13 @@ class Cycle:
         self.collected_quantities.append(choice.collectable_volume)
         choice.current_volume -= choice.collectable_volume
 
-        # Updating times
+        # Updating distances
         self.travel_distances.append(choice.distance)
+        self.cycle_distance = sum(self.travel_distances)
+
+        # Updating times
         self.travel_times.append(choice.time_to_go)
         self.manoever_times.append(choice.manoever_time)
-
         self.cycle_time += choice.time_to_go + choice.manoever_time +  optimization_parameters.vehicle.loading_time
         self.current_time = self.starting_time + timedelta(minutes=self.cycle_time)
         self.potential_ending_time = self.current_time + timedelta(minutes=choice.return_time)
@@ -379,6 +381,9 @@ class Journey:
                 self.journey_time == other.journey_time and
                 self.journey_volume == other.journey_volume and
                 self.journey_distance == other.journey_distance)
+
+    def __hash__(self):
+        return hash((self.starting_time, self.ending_time, self.journey_time, self.journey_volume, self.journey_distance))
 
     def add_cycle(self, cycle: Cycle) -> List[Cycle]:
         self.journey_time += cycle.cycle_time

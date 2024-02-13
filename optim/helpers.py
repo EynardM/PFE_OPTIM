@@ -144,36 +144,39 @@ def optim_cycle(cycle: Cycle, choice: Tank, choice_position: int, unused_tanks: 
     # Slicing the cycle till the choice_position
     new_cycle = get_unchanged_cycle(cycle=cycle, choice_position=choice_position, optimization_parameters=optimization_parameters)
 
-    # Updating the attributes of the chosen tank (depending on the sliced cycle) 
-    update_choice_attributes(cycle=cycle, choice=choice, optimization_parameters=optimization_parameters)
-
     # Get the list of remaining tanks for the optimization of the cycle
     remaining_tanks = get_remaining_tanks(cycle=cycle, choice_position=choice_position, unused_tanks=unused_tanks)
 
+    # Updating the attributes of the chosen tank (depending on the sliced cycle) 
+    update_choice_attributes(cycle=new_cycle, choice=choice, optimization_parameters=optimization_parameters)
+
     # Adding chosen tank 
     choice_flag = True
-    if choice_flag and check_choice(cycle=new_cycle, choice=choice, optimization_parameters=optimization_parameters):
-        new_cycle.add_tank(choice=choice, optimization_parameters=optimization_parameters)
-        choice_flag = False
-    else :
-        return None
+    processing_cycle = False
+    if choice_flag:
+        if check_choice(cycle=new_cycle, choice=choice, optimization_parameters=optimization_parameters):
+            new_cycle.add_tank(choice=choice, optimization_parameters=optimization_parameters)
+            choice_flag = False
+            processing_cycle = True
+        else :
+            return None
     
-    # Applying the filters to know which tanks are available for a collect mission
-    available_tanks = filter_hours_cycle(cycle=new_cycle, tanks=remaining_tanks, optimization_parameters=optimization_parameters)  
-    filled_enough_tanks = filter_enough_filled_cycle(cycle=new_cycle, tanks=available_tanks, optimization_parameters=optimization_parameters)
-    final_tanks = filter_return_cycle(cycle=new_cycle, tanks=filled_enough_tanks, optimization_parameters=optimization_parameters)
-
-    if not final_tanks:
-        if cycle.current_time < cycle.ending_time:
-            cycle.ending_time = cycle.current_time
-        return new_cycle
-    
-    else : 
-        last_point = cycle.get_last_point(storehouse=optimization_parameters.storehouse)
-        tank = choice_function(starting_point=last_point, tanks=final_tanks, method=method)
-        cycle.add_tank(choice=tank, optimization_parameters=optimization_parameters)
-        remaining_tanks.remove(tank)
-
+    while(processing_cycle):
+        # Applying the filters to know which tanks are available for a collect mission
+        available_tanks = filter_hours_cycle(cycle=new_cycle, tanks=remaining_tanks, optimization_parameters=optimization_parameters)  
+        filled_enough_tanks = filter_enough_filled_cycle(cycle=new_cycle, tanks=available_tanks, optimization_parameters=optimization_parameters)
+        final_tanks = filter_return_cycle(cycle=new_cycle, tanks=filled_enough_tanks, optimization_parameters=optimization_parameters)
+        
+        if not final_tanks:
+            # if new_cycle.current_time < new_cycle.ending_time:
+            #     new_cycle.ending_time = new_cycle.current_time
+            processing_cycle = False
+        else : 
+            last_point = new_cycle.get_last_point(storehouse=optimization_parameters.storehouse)
+            tank = choice_function(starting_point=last_point, tanks=final_tanks, method=method)
+            new_cycle.add_tank(choice=tank, optimization_parameters=optimization_parameters)
+            remaining_tanks.remove(tank)
+    return new_cycle
 def generate_neighbour_journey(journey: Journey, new_cycle: Cycle, cycle_index: int) -> Journey :
     new_journey = Journey(starting_time=journey.starting_time, ending_time=journey.ending_time)
     for i, cycle in enumerate(journey.cycles):

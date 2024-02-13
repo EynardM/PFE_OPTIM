@@ -134,10 +134,8 @@ def filter_return(tanks: List[Tank], journey: Journey, cycle: Cycle, optimizatio
     return final_tanks
 
 def choice_function(starting_point: Union[Tank, Storehouse], tanks: List[Tank], method):
-    methods = ["R", "Q", "D", "E", "HQD", "HQDE"]
-
     if method == "Random":
-        method = random.choice(methods)
+        method = random.choice(METHODS)
     if method == "R":
         tank_chosen = random.choice(tanks)
     if method == "Q":
