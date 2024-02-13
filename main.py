@@ -49,11 +49,11 @@ def main():
             visited_journeys[optimization_parameters.method] = [journey]
 
         permutation(journey=journey, tanks=tanks, optimization_parameters=optimization_parameters)
-        # journeys.append(journey)
-        # score, volume, distance, emergency = journey.evaluation(tanks=tanks)
-        # solutions.append({"method": optimization_parameters.method, "score": score, "volume": volume, "distance": distance, "emergency": emergency})
+        journeys.append(journey)
+        score, volume, distance, emergency = journey.evaluation(tanks=tanks)
+        solutions.append({"method": optimization_parameters.method, "score": score, "volume": volume, "distance": distance, "emergency": emergency})
         # print(json.dumps(journey.to_dict(), indent=4)) 
-
+    print(len(journeys))
     # plot_pareto_front_3d(solutions)
 
 # Appel de la fonction main

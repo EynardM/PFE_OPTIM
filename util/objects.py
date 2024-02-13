@@ -268,10 +268,10 @@ class Maker:
                f"id={self.id}, latitude={self.latitude})"
 
 class Cycle:
-    def __init__(self, starting_time):
+    def __init__(self, starting_time, ending_time=None):
         self.starting_time = starting_time
         self.current_time = starting_time
-        self.ending_time = None
+        self.ending_time = ending_time
         self.potential_ending_time = None
 
         self.selected_tanks = []
@@ -288,6 +288,7 @@ class Cycle:
         tanks_ids = ", ".join([f"Tank : {tank.id}" for tank in self.selected_tanks])
         tanks_collected_quantities = ", ".join([f"Collected quantity : {quantity}" for quantity in self.collected_quantities])
         colored(self.starting_time, "green", "starting_time")
+        colored(self.current_time, "green", "current_time")
         colored(self.ending_time, "green", "ending_time")
         colored(self.cycle_time, "blue", "cycle_time")
         colored(self.cycle_volume, "blue", "cycle_volume")
