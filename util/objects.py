@@ -190,7 +190,7 @@ class Tank:
         self.mean_zeros_fill_seq = None
         self.std_zeros_fill_seq = None
         self.filling_vector = None
-        
+        self.distance = None
         self.time_to_go = None
         self.collectable_volume = None
         self.manoever_time = None
@@ -268,14 +268,15 @@ class Maker:
                f"id={self.id}, latitude={self.latitude})"
 
 class Cycle:
-    def __init__(self, starting_time):
+    def __init__(self, starting_time, ending_time=None):
         self.starting_time = starting_time
         self.current_time = starting_time
-        self.ending_time = None
+        self.ending_time = ending_time
         self.potential_ending_time = None
 
         self.selected_tanks = []
         self.collected_quantities = []
+        self.travel_distances = []
         self.travel_times = []
         self.manoever_times = []
 
@@ -287,6 +288,7 @@ class Cycle:
         tanks_ids = ", ".join([f"Tank : {tank.id}" for tank in self.selected_tanks])
         tanks_collected_quantities = ", ".join([f"Collected quantity : {quantity}" for quantity in self.collected_quantities])
         colored(self.starting_time, "green", "starting_time")
+        colored(self.current_time, "green", "current_time")
         colored(self.ending_time, "green", "ending_time")
         colored(self.cycle_time, "blue", "cycle_time")
         colored(self.cycle_volume, "blue", "cycle_volume")
@@ -303,10 +305,13 @@ class Cycle:
         self.collected_quantities.append(choice.collectable_volume)
         choice.current_volume -= choice.collectable_volume
 
+        # Updating distances
+        self.travel_distances.append(choice.distance)
+        self.cycle_distance = sum(self.travel_distances)
+
         # Updating times
         self.travel_times.append(choice.time_to_go)
         self.manoever_times.append(choice.manoever_time)
-
         self.cycle_time += choice.time_to_go + choice.manoever_time +  optimization_parameters.vehicle.loading_time
         self.current_time = self.starting_time + timedelta(minutes=self.cycle_time)
         self.potential_ending_time = self.current_time + timedelta(minutes=choice.return_time)
@@ -333,7 +338,7 @@ class Cycle:
 
         # Updating cycle values
         self.cycle_time += last_tank.return_time
-        self.cycle_distance = sum(self.travel_times)
+        self.cycle_distance = sum(self.travel_distances)
         
         # Updating the ending time of the cycle
         self.ending_time = self.starting_time + timedelta(minutes=self.cycle_time)
@@ -376,6 +381,9 @@ class Journey:
                 self.journey_time == other.journey_time and
                 self.journey_volume == other.journey_volume and
                 self.journey_distance == other.journey_distance)
+
+    def __hash__(self):
+        return hash((self.starting_time, self.ending_time, self.journey_time, self.journey_volume, self.journey_distance))
 
     def add_cycle(self, cycle: Cycle) -> List[Cycle]:
         self.journey_time += cycle.cycle_time

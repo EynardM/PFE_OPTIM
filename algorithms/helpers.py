@@ -102,7 +102,8 @@ def filter_hours(journey: Journey, cycle: Cycle, optimization_parameters: Optimi
     last_point = cycle.get_last_point(storehouse=optimization_parameters.storehouse)
     available_tanks = []
     for tank in optimization_parameters.tanks: 
-        tank.time_to_go = ((calculate_distance(last_point, tank) * 60) / optimization_parameters.vehicle.speed) * K
+        tank.distance = calculate_distance(last_point, tank)
+        tank.time_to_go = ((tank.distance * 60) / optimization_parameters.vehicle.speed) * K
         ending_time = journey.current_time + timedelta(minutes=tank.time_to_go)
         if tank.is_available(dt=ending_time):
             available_tanks.append(tank)
@@ -133,10 +134,8 @@ def filter_return(tanks: List[Tank], journey: Journey, cycle: Cycle, optimizatio
     return final_tanks
 
 def choice_function(starting_point: Union[Tank, Storehouse], tanks: List[Tank], method):
-    methods = ["R", "Q", "D", "E", "HQD", "HQDE"]
-
     if method == "Random":
-        method = random.choice(methods)
+        method = random.choice(METHODS)
     if method == "R":
         tank_chosen = random.choice(tanks)
     if method == "Q":
