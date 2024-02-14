@@ -313,6 +313,7 @@ class Cycle:
         self.travel_times.append(choice.time_to_go)
         self.manoever_times.append(choice.manoever_time)
         self.cycle_time += choice.time_to_go + choice.manoever_time +  optimization_parameters.vehicle.loading_time
+
         self.current_time = self.starting_time + timedelta(minutes=self.cycle_time)
         self.potential_ending_time = self.current_time + timedelta(minutes=choice.return_time)
 
@@ -344,9 +345,14 @@ class Cycle:
         self.ending_time = self.starting_time + timedelta(minutes=self.cycle_time)
 
     def to_dict(self):
+        if self.ending_time is None:
+            ending_time = None
+        else :
+            ending_time = self.ending_time.strftime("%Y-%m-%d %H:%M:%S")
         return {
             "starting_time": self.starting_time.strftime("%Y-%m-%d %H:%M:%S"),
-            "ending_time": self.ending_time.strftime("%Y-%m-%d %H:%M:%S") ,
+            "current_time": self.current_time.strftime("%Y-%m-%d %H:%M:%S"),
+            "ending_time": ending_time,
             "selected_tanks": [tank.id for tank in self.selected_tanks],
             "collected_quantities": [quantity for quantity in self.collected_quantities],
             "cycle_time": self.cycle_time,
@@ -355,13 +361,13 @@ class Cycle:
         }
     
 class Journey:
-    def __init__(self, starting_time: datetime, ending_time: datetime):
+    def __init__(self, starting_time: datetime, ending_time: datetime, break_time=0):
         self.starting_time = starting_time
         self.current_time = starting_time
         self.ending_time = ending_time
         self.cycles = []
 
-        self.break_time = 0
+        self.break_time = break_time
         self.journey_time = 0
         self.journey_volume = 0
         self.journey_distance = 0

@@ -45,6 +45,7 @@ def get_random_position(cycles_positions):
         return None, None
     
 # Optim cycle functions
+    
 def get_unchanged_cycle(cycle: Cycle, choice_position: int, optimization_parameters: OptimizationParameters) -> Cycle:
     new_cycle = Cycle(starting_time=cycle.starting_time, ending_time=cycle.ending_time)
 
@@ -177,6 +178,7 @@ def optim_cycle(cycle: Cycle, choice: Tank, choice_position: int, unused_tanks: 
             new_cycle.add_tank(choice=tank, optimization_parameters=optimization_parameters)
             remaining_tanks.remove(tank)
     return new_cycle
+
 def generate_neighbour_journey(journey: Journey, new_cycle: Cycle, cycle_index: int) -> Journey :
     new_journey = Journey(starting_time=journey.starting_time, ending_time=journey.ending_time)
     for i, cycle in enumerate(journey.cycles):
