@@ -1,0 +1,282 @@
+iter = 0
+pair n°0/22
+pair n°1/22
+pair n°2/22
+pair n°3/22
+pair n°4/22
+pair n°5/22
+pair n°6/22
+worked
+{
+    "start_time": "2024-02-14 07:00:00",
+    "end_time": "2024-02-14 15:00:00",
+    "cycles": [
+        {
+            "starting_time": "2024-02-14 07:00:00",
+            "current_time": "2024-02-14 10:09:31",
+            "ending_time": "2024-02-14 11:03:35",
+            "selected_tanks": [
+                "2cfc21d05e0116624b3147434ad79d1a",
+                "a1b7da8cde08c9dc94c2ef1525b5610b",
+                "bf49c3f75cc32eb224d5dcb19cb45d27",
+                "d06a9c1255b7b8db5cfac56f0f4e4204"
+            ],
+            "collected_quantities": [
+                34.34,
+                58.81,
+                165.0,
+                71.85000000000002
+            ],
+            "cycle_time": 243.59666969510016,
+            "cycle_volume": 330.0,
+            "cycle_distance": 12.065584637321257
+        },
+        {
+            "starting_time": "2024-02-14 11:03:35",
+            "current_time": "2024-02-14 12:35:26",
+            "ending_time": "2024-02-14 13:15:58",
+            "selected_tanks": [
+                "1b0c00fd3092fed1721722e29fabd4cb",
+                "e1a9922ad360c1213eda5f8a62c7d3db",
+                "8fdba7fd4996f5d6a19b6bc9367b273d",
+                "2deb44350db6d37703f33fc1eff37320"
+            ],
+            "collected_quantities": [
+                76.32,
+                36.54,
+                65.05,
+                50.32
+            ],
+            "cycle_time": 132.38386385042907,
+            "cycle_volume": 228.22999999999996,
+            "cycle_distance": 1.1282026729140584
+        },
+        {
+            "starting_time": "2024-02-14 14:00:00",
+            "current_time": "2024-02-14 14:18:36",
+            "ending_time": "2024-02-14 14:37:11",
+            "selected_tanks": [
+                "22345c1890c88f24b367c6f643d4f09f"
+            ],
+            "collected_quantities": [
+                29.0
+            ],
+            "cycle_time": 37.1827037742004,
+            "cycle_volume": 29.0,
+            "cycle_distance": 0.08641898588752504
+        }
+    ],
+    "journey_time": 457.19657065306296,
+    "journey_volume": 587.23,
+    "journey_distance": 13.28020629612284,
+    "break_time": 0
+}
+{
+    "start_time": "2024-02-14 07:00:00",
+    "end_time": "2024-02-14 15:00:00",
+    "cycles": [
+        {
+            "starting_time": "2024-02-14 07:00:00",
+            "current_time": "2024-02-14 10:09:31",
+            "ending_time": "2024-02-14 11:03:35",
+            "selected_tanks": [
+                "2cfc21d05e0116624b3147434ad79d1a",
+                "a1b7da8cde08c9dc94c2ef1525b5610b",
+                "bf49c3f75cc32eb224d5dcb19cb45d27",
+                "d06a9c1255b7b8db5cfac56f0f4e4204"
+            ],
+            "collected_quantities": [
+                34.34,
+                58.81,
+                165.0,
+                71.85000000000002
+            ],
+            "cycle_time": 189.52467709857007,
+            "cycle_volume": 330.0,
+            "cycle_distance": 12.065584637321257
+        },
+        {
+            "starting_time": "2024-02-14 11:03:35",
+            "current_time": "2024-02-14 12:35:00",
+            "ending_time": "2024-02-14 13:15:58",
+            "selected_tanks": [
+                "e1a9922ad360c1213eda5f8a62c7d3db",
+                "1b0c00fd3092fed1721722e29fabd4cb",
+                "8fdba7fd4996f5d6a19b6bc9367b273d",
+                "2deb44350db6d37703f33fc1eff37320"
+            ],
+            "collected_quantities": [
+                36.54,
+                76.32,
+                65.05,
+                50.32
+            ],
+            "cycle_time": 91.41443147244269,
+            "cycle_volume": 228.22999999999996,
+            "cycle_distance": 1.073928934055336
+        },
+        {
+            "starting_time": "2024-02-14 14:00:00",
+            "current_time": "2024-02-14 14:18:36",
+            "ending_time": "2024-02-14 14:37:11",
+            "selected_tanks": [
+                "22345c1890c88f24b367c6f643d4f09f"
+            ],
+            "collected_quantities": [
+                29.0
+            ],
+            "cycle_time": 18.5913518871002,
+            "cycle_volume": 29.0,
+            "cycle_distance": 0.08641898588752504
+        }
+    ],
+    "journey_time": 299.53046045811294,
+    "journey_volume": 587.23,
+    "journey_distance": 13.225932557264118,
+    "break_time": 0
+}
+pair n°7/22
+pair n°8/22
+pair n°9/22
+worked
+{
+    "start_time": "2024-02-14 07:00:00",
+    "end_time": "2024-02-14 15:00:00",
+    "cycles": [
+        {
+            "starting_time": "2024-02-14 07:00:00",
+            "current_time": "2024-02-14 10:09:31",
+            "ending_time": "2024-02-14 11:03:35",
+            "selected_tanks": [
+                "2cfc21d05e0116624b3147434ad79d1a",
+                "a1b7da8cde08c9dc94c2ef1525b5610b",
+                "bf49c3f75cc32eb224d5dcb19cb45d27",
+                "d06a9c1255b7b8db5cfac56f0f4e4204"
+            ],
+            "collected_quantities": [
+                34.34,
+                58.81,
+                165.0,
+                71.85000000000002
+            ],
+            "cycle_time": 243.59666969510016,
+            "cycle_volume": 330.0,
+            "cycle_distance": 12.065584637321257
+        },
+        {
+            "starting_time": "2024-02-14 11:03:35",
+            "current_time": "2024-02-14 12:35:26",
+            "ending_time": "2024-02-14 13:15:58",
+            "selected_tanks": [
+                "1b0c00fd3092fed1721722e29fabd4cb",
+                "e1a9922ad360c1213eda5f8a62c7d3db",
+                "8fdba7fd4996f5d6a19b6bc9367b273d",
+                "2deb44350db6d37703f33fc1eff37320"
+            ],
+            "collected_quantities": [
+                76.32,
+                36.54,
+                65.05,
+                50.32
+            ],
+            "cycle_time": 132.38386385042907,
+            "cycle_volume": 228.22999999999996,
+            "cycle_distance": 1.1282026729140584
+        },
+        {
+            "starting_time": "2024-02-14 14:00:00",
+            "current_time": "2024-02-14 14:18:36",
+            "ending_time": "2024-02-14 14:37:11",
+            "selected_tanks": [
+                "22345c1890c88f24b367c6f643d4f09f"
+            ],
+            "collected_quantities": [
+                29.0
+            ],
+            "cycle_time": 37.1827037742004,
+            "cycle_volume": 29.0,
+            "cycle_distance": 0.08641898588752504
+        }
+    ],
+    "journey_time": 457.19657065306296,
+    "journey_volume": 587.23,
+    "journey_distance": 13.28020629612284,
+    "break_time": 0
+}
+{
+    "start_time": "2024-02-14 07:00:00",
+    "end_time": "2024-02-14 15:00:00",
+    "cycles": [
+        {
+            "starting_time": "2024-02-14 07:00:00",
+            "current_time": "2024-02-14 10:09:31",
+            "ending_time": "2024-02-14 11:03:35",
+            "selected_tanks": [
+                "2cfc21d05e0116624b3147434ad79d1a",
+                "a1b7da8cde08c9dc94c2ef1525b5610b",
+                "bf49c3f75cc32eb224d5dcb19cb45d27",
+                "d06a9c1255b7b8db5cfac56f0f4e4204"
+            ],
+            "collected_quantities": [
+                34.34,
+                58.81,
+                165.0,
+                71.85000000000002
+            ],
+            "cycle_time": 189.52467709857007,
+            "cycle_volume": 330.0,
+            "cycle_distance": 12.065584637321257
+        },
+        {
+            "starting_time": "2024-02-14 11:03:35",
+            "current_time": "2024-02-14 12:35:00",
+            "ending_time": "2024-02-14 13:15:58",
+            "selected_tanks": [
+                "e1a9922ad360c1213eda5f8a62c7d3db",
+                "1b0c00fd3092fed1721722e29fabd4cb",
+                "8fdba7fd4996f5d6a19b6bc9367b273d",
+                "2deb44350db6d37703f33fc1eff37320"
+            ],
+            "collected_quantities": [
+                36.54,
+                76.32,
+                65.05,
+                50.32
+            ],
+            "cycle_time": 91.41443147244269,
+            "cycle_volume": 228.22999999999996,
+            "cycle_distance": 1.073928934055336
+        },
+        {
+            "starting_time": "2024-02-14 14:00:00",
+            "current_time": "2024-02-14 14:18:36",
+            "ending_time": "2024-02-14 14:37:11",
+            "selected_tanks": [
+                "22345c1890c88f24b367c6f643d4f09f"
+            ],
+            "collected_quantities": [
+                29.0
+            ],
+            "cycle_time": 18.5913518871002,
+            "cycle_volume": 29.0,
+            "cycle_distance": 0.08641898588752504
+        }
+    ],
+    "journey_time": 299.53046045811294,
+    "journey_volume": 587.23,
+    "journey_distance": 13.225932557264118,
+    "break_time": 0
+}
+pair n°10/22
+pair n°11/22
+pair n°12/22
+pair n°13/22
+pair n°14/22
+pair n°15/22
+pair n°16/22
+pair n°17/22
+pair n°18/22
+pair n°19/22
+pair n°20/22
+pair n°21/22
+Time taken by main: 1.3800787925720215

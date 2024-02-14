@@ -98,20 +98,20 @@ def calculate_distance(obj1:  Union[Tank, Storehouse], obj2:  Union[Tank, Storeh
 
     return distance
 
-def filter_hours(journey: Journey, cycle: Cycle, optimization_parameters: OptimizationParameters) -> List[Tank]:
+def filter_hours(cycle: Cycle, optimization_parameters: OptimizationParameters) -> List[Tank]:
     last_point = cycle.get_last_point(storehouse=optimization_parameters.storehouse)
     available_tanks = []
     for tank in optimization_parameters.tanks: 
         tank.distance = calculate_distance(last_point, tank)
         tank.time_to_go = ((tank.distance * 60) / optimization_parameters.vehicle.speed) * K
-        ending_time = journey.current_time + timedelta(minutes=tank.time_to_go)
+        ending_time = cycle.current_time + timedelta(minutes=tank.time_to_go)
         if tank.is_available(dt=ending_time):
             available_tanks.append(tank)
     return available_tanks
 
-def filter_enough_filled(tanks: List[Tank], journey: Journey, cycle: Cycle, optimization_parameters: OptimizationParameters) -> List[Tank]:
+def filter_enough_filled(tanks: List[Tank], cycle: Cycle, optimization_parameters: OptimizationParameters) -> List[Tank]:
     filled_enough_tanks = []  
-    for tank in optimization_parameters.tanks:
+    for tank in tanks:
         if tank.current_volume <= optimization_parameters.vehicle.capacity - cycle.cycle_volume:
             tank.collectable_volume = tank.current_volume
             filled_enough_tanks.append(tank)
@@ -128,8 +128,8 @@ def filter_return(tanks: List[Tank], journey: Journey, cycle: Cycle, optimizatio
         total_collect_time = tank.time_to_go + tank.manoever_time + optimization_parameters.vehicle.loading_time
         tank.time_to_storehouse = ((calculate_distance(tank, optimization_parameters.storehouse) * 60) / optimization_parameters.vehicle.speed) * K
         tank.return_time = tank.time_to_storehouse + ((cycle.cycle_volume + tank.collectable_volume) / optimization_parameters.vehicle.draining_speed) + optimization_parameters.vehicle.loading_time
-        remaining_time = (journey.ending_time.hour - journey.starting_time.hour)*60 - journey.journey_time
-        if remaining_time - (cycle.cycle_time + total_collect_time + tank.return_time) > 0:
+        remaining_datetime = journey.ending_time - journey.current_time
+        if remaining_datetime > timedelta(minutes=(cycle.cycle_time + total_collect_time + tank.return_time)):
             final_tanks.append(tank)
     return final_tanks
 

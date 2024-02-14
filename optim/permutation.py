@@ -2,7 +2,7 @@ from util.imports import *
 from util.locations import *
 from util.helpers import *
 from util.objects import *
-from optim.helpers import *
+from optim.permutation_helpers import *
 
 def permutation(journey: Journey, tanks: List[Tank], optimization_parameters: OptimizationParameters):
     # Get unused tanks

@@ -16,23 +16,20 @@ def run_slot(journey: Journey, optimization_parameters: OptimizationParameters, 
         journey.break_time += (slot[0] - journey.ending_time).total_seconds()/60
         journey.current_time = slot[0]
         journey.ending_time = slot[1]
-
     processing_journey = True
     while(processing_journey):
         starting_time = get_starting_time(journey=journey, optimization_parameters=optimization_parameters)
-        
+
         processing_cycle = True
         cycle = Cycle(starting_time=starting_time)
-        
-        while(processing_cycle):
 
+        while(processing_cycle):
             if journey.current_time >= journey.ending_time:
                 processing_cycle = False
                 processing_journey = False
                 continue
+            available_tanks = filter_hours(cycle=cycle, optimization_parameters=optimization_parameters)  
 
-            available_tanks = filter_hours(journey=journey, cycle=cycle, optimization_parameters=optimization_parameters)  
-           
             if not available_tanks:
                 if not cycle.is_empty():
                     cycle.storehouse_return(optimization_parameters=optimization_parameters)
@@ -46,7 +43,8 @@ def run_slot(journey: Journey, optimization_parameters: OptimizationParameters, 
                 processing_cycle = False
                 continue
 
-            filled_enough_tanks = filter_enough_filled(tanks=available_tanks, journey=journey, cycle=cycle, optimization_parameters=optimization_parameters)
+            filled_enough_tanks = filter_enough_filled(tanks=available_tanks, cycle=cycle, optimization_parameters=optimization_parameters)
+
             if not filled_enough_tanks:
                 cycle.storehouse_return(optimization_parameters=optimization_parameters)
                 journey.add_cycle(cycle=cycle)
@@ -55,6 +53,7 @@ def run_slot(journey: Journey, optimization_parameters: OptimizationParameters, 
                 continue
 
             final_candidates = filter_return(tanks=filled_enough_tanks, journey=journey, cycle=cycle, optimization_parameters=optimization_parameters)
+
             if not final_candidates:
                 if not cycle.is_empty():
                     cycle.storehouse_return(optimization_parameters=optimization_parameters)
@@ -81,7 +80,9 @@ def run(optimization_parameters: OptimizationParameters):
         for i,slot in enumerate(optimization_parameters.agent.daily_working_slot):
             if i == 0:
                 starting_time, ending_time = slot
-                journey = Journey(starting_time=starting_time, ending_time=ending_time)      
-            journey = run_slot(journey=journey, optimization_parameters=optimization_parameters, slot=slot)
+                journey = Journey(starting_time=starting_time, ending_time=ending_time) 
+                journey = run_slot(journey=journey, optimization_parameters=optimization_parameters, slot=slot)
+            else :
+                journey = run_slot(journey=journey, optimization_parameters=optimization_parameters, slot=slot)
     return journey
             
