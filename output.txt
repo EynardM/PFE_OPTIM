@@ -1,0 +1,2591 @@
+Meilleures solutions pour la méthode D:
+Score: 755.0565246457085, Volume: 758.22, Distance: 2.8419194262516676, Emergency: 0.3215559280398993
+Score: 742.0418182725019, Volume: 745.6500000000001, Distance: 3.283022728638298, Emergency: 0.32515899885976407
+Score: 719.7307682706559, Volume: 722.8100000000001, Distance: 2.7471932124121436, Emergency: 0.3320385169320533
+Meilleures solutions pour la méthode E:
+Score: 777.4015343872212, Volume: 783.51, Distance: 5.794527154618439, Emergency: 0.3139384581603812
+Score: 776.8682717113979, Volume: 782.87, Distance: 5.687597059357339, Emergency: 0.31413122924471854
+Score: 742.3146937637753, Volume: 749.3299999999999, Distance: 6.691072597341472, Emergency: 0.3242336388832727
+Meilleures solutions pour la méthode HDE:
+Score: 722.3168069919457, Volume: 726.8799999999999, Distance: 4.2319169801025325, Emergency: 0.33127602795174177
+Score: 683.0914434542842, Volume: 686.59, Distance: 3.155328049353909, Emergency: 0.343228496361968
+Score: 673.6691315320297, Volume: 677.57, Distance: 3.5549231041384375, Emergency: 0.34594536383184754
+Meilleures solutions pour la méthode HQD:
+Score: 746.3611945265422, Volume: 754.13, Distance: 7.446017617706966, Emergency: 0.32278785575074265
+Score: 691.8103475062792, Volume: 707.37, Distance: 15.184571756136302, Emergency: 0.37508073758448424
+Score: 687.1546988406986, Volume: 698.3900000000001, Distance: 10.895724146924211, Emergency: 0.33957701237724863
+Meilleures solutions pour la méthode HQDE:
+Score: 746.3611945265422, Volume: 754.13, Distance: 7.446017617706966, Emergency: 0.32278785575074265
+Score: 691.8103475062792, Volume: 707.37, Distance: 15.184571756136302, Emergency: 0.37508073758448424
+Score: 687.1546988406986, Volume: 698.3900000000001, Distance: 10.895724146924211, Emergency: 0.33957701237724863
+Meilleures solutions pour la méthode HQE:
+Score: 737.28634102213, Volume: 744.87, Distance: 7.258081965492734, Emergency: 0.3255770123772487
+Score: 691.8103475062792, Volume: 707.37, Distance: 15.184571756136302, Emergency: 0.37508073758448424
+Score: 687.1546988406986, Volume: 698.3900000000001, Distance: 10.895724146924211, Emergency: 0.33957701237724863
+Meilleures solutions pour la méthode Q:
+Score: 737.28634102213, Volume: 744.87, Distance: 7.258081965492734, Emergency: 0.3255770123772487
+Score: 691.8103475062792, Volume: 707.37, Distance: 15.184571756136302, Emergency: 0.37508073758448424
+Score: 687.1546988406986, Volume: 698.3900000000001, Distance: 10.895724146924211, Emergency: 0.33957701237724863
+Meilleures solutions pour la méthode R:
+Score: 665.2814538685608, Volume: 673.05, Distance: 7.421239321824154, Emergency: 0.34730680961498006
+Score: 625.4730168889043, Volume: 633.85, Distance: 8.01814941344069, Emergency: 0.35883369765494477
+Score: 594.8158383117986, Volume: 600.53, Distance: 5.345289568565827, Emergency: 0.36887211963555017
+Meilleures solutions pour la méthode Random:
+Score: 760.81909049571, Volume: 766.81, Distance: 5.6721208771610225, Emergency: 0.31878862712893835
+Score: 729.6612011115747, Volume: 736.72, Distance: 6.730767056771028, Emergency: 0.32803183165435706
+Score: 724.4413488560034, Volume: 730.25, Distance: 5.478670517161468, Emergency: 0.32998062683507995
+Méthode D: 75.00%
+Méthode E: 16.67%
+Méthode HDE: 0.00%
+Méthode HQD: 0.00%
+Méthode HQDE: 0.00%
+Méthode HQE: 0.00%
+Méthode Q: 0.00%
+Méthode R: 0.00%
+Méthode Random: 8.33%
+Time taken by get_basic_journeys: 8.101133823394775
+Journey n°0/396
+iter : n°0
+progress
+progress
+progress
+progress
+progress
+iter : n°1
+progress
+progress
+progress
+progress
+progress
+progress
+iter : n°2
+Time taken by hill_climbing: 16.49589467048645
+Journey n°1/396
+iter : n°0
+progress
+progress
+progress
+progress
+progress
+progress
+iter : n°1
+progress
+progress
+iter : n°2
+progress
+progress
+progress
+progress
+iter : n°3
+progress
+progress
+progress
+progress
+progress
+iter : n°4
+progress
+progress
+progress
+progress
+iter : n°5
+Time taken by hill_climbing: 40.342087507247925
+Journey n°2/396
+iter : n°0
+progress
+progress
+progress
+progress
+iter : n°1
+Time taken by hill_climbing: 19.16766333580017
+Journey n°3/396
+iter : n°0
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+iter : n°1
+progress
+iter : n°2
+progress
+progress
+progress
+iter : n°3
+progress
+progress
+progress
+progress
+progress
+iter : n°4
+progress
+progress
+iter : n°5
+progress
+progress
+progress
+progress
+progress
+progress
+iter : n°6
+Time taken by hill_climbing: 64.20760750770569
+Journey n°4/396
+iter : n°0
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+iter : n°1
+progress
+progress
+progress
+progress
+progress
+progress
+iter : n°2
+progress
+progress
+progress
+progress
+progress
+iter : n°3
+progress
+iter : n°4
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+iter : n°5
+progress
+progress
+progress
+iter : n°6
+Time taken by hill_climbing: 55.77410650253296
+Journey n°5/396
+iter : n°0
+Time taken by hill_climbing: 6.152026176452637
+Journey n°6/396
+iter : n°0
+progress
+progress
+iter : n°1
+progress
+iter : n°2
+Time taken by hill_climbing: 18.339984893798828
+Journey n°7/396
+iter : n°0
+progress
+iter : n°1
+progress
+progress
+iter : n°2
+Time taken by hill_climbing: 20.217076301574707
+Journey n°8/396
+iter : n°0
+Time taken by hill_climbing: 5.745795965194702
+Journey n°9/396
+iter : n°0
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+iter : n°1
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+iter : n°2
+Time taken by hill_climbing: 19.603832721710205
+Journey n°10/396
+iter : n°0
+progress
+progress
+iter : n°1
+progress
+iter : n°2
+Time taken by hill_climbing: 12.069185018539429
+Journey n°11/396
+iter : n°0
+progress
+iter : n°1
+progress
+iter : n°2
+progress
+progress
+iter : n°3
+Time taken by hill_climbing: 17.402326107025146
+Journey n°12/396
+iter : n°0
+Time taken by hill_climbing: 5.796718120574951
+Journey n°13/396
+iter : n°0
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+iter : n°1
+progress
+progress
+progress
+progress
+iter : n°2
+Time taken by hill_climbing: 18.25783896446228
+Journey n°14/396
+iter : n°0
+Time taken by hill_climbing: 5.735436201095581
+Journey n°15/396
+iter : n°0
+progress
+progress
+progress
+progress
+iter : n°1
+progress
+iter : n°2
+Time taken by hill_climbing: 17.240939140319824
+Journey n°16/396
+iter : n°0
+progress
+iter : n°1
+progress
+progress
+progress
+progress
+iter : n°2
+progress
+progress
+progress
+progress
+iter : n°3
+Time taken by hill_climbing: 35.65628147125244
+Journey n°17/396
+iter : n°0
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+iter : n°1
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+iter : n°2
+progress
+progress
+progress
+progress
+progress
+progress
+iter : n°3
+Time taken by hill_climbing: 34.26174855232239
+Journey n°18/396
+iter : n°0
+progress
+progress
+iter : n°1
+Time taken by hill_climbing: 14.809185028076172
+Journey n°19/396
+iter : n°0
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+iter : n°1
+Time taken by hill_climbing: 13.739758729934692
+Journey n°20/396
+iter : n°0
+Time taken by hill_climbing: 9.416961669921875
+Journey n°21/396
+iter : n°0
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+iter : n°1
+progress
+progress
+progress
+progress
+progress
+iter : n°2
+Time taken by hill_climbing: 25.047459840774536
+Journey n°22/396
+iter : n°0
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+iter : n°1
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+iter : n°2
+Time taken by hill_climbing: 22.138725757598877
+Journey n°23/396
+iter : n°0
+progress
+progress
+progress
+progress
+progress
+iter : n°1
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+iter : n°2
+progress
+progress
+progress
+progress
+iter : n°3
+progress
+progress
+progress
+progress
+iter : n°4
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+iter : n°5
+Time taken by hill_climbing: 49.495906829833984
+Journey n°24/396
+iter : n°0
+Time taken by hill_climbing: 7.785309314727783
+Journey n°25/396
+iter : n°0
+Time taken by hill_climbing: 9.04038119316101
+Journey n°26/396
+iter : n°0
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+iter : n°1
+progress
+iter : n°2
+progress
+iter : n°3
+Time taken by hill_climbing: 32.490251302719116
+Journey n°27/396
+iter : n°0
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+iter : n°1
+progress
+progress
+progress
+progress
+iter : n°2
+progress
+progress
+progress
+progress
+progress
+iter : n°3
+Time taken by hill_climbing: 29.6014506816864
+Journey n°28/396
+iter : n°0
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+iter : n°1
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+iter : n°2
+Time taken by hill_climbing: 15.774892807006836
+Journey n°29/396
+iter : n°0
+Time taken by hill_climbing: 6.162018537521362
+Journey n°30/396
+iter : n°0
+progress
+iter : n°1
+Time taken by hill_climbing: 13.00076150894165
+Journey n°31/396
+iter : n°0
+progress
+iter : n°1
+progress
+progress
+iter : n°2
+Time taken by hill_climbing: 15.40258002281189
+Journey n°32/396
+iter : n°0
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+iter : n°1
+progress
+iter : n°2
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+iter : n°3
+Time taken by hill_climbing: 15.181556463241577
+Journey n°33/396
+iter : n°0
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+iter : n°1
+Time taken by hill_climbing: 8.331117153167725
+Journey n°34/396
+iter : n°0
+progress
+progress
+iter : n°1
+Time taken by hill_climbing: 11.135730743408203
+Journey n°35/396
+iter : n°0
+progress
+progress
+iter : n°1
+progress
+progress
+progress
+progress
+iter : n°2
+Time taken by hill_climbing: 10.223281145095825
+Journey n°36/396
+iter : n°0
+progress
+progress
+iter : n°1
+progress
+iter : n°2
+Time taken by hill_climbing: 5.939911842346191
+Journey n°37/396
+iter : n°0
+Time taken by hill_climbing: 3.1852662563323975
+Journey n°38/396
+iter : n°0
+Time taken by hill_climbing: 4.694493055343628
+Journey n°39/396
+iter : n°0
+progress
+iter : n°1
+progress
+progress
+iter : n°2
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+iter : n°3
+Time taken by hill_climbing: 14.148380279541016
+Journey n°40/396
+iter : n°0
+progress
+progress
+iter : n°1
+Time taken by hill_climbing: 3.52205491065979
+Journey n°41/396
+iter : n°0
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+iter : n°1
+progress
+iter : n°2
+progress
+iter : n°3
+Time taken by hill_climbing: 10.7384774684906
+Journey n°42/396
+iter : n°0
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+iter : n°1
+progress
+iter : n°2
+Time taken by hill_climbing: 10.699727535247803
+Journey n°43/396
+iter : n°0
+progress
+progress
+progress
+progress
+progress
+progress
+iter : n°1
+Time taken by hill_climbing: 10.571000576019287
+Journey n°44/396
+iter : n°0
+progress
+progress
+progress
+progress
+progress
+progress
+iter : n°1
+progress
+progress
+progress
+iter : n°2
+progress
+iter : n°3
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+iter : n°4
+Time taken by hill_climbing: 21.430477142333984
+Journey n°45/396
+iter : n°0
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+iter : n°1
+progress
+iter : n°2
+progress
+iter : n°3
+progress
+iter : n°4
+Time taken by hill_climbing: 39.13868761062622
+Journey n°46/396
+iter : n°0
+progress
+progress
+progress
+progress
+iter : n°1
+progress
+iter : n°2
+progress
+progress
+progress
+progress
+progress
+progress
+iter : n°3
+progress
+progress
+progress
+progress
+progress
+progress
+iter : n°4
+Time taken by hill_climbing: 53.903395891189575
+Journey n°47/396
+iter : n°0
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+iter : n°1
+progress
+progress
+progress
+progress
+progress
+iter : n°2
+Time taken by hill_climbing: 26.574649810791016
+Journey n°48/396
+iter : n°0
+progress
+progress
+progress
+progress
+progress
+iter : n°1
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+iter : n°2
+progress
+iter : n°3
+Time taken by hill_climbing: 31.945825576782227
+Journey n°49/396
+iter : n°0
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+iter : n°1
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+iter : n°2
+progress
+progress
+progress
+progress
+progress
+iter : n°3
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+iter : n°4
+progress
+progress
+progress
+iter : n°5
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+iter : n°6
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+iter : n°7
+progress
+iter : n°8
+Time taken by hill_climbing: 53.19833779335022
+Journey n°50/396
+iter : n°0
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+iter : n°1
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+iter : n°2
+progress
+progress
+progress
+progress
+progress
+iter : n°3
+progress
+progress
+progress
+progress
+progress
+progress
+iter : n°4
+progress
+progress
+progress
+iter : n°5
+progress
+iter : n°6
+Time taken by hill_climbing: 44.81360697746277
+Journey n°51/396
+iter : n°0
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+iter : n°1
+progress
+progress
+progress
+progress
+progress
+progress
+iter : n°2
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+iter : n°3
+progress
+iter : n°4
+progress
+progress
+iter : n°5
+Time taken by hill_climbing: 46.0727276802063
+Journey n°52/396
+iter : n°0
+Time taken by hill_climbing: 5.950110197067261
+Journey n°53/396
+iter : n°0
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+iter : n°1
+Time taken by hill_climbing: 7.999073505401611
+Journey n°54/396
+iter : n°0
+Time taken by hill_climbing: 3.529751777648926
+Journey n°55/396
+iter : n°0
+Time taken by hill_climbing: 3.752525806427002
+Journey n°56/396
+iter : n°0
+progress
+iter : n°1
+progress
+iter : n°2
+progress
+progress
+progress
+iter : n°3
+Time taken by hill_climbing: 25.87619924545288
+Journey n°57/396
+iter : n°0
+progress
+progress
+progress
+progress
+progress
+progress
+iter : n°1
+Time taken by hill_climbing: 10.609134912490845
+Journey n°58/396
+iter : n°0
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+iter : n°1
+progress
+progress
+progress
+progress
+iter : n°2
+Time taken by hill_climbing: 16.75707459449768
+Journey n°59/396
+iter : n°0
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+iter : n°1
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+iter : n°2
+progress
+progress
+progress
+progress
+progress
+progress
+iter : n°3
+Time taken by hill_climbing: 23.92797613143921
+Journey n°60/396
+iter : n°0
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+iter : n°1
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+iter : n°2
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+iter : n°3
+Time taken by hill_climbing: 31.77465534210205
+Journey n°61/396
+iter : n°0
+progress
+iter : n°1
+progress
+progress
+progress
+progress
+progress
+iter : n°2
+Time taken by hill_climbing: 27.70130944252014
+Journey n°62/396
+iter : n°0
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+iter : n°1
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+iter : n°2
+progress
+iter : n°3
+Time taken by hill_climbing: 26.60577368736267
+Journey n°63/396
+iter : n°0
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+iter : n°1
+progress
+iter : n°2
+progress
+progress
+progress
+progress
+progress
+progress
+iter : n°3
+Time taken by hill_climbing: 31.072240829467773
+Journey n°64/396
+iter : n°0
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+iter : n°1
+Time taken by hill_climbing: 18.078789949417114
+Journey n°65/396
+iter : n°0
+Time taken by hill_climbing: 10.226145505905151
+Journey n°66/396
+iter : n°0
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+iter : n°1
+progress
+progress
+progress
+progress
+progress
+progress
+progress342087507247925
+progress
+iter : n°2
+progress
+progress
+progress
+progress
+progress
+iter : n°3
+progress
+progress
+iter : n°4
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+iter : n°5
+Time taken by hill_climbing: 64.27288484573364
+Journey n°67/396
+iter : n°0
+progress
+iter : n°1
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+iter : n°2
+Time taken by hill_climbing: 21.628645420074463
+Journey n°68/396
+iter : n°0
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+iter : n°1
+progress
+progress
+iter : n°2
+progress
+progress
+iter : n°3
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+iter : n°4
+progress
+progress
+progress
+progress
+progress
+progress
+iter : n°5
+Time taken by hill_climbing: 52.23127841949463
+Journey n°69/396
+iter : n°0
+Time taken by hill_climbing: 8.518293142318726
+Journey n°70/396
+iter : n°0
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+iter : n°1
+progress
+progress
+progress
+progress
+iter : n°2
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+iter : n°3
+Time taken by hill_climbing: 34.5926353931427
+Journey n°71/396
+iter : n°0
+Time taken by hill_climbing: 7.8884100914001465
+Journey n°72/396
+iter : n°0
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+progreprogress
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+iter : n°2
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+iter : n°3
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+iter : n°4
+progress
+progress
+progress
+iter : n°5
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+iter : n°6
+Time taken by hill_climbing: 56.37813639640808
+Journey n°73/396
+iter : n°0
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+iter : n°1
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+iter : n°2
+Time taken by hill_climbing: 24.575806617736816
+Journey n°74/396
+iter : n°0
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+iter : n°1
+progress
+progress
+iter : n°2
+progress
+progress
+progress
+progress
+iter : n°3
+Time taken by hill_climbing: 25.857237339019775
+Journey n°75/396
+iter : n°0
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+iter : n°1
+Time taken by hill_climbing: 7.6696531772613525
+Journey n°76/396
+iter : n°0
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+iter : n°1
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+iter : n°2
+progress
+progress
+progress
+progress
+progress
+iter : n°3
+progress
+iter : n°4
+Time taken by hill_climbing: 18.936115264892578
+Journey n°77/396
+iter : n°0
+progress
+progress
+progress
+progress
+progress
+progress
+iter : n°1
+Time taken by hill_climbing: 9.453832864761353
+Journey n°78/396
+iter : n°0
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+iter : n°1
+Time taken by hill_climbing: 12.365898609161377
+Journey n°79/396
+iter : n°0
+progress
+progress
+iter : n°1
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+iter : n°2
+Time taken by hill_climbing: 11.747522592544556
+Journey n°80/396
+iter : n°0
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+iter : n°1
+Time taken by hill_climbing: 4.082589149475098
+Journey n°81/396
+iter : n°0
+Time taken by hill_climbing: 3.248581647872925
+Journey n°82/396
+iter : n°0
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+iter : n°1
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+iter : n°2
+progress
+progress
+progress
+progress
+iter : n°3
+Time taken by hill_climbing: 17.16568350791931
+Journey n°83/396
+iter : n°0
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+iter : n°1
+progress
+progress
+progress
+progress
+iter : n°2
+progress
+progress
+progress
+progress
+progress
+iter : n°3
+Time taken by hill_climbing: 14.808159351348877
+Journey n°84/396
+iter : n°0
+Time taken by hill_climbing: 1.5434315204620361
+Journey n°85/396
+iter : n°0
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+iter : n°1
+Time taken by hill_climbing: 4.98687481880188
+Journey n°86/396
+iter : n°0
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+iter : n°1
+progress
+progress
+iter : n°2
+Time taken by hill_climbing: 15.05648922920227
+Journey n°87/396
+iter : n°0
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+iter : n°1
+progress
+progress
+progress
+progress
+progress
+progress
+iter : n°2
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+iter : n°3
+progress
+iter : n°4
+progress
+iter : n°5
+Time taken by hill_climbing: 33.982526779174805
+Journey n°88/396
+iter : n°0
+Time taken by hill_climbing: 4.199552536010742
+Journey n°89/396
+iter : n°0
+progress
+progress
+progress
+progress
+progress
+progress
+iter : n°1
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+iter : n°2
+Time taken by hill_climbing: 11.27570652961731
+Journey n°90/396
+iter : n°0
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+iter : n°1
+Time taken by hill_climbing: 11.758578300476074
+Journey n°91/396
+iter : n°0
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+iter : n°1
+progress
+progress
+progress
+progress
+iter : n°2
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+iter : n°3
+Time taken by hill_climbing: 33.197543144226074
+Journey n°92/396
+iter : n°0
+progress
+progress
+progress
+progress
+progress
+progress
+iter : n°1
+Time taken by hill_climbing: 14.614630699157715
+Journey n°93/396
+iter : n°0
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+iter : n°1
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+iter : n°2
+progress
+progress
+progress
+iter : n°3
+progress
+progress
+iter : n°4
+progress
+progress
+progress
+progress
+iter : n°5
+Time taken by hill_climbing: 41.202698707580566
+Journey n°94/396
+iter : n°0
+progress
+progress
+progress
+progress
+iter : n°1
+progress
+iter : n°2
+Time taken by hill_climbing: 19.026702642440796
+Journey n°95/396
+iter : n°0
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+iter : n°1
+Time taken by hill_climbing: 13.44104528427124
+Journey n°96/396
+iter : n°0
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+iter : n°1
+Time taken by hill_climbing: 12.736812114715576
+Journey n°97/396
+iter : n°0
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+iter : n°1
+Time taken by hill_climbing: 10.453429698944092
+Journey n°98/396
+iter : n°0
+Time taken by hill_climbing: 3.850964069366455
+Journey n°99/396
+iter : n°0
+progress
+progress
+iter : n°1
+Time taken by hill_climbing: 7.633628606796265
+Journey n°100/396
+iter : n°0
+Time taken by hill_climbing: 5.8222081661224365
+Journey n°101/396
+iter : n°0
+Time taken by hill_climbing: 5.672819375991821
+Journey n°102/396
+iter : n°0
+Time taken by hill_climbing: 5.627061128616333
+Journey n°103/396
+iter : n°0
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+iter : n°1
+Time taken by hill_climbing: 10.502308130264282
+Journey n°104/396
+iter : n°0
+Time taken by hill_climbing: 7.328373432159424
+Journey n°105/396
+iter : n°0
+Time taken by hill_climbing: 5.619166612625122
+Journey n°106/396
+iter : n°0
+Time taken by hill_climbing: 4.066673755645752
+Journey n°107/396
+iter : n°0
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+iter : n°1
+progress
+iter : n°2
+Time taken by hill_climbing: 20.205860137939453
+Journey n°108/396
+iter : n°0
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+iter : n°1
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+iter : n°2
+Time taken by hill_climbing: 23.259796619415283
+Journey n°109/396
+iter : n°0
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+iter : n°1
+Time taken by hill_climbing: 17.024147748947144
+Journey n°110/396
+iter : n°0
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+iter : n°1
+Time taken by hill_climbing: 12.994520664215088
+Journey n°111/396
+iter : n°0
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+iter : n°1
+progress
+progress
+progress
+iter : n°2
+progress
+iter : n°3
+Time taken by hill_climbing: 29.54522943496704
+Journey n°112/396
+iter : n°0
+progress
+progress
+progress
+iter : n°1
+Time taken by hill_climbing: 15.87878155708313
+Journey n°113/396
+iter : n°0
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+iter : n°1
+Time taken by hill_climbing: 16.354360103607178
+Journey n°114/396
+iter : n°0
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+iter : n°1
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+iter : n°2
+Time taken by hill_climbing: 26.11517596244812
+Journey n°115/396
+iter : n°0
+progress
+progress
+progress
+progress
+progress
+iter : n°1
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+iter : n°2
+Time taken by hill_climbing: 19.32288146018982
+Journey n°116/396
+iter : n°0
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+iter : n°1
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+iter : n°2
+Time taken by hill_climbing: 14.794761419296265
+Journey n°117/396
+iter : n°0
+progress
+iter : n°1
+Time taken by hill_climbing: 12.649880409240723
+Journey n°118/396
+iter : n°0
+Time taken by hill_climbing: 6.583477258682251
+Journey n°119/396
+iter : n°0
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+iter : n°1
+Time taken by hill_climbing: 10.648802518844604
+Journey n°120/396
+iter : n°0
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+iter : n°1
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+iter : n°2
+Time taken by hill_climbing: 13.45531702041626
+Journey n°121/396
+iter : n°0
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+iter : n°1
+Time taken by hill_climbing: 9.863346576690674
+Journey n°122/396
+iter : n°0
+progress
+progress
+iter : n°1
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+iter : n°2
+progress
+progress
+iter : n°3
+progress
+progress
+progress
+progress
+progress
+progress
+iter : n°4
+Time taken by hill_climbing: 30.810182332992554
+Journey n°123/396
+iter : n°0
+progress
+progress
+progress
+iter : n°1
+Time taken by hill_climbing: 6.121990203857422
+Journey n°124/396
+iter : n°0
+progress
+iter : n°1
+Time taken by hill_climbing: 4.3045103549957275
+Journey n°125/396
+iter : n°0
+Time taken by hill_climbing: 3.144174814224243
+Journey n°126/396
+iter : n°0
+Time taken by hill_climbing: 4.740941762924194
+Journey n°127/396
+iter : n°0
+progress
+progress
+progress
+iter : n°1
+Time taken by hill_climbing: 6.295165061950684
+Journey n°128/396
+iter : n°0
+progress
+progress
+progress
+progress
+iter : n°1
+Time taken by hill_climbing: 3.507537364959717
+Journey n°129/396
+iter : n°0
+progress
+progress
+progress
+progress
+iter : n°1
+Time taken by hill_climbing: 5.348501205444336
+Journey n°130/396
+iter : n°0
+progress
+progress
+progress
+iter : n°1
+Time taken by hill_climbing: 7.271594047546387
+Journey n°131/396
+iter : n°0
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+iter : n°1
+progress
+iter : n°2
+Time taken by hill_climbing: 15.304667472839355
+Journey n°132/396
+iter : n°0
+progress
+progress
+progress
+progress
+iter : n°1
+Time taken by hill_climbing: 14.277857542037964
+Journey n°133/396
+iter : n°0
+Time taken by hill_climbing: 6.972475051879883
+Journey n°134/396
+iter : n°0
+Time taken by hill_climbing: 9.772048234939575
+Journey n°135/396
+iter : n°0
+progress
+progress
+progress
+progress
+iter : n°1
+progress
+progress
+progress
+progress
+progress
+progress
+iter : n°2
+Time taken by hill_climbing: 33.14551520347595
+Journey n°136/396
+iter : n°0
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+iter : n°1
+Time taken by hill_climbing: 14.162241458892822
+Journey n°137/396
+iter : n°0
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+iter : n°1
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+iter : n°2
+progress
+progress
+progress
+progress
+progress
+progress
+iter : n°3
+Time taken by hill_climbing: 36.56713080406189
+Journey n°138/396
+iter : n°0
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+iter : n°1
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+iter : n°2
+progress
+progress
+progress
+iter : n°3
+Time taken by hill_climbing: 42.75453543663025
+Journey n°139/396
+iter : n°0
+Time taken by hill_climbing: 9.632742643356323
+Journey n°140/396
+iter : n°0
+Time taken by hill_climbing: 7.7866761684417725
+Journey n°141/396
+iter : n°0
+Time taken by hill_climbing: 5.062600135803223
+Journey n°142/396
+iter : n°0
+Time taken by hill_climbing: 4.603870630264282
+Journey n°143/396
+iter : n°0
+progress
+iter : n°1
+Time taken by hill_climbing: 11.577543497085571
+Journey n°144/396
+iter : n°0
+Time taken by hill_climbing: 7.302078723907471
+Journey n°145/396
+iter : n°0
+Time taken by hill_climbing: 8.349314451217651
+Journey n°146/396
+iter : n°0
+progress
+progress
+progress
+progress
+progress
+progress
+iter : n°1
+Time taken by hill_climbing: 11.357643604278564
+Journey n°147/396
+iter : n°0
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+iter : n°1
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+progress
+iter : n°2
+Time taken by hill_climbing: 19.800811052322388
+Journey n°148/396
+iter : n°0

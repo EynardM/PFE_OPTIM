@@ -408,7 +408,7 @@ class Journey:
                         tank.current_volume -= cycle.collected_quantities[i]
         self.journey_global_emergency = np.mean([tank.current_volume / tank.overflow_capacity for tank in tanks_copy]) # add mean or max filling of each tank in the ratio 
         score = weight_Q * self.journey_volume + weight_D * self.journey_distance + weight_E * self.journey_global_emergency
-        return score, self.journey_volume, self.journey_distance, self.journey_global_emergency
+        return score
     
     def to_dict(self):
         return {
