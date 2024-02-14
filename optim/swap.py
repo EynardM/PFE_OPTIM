@@ -127,11 +127,9 @@ def optim_swap(journey: Journey, tanks: List[Tank], pair: Tuple[Tank,Tank], opti
 def swap(journey: Journey, tanks: List[Tank], optimization_parameters: OptimizationParameters):
     tank_time = get_couples(journey=journey)
     possible_swaps = get_possible_swaps(tank_time=tank_time)
+    new_journeys = []
     for i,pair in enumerate(possible_swaps):
-        print(f'pair n°{i}/{len(possible_swaps)}')
         new_journey = optim_swap(journey=journey, tanks=tanks, pair=pair, optimization_parameters=optimization_parameters)
         if new_journey is not None:
-            print('worked')
-            print(json.dumps(journey.to_dict(), indent=4))
-            print(json.dumps(new_journey.to_dict(), indent=4))
+            new_journeys.append(new_journey)
 
