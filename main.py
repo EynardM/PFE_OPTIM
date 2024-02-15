@@ -216,7 +216,7 @@ def main(maximum_complexity, example):
     hill_climbing_results = []
     simulated_annealing_results = []
     
-    """make_empty(folder=HILL_CLIMBING_RESULTS_PATH)
+    make_empty(folder=HILL_CLIMBING_RESULTS_PATH)
     make_empty(folder=SIMULATED_ANNEALING_PATH)
 
     if example:
@@ -262,7 +262,7 @@ def main(maximum_complexity, example):
 
     save_results_to_path(results=hill_climbing_results, folder_path=HILL_CLIMBING_RESULTS_PATH)
     save_results_to_path(results=simulated_annealing_results, folder_path=SIMULATED_ANNEALING_PATH)
-"""
+
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Run the main function with optional flags.")
     parser.add_argument("--maximum-complexity", action="store_true", help="Run with maximum complexity flag.")
