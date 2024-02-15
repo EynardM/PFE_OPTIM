@@ -23,5 +23,6 @@ import math
 import argparse
 from tqdm import tqdm
 import pickle
-
+from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware
 init(autoreset=True)
