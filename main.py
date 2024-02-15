@@ -244,7 +244,7 @@ def main(maximum_complexity, example):
                             "emergency": journey.journey_global_emergency})
 
             plot_pareto_front(solutions=solutions, journey_id=i) 
-             
+        
     for i, journey in enumerate(journeys):
         print(f'\n#---------- Journey n°{i}/{len(journeys)} ----------#\n')
         parameter = parameters[i]
