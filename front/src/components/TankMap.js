@@ -29,11 +29,19 @@ var tank_icon = new Icon2({
 function TankMap({ storehouse, cycles }) {
   const storehousePosition = [storehouse.latitude, storehouse.longitude];
   const [routes, setRoutes] = useState([]);
-  const colors = ['red', 'blue', 'black', 'pink', 'brown'];
+  const colors = ['red','brown', 'green', 'purple' ,"black"];
 
   useEffect(() => {
+    // console.log("in the tank map",cycles)
     const newRoutes = cycles.flatMap((cycle, cycleIndex) => {
-      const tankPositions = cycle.selected_tanks.map((tank) => [tank.maker.latitude, tank.maker.longitude]);
+      // if (!cycle) {
+      //   console.log('Cycles is undefined or null.');
+      //   return;
+      // }
+      // cycles est 
+      // {console.log("i am in the tank map",result.hill_climbing_results.journey_366[0].cycles[0].selected_tanks_coodinates[0])}
+      // console.log("in the tankmap",cycle.selected_tanks_coodinates)
+      const tankPositions = cycle.selected_tanks_coodinates.map((tank) => [tank[0], tank[1]]);
   
       // Ajouter le trajet du dépôt à la première cuve
       const depotToFirstTank = [
@@ -67,11 +75,13 @@ function TankMap({ storehouse, cycles }) {
       </Marker>
       {cycles.map((cycle, cycleIndex) => (
         <React.Fragment key={cycleIndex}>
-          {cycle.selected_tanks.map((tank, tankIndex) => (
-            <Marker key={tankIndex} position={[tank.maker.latitude, tank.maker.longitude]} icon={tank_icon}>
+          {cycle.selected_tanks_coodinates.map((tank,tankIndex) => (
+            <Marker key={tankIndex} position={[tank[0], tank[1]]} icon={tank_icon}>
               <Popup>
-                Réservoir {tank.id} - Cycle {cycleIndex + 1}
+                Réservoir {cycle.selected_tanks_ids[tankIndex]} - Cycle {cycleIndex + 1}
+                
               </Popup>
+            
             </Marker>
           ))}
         </React.Fragment>

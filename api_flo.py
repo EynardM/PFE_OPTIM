@@ -46,7 +46,8 @@ def get_results():
     simulated_annealing_results = get_journeys(folder_path=SIMULATED_ANNEALING_PATH)
     return  {
         "hill_climbing_results": hill_climbing_results,
-        "simulated_annealing_results": simulated_annealing_results
+        "simulated_annealing_results": simulated_annealing_results,
+        "storehouse" : storehouse
         }
 
 if __name__ == "__main__":
