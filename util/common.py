@@ -34,3 +34,10 @@ def colored(variable, color, variable_name=None, logs=True):
         print(f"{color_code}{variable_name} = {variable}{reset_code}")
     else :
         logging.info(f"{color_code}{variable_name} = {variable}{reset_code}")
+
+def make_empty(folder):
+    fichiers = os.listdir(folder)
+    for fichier in fichiers:
+        chemin_fichier = os.path.join(folder, fichier)
+        if os.path.isfile(chemin_fichier):
+            os.remove(chemin_fichier)

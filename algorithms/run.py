@@ -12,30 +12,46 @@ file_handler.setFormatter(formatter)
 logging.getLogger().addHandler(file_handler)
 
 def run_slot(journey: Journey, optimization_parameters: OptimizationParameters, slot=Tuple[datetime,datetime]) -> List[Cycle]:
+    """
+    Runs the optimization process for a single time slot within a journey.
+
+    Args:
+    - journey (Journey): Journey object representing the current journey.
+    - optimization_parameters (OptimizationParameters): OptimizationParameters object containing optimization parameters.
+    - slot (Tuple[datetime, datetime]): Time slot tuple (start, end) within the journey.
+
+    Returns:
+    - List[Cycle]: List of cycles completed within the time slot.
+    """
+    # Adjust journey's current time and ending time if needed
     if journey.current_time != journey.starting_time:
-        journey.break_time += (slot[0] - journey.ending_time).total_seconds()/60
+        journey.break_time += (slot[0] - journey.ending_time).total_seconds() / 60
         journey.current_time = slot[0]
         journey.ending_time = slot[1]
+
+    # Initialize variables for processing journey
     processing_journey = True
-    while(processing_journey):
+    while processing_journey:
         starting_time = get_starting_time(journey=journey, optimization_parameters=optimization_parameters)
 
+        # Initialize variables for processing cycle
         processing_cycle = True
         cycle = Cycle(starting_time=starting_time)
 
-        while(processing_cycle):
+        while processing_cycle:
             if journey.current_time >= journey.ending_time:
                 processing_cycle = False
                 processing_journey = False
                 continue
-            available_tanks = filter_hours(cycle=cycle, optimization_parameters=optimization_parameters)  
+
+            available_tanks = filter_hours(cycle=cycle, optimization_parameters=optimization_parameters)
 
             if not available_tanks:
                 if not cycle.is_empty():
                     cycle.storehouse_return(optimization_parameters=optimization_parameters)
                     journey.add_cycle(cycle=cycle)
                     journey.current_time += timedelta(minutes=cycle.cycle_time)
-                else :
+                else:
                     datetime_to_add = (journey.current_time + timedelta(hours=1)).replace(minute=0, second=0) - journey.current_time
                     cycle.cycle_time += datetime_to_add.total_seconds() / 60
                     journey.add_cycle(cycle=cycle)
@@ -62,27 +78,37 @@ def run_slot(journey: Journey, optimization_parameters: OptimizationParameters, 
                 processing_journey = False
                 processing_cycle = False
                 continue
-            
-            else : 
+            else:
                 last_point = cycle.get_last_point(storehouse=optimization_parameters.storehouse)
                 tank = choice_function(starting_point=last_point, tanks=final_candidates, method=optimization_parameters.method)
                 cycle.add_tank(choice=tank, optimization_parameters=optimization_parameters)
                 optimization_parameters.tanks.remove(tank)
 
-    return journey 
-      
+    return journey
+
 def run(optimization_parameters: OptimizationParameters):
+    """
+    Runs the optimization process for all time slots within an optimization period.
+
+    Args:
+    - optimization_parameters (OptimizationParameters): OptimizationParameters object containing optimization parameters.
+
+    Returns:
+    - Journey: Journey object representing the completed journey.
+    """
+    # Initialize journey based on the number of slots
     if optimization_parameters.agent.nb_of_slots() == 1:
         starting_time, ending_time = optimization_parameters.agent.daily_working_slot
         journey = Journey(starting_time=starting_time, ending_time=ending_time)
         journey = run_slot(journey=journey, optimization_parameters=optimization_parameters, slot=optimization_parameters.agent.daily_working_slot)
-    else :
-        for i,slot in enumerate(optimization_parameters.agent.daily_working_slot):
+    else:
+        for i, slot in enumerate(optimization_parameters.agent.daily_working_slot):
             if i == 0:
                 starting_time, ending_time = slot
-                journey = Journey(starting_time=starting_time, ending_time=ending_time) 
+                journey = Journey(starting_time=starting_time, ending_time=ending_time)
                 journey = run_slot(journey=journey, optimization_parameters=optimization_parameters, slot=slot)
-            else :
+            else:
                 journey = run_slot(journey=journey, optimization_parameters=optimization_parameters, slot=slot)
     return journey
+
             

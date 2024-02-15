@@ -1,9 +1,16 @@
-K = 2 # Pour se rapprocher de la réalité
-weight_Q = 1 # Poids pour maximiser Q
-weight_D = -1 # Poids pour minimiser d
-weight_E = -1  # Poids pour minimiser u
+K = 2 
+weight_Q = 1 
+weight_D = -1 
+weight_E = -1  
 BREAK_TIME = 2
 
-ITERMAX = 20
+# Hill Climbing
+ITERMAX_HC = 150
+
+# Simulated Annealing
+ITERMAX_SA = 134
+INITIAL_TEMPERATURE = 100
+COOLING_RATE = 0.95
+MINIMAL_TEMPERATURE = 0.1
 
 METHODS = ["R", "Q", "D", "E", "HQD", "HQDE"]

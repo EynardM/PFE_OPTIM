@@ -185,11 +185,7 @@ class Tank:
         self.tank_status_id = tank_status_id
         self.fill_level = fill_level
         self.maker = None
-        self.mean_nonzeros_fill = None
-        self.std_nonzeros_fill = None
-        self.mean_zeros_fill_seq = None
-        self.std_zeros_fill_seq = None
-        self.filling_vector = None
+        self.mean_filling = None
         self.distance = None
         self.time_to_go = None
         self.collectable_volume = None
@@ -406,7 +402,7 @@ class Journey:
                 for tank in tanks_copy:
                     if tank_cycle.id == tank.id:
                         tank.current_volume -= cycle.collected_quantities[i]
-        self.journey_global_emergency = np.mean([tank.current_volume / tank.overflow_capacity for tank in tanks_copy]) # add mean or max filling of each tank in the ratio 
+        self.journey_global_emergency = np.mean([(tank.current_volume + tank.mean_filling)/ tank.overflow_capacity for tank in tanks_copy]) 
         score = weight_Q * self.journey_volume + weight_D * self.journey_distance + weight_E * self.journey_global_emergency
         return score
     
