@@ -78,7 +78,6 @@ def get_basic_journeys(tanks: List[Tank], delta_days: int):
     # Save generated solutions to file system
     make_empty(folder=CURRENT_RESULTS_PATH)
     get_results(solutions=solutions, delta_days=delta_days, folder_path=CURRENT_RESULTS_PATH)
-    print(solutions)
     return solutions, journeys, parameters
 
 @timeit
@@ -216,9 +215,6 @@ def main(maximum_complexity, example):
     hill_climbing_results = []
     simulated_annealing_results = []
     
-    make_empty(folder=HILL_CLIMBING_RESULTS_PATH)
-    make_empty(folder=SIMULATED_ANNEALING_PATH)
-
     if example:
         for i in range(example):
             print(f'\n#---------- Example : Journey n°{i} ----------#\n')
@@ -227,7 +223,7 @@ def main(maximum_complexity, example):
 
             permutation_journeys, swap_journeys, transfer_journeys = get_neighbors(best_journey=journey, tanks=tanks, 
                                                                                 optimization_parameters=parameter,
-                                                                                    maximum_complexity=True, example=example)
+                                                                                    maximum_complexity=True, example=True)
             solutions = []
             for journey in permutation_journeys:
                 solutions.append({"method": "Permutation", "score": journey.evaluation(tanks=tanks),
@@ -244,8 +240,10 @@ def main(maximum_complexity, example):
                             "volume": journey.journey_volume, "distance": journey.journey_distance,
                             "emergency": journey.journey_global_emergency})
 
-            plot_pareto_front(solutions=solutions, journey_id=i) 
-        
+            plot_pareto_front(solutions=solutions, journey_id=i)       
+""" 
+    make_empty(folder=HILL_CLIMBING_RESULTS_PATH)
+    make_empty(folder=SIMULATED_ANNEALING_PATH)   
     for i, journey in enumerate(journeys):
         print(f'\n#---------- Journey n°{i}/{len(journeys)} ----------#\n')
         parameter = parameters[i]
@@ -261,7 +259,7 @@ def main(maximum_complexity, example):
         simulated_annealing_results.append(simulated_annealing_journeys)
 
     save_results_to_path(results=hill_climbing_results, folder_path=HILL_CLIMBING_RESULTS_PATH)
-    save_results_to_path(results=simulated_annealing_results, folder_path=SIMULATED_ANNEALING_PATH)
+    save_results_to_path(results=simulated_annealing_results, folder_path=SIMULATED_ANNEALING_PATH)"""
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Run the main function with optional flags.")

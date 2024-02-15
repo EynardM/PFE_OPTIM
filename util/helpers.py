@@ -123,7 +123,6 @@ def get_pareto_front(solutions):
     return pareto_front
 
 def plot_pareto_front(solutions, journey_id, FOLDER_PATH=NEIGHBORS_PATH):
-    make_empty(folder=NEIGHBORS_PATH)
     fig = plt.figure()
     ax = fig.add_subplot(111, projection='3d')
 
@@ -170,12 +169,9 @@ def plot_pareto_front(solutions, journey_id, FOLDER_PATH=NEIGHBORS_PATH):
     ax.legend(handles=scatter_handles, labels=legend_labels)
 
     # Save figure
-    if not os.path.exists(FOLDER_PATH):
-        os.makedirs(FOLDER_PATH)
     filename = os.path.join(FOLDER_PATH, f"example_journey_{journey_id}.png")
     plt.savefig(filename)
-    plt.show()
-    plt.close()
+    plt.close('all')
 
 def get_results(solutions, delta_days: int, folder_path):
     fig = plt.figure()
@@ -215,7 +211,7 @@ def get_results(solutions, delta_days: int, folder_path):
 
     ax.legend(handles=scatter_handles)
     plt.show()
-    plt.close()
+    plt.close('all')
 
     # Initialize an empty DataFrame for values
     values_data = []
