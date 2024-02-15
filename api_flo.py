@@ -35,7 +35,7 @@ def get_journeys(folder_path):
 
             for journey in pickle_objects:
                 results_dict[filename].append(journey.to_dict()) 
-                break 
+                
     return results_dict
 
 @app.get("/get_results")
