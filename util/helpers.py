@@ -178,7 +178,6 @@ def plot_pareto_front(solutions, journey_id, FOLDER_PATH=NEIGHBORS_PATH):
     plt.close()
 
 def get_results(solutions, delta_days: int, folder_path):
-    make_empty(folder_path)
     fig = plt.figure()
     ax = fig.add_subplot(111, projection='3d')
 
@@ -223,12 +222,14 @@ def get_results(solutions, delta_days: int, folder_path):
 
     # Append data to the list
     for method in unique_methods:
-        for sol in method_solutions_sorted:
-            values_data.append({'Method': method,
-                                'Score': sol['score'],
-                                'Volume': sol['volume'],
-                                'Distance': sol['distance'],
-                                'Emergency': sol['emergency']})
+            method_solutions = [sol for sol in solutions if sol['method'] == method]
+            method_solutions_sorted = sorted(method_solutions, key=lambda x: x['score'], reverse=True)
+            for sol in method_solutions_sorted:
+                values_data.append({'Method': method,
+                                    'Score': sol['score'],
+                                    'Volume': sol['volume'],
+                                    'Distance': sol['distance'],
+                                    'Emergency': sol['emergency']})
 
     # Create DataFrame from the list of dictionaries
     values_df = pd.DataFrame(values_data)

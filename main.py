@@ -76,8 +76,9 @@ def get_basic_journeys(tanks: List[Tank], delta_days: int):
                            "emergency": journey.journey_global_emergency})
 
     # Save generated solutions to file system
+    make_empty(folder=CURRENT_RESULTS_PATH)
     get_results(solutions=solutions, delta_days=delta_days, folder_path=CURRENT_RESULTS_PATH)
-
+    print(solutions)
     return solutions, journeys, parameters
 
 @timeit
@@ -215,7 +216,7 @@ def main(maximum_complexity, example):
     hill_climbing_results = []
     simulated_annealing_results = []
     
-    make_empty(folder=HILL_CLIMBING_RESULTS_PATH)
+    """make_empty(folder=HILL_CLIMBING_RESULTS_PATH)
     make_empty(folder=SIMULATED_ANNEALING_PATH)
 
     if example:
@@ -261,7 +262,7 @@ def main(maximum_complexity, example):
 
     save_results_to_path(results=hill_climbing_results, folder_path=HILL_CLIMBING_RESULTS_PATH)
     save_results_to_path(results=simulated_annealing_results, folder_path=SIMULATED_ANNEALING_PATH)
-
+"""
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Run the main function with optional flags.")
     parser.add_argument("--maximum-complexity", action="store_true", help="Run with maximum complexity flag.")
