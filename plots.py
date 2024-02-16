@@ -1,4 +1,5 @@
 from util.imports import *
+from util.locations import *
 
 def generate_box_plot(input_xlsx, folder_path, filename):
     df = pd.read_excel(input_xlsx)
@@ -17,3 +18,5 @@ def generate_box_plot(input_xlsx, folder_path, filename):
     plt.tight_layout()
     plt.savefig(folder_path+filename+".png")
     plt.close()
+
+generate_box_plot(input_xlsx="results/current_run/values.xlsx", folder_path=CURRENT_RESULTS_PATH, filename="current_boxplot")
