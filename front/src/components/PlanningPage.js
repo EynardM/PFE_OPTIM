@@ -126,7 +126,7 @@ const PlanningPage = () => {
         </div>
 
         <div style={{ flex: 1, marginLeft: '20px'   }}>
-          <h1 style={{ color: 'black', textAlign: 'center' }}>Recuit Simulé</h1>
+          <h1 style={{ color: 'black', textAlign: 'center' }}>Simmulated Annealing</h1>
           <div style={{ backgroundColor: '#333', color: '#fff', padding: '20px',borderRadius : "19px"  }}>
             {result && result.simulated_annealing_results && result.simulated_annealing_results.journey_1 && (
               result.simulated_annealing_results.journey_1[currentSimulatedAnnealingJourney].cycles.map((cycle, cycleIndex) => (
