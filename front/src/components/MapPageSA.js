@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import TankMap from './TankMap';
-import MultiSliderComponent from './MultiSliderComponent';
 import { useNavigate } from 'react-router-dom';
 import 'leaflet/dist/leaflet.css'; 
 
@@ -94,20 +93,8 @@ const MapPageSA = () => {
   }
 
   const journeys = result.simulated_annealing_results;
-  const journeyKeys = Object.keys(journeys); 
-  console.log("truc",journeyKeys[currentJourneyIndex])
-
+  const journeyKeys = Object.keys(journeys);
   const currentJourney = journeys[journeyKeys[currentJourneyIndex]];
-  console.log("current index",currentJourneyIndexInList)
-  console.log("current journey index",currentJourney[currentJourneyIndexInList])
-  console.log("journey keys length",journeyKeys.length)
-  // const currentJourney = journeys.journey_200;
-  // journeys est un dictionnaire de journey avec comme value des listes de journées correspondant à la méthode d'optim utilisé
-  // journeyKeys est un tableau avec toutes les clées du dictionnaire de journeys
-  // journeyKeys[currentJourneyIndex] qui est le nom de la clé accéder à une liste de journée dans le dictionnaire de journée
-  // currentJourney est une une journée que l'on peut prendre et mettre dans le truc pour get les positions
-  
-  console.log("current journey",Object.prototype.toString.call(currentJourney))
 
   const handleNextJourney = () => {
     setCurrentJourneyIndex((prevIndex) => (prevIndex + 1) % journeyKeys.length);
@@ -132,6 +119,13 @@ const MapPageSA = () => {
 
   return (
     <div className="App">
+      <style>
+        {`
+          body {
+            overflow: hidden;
+          }
+        `}
+      </style>
       <div style={{display: "flex", flexDirection: "column",  justifyContent: "center", alignItems:"center"}}>
         <div style={{ display: 'flex', justifyContent:"space-around",flexDirection: 'row' , marginTop:"20px"}}> 
           <h1 style={{ marginBottom: '20px', marginRight: "100px"}}>Simulated Annealing Results</h1>

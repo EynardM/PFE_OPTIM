@@ -228,6 +228,7 @@ const PlanningPage = () => {
           fontSize: '22px',
           marginTop: '20px',  // Adjusted margin for the duplicated button
           margin: '20px auto 0',  // Ajout de cette ligne pour centrer le bouton horizontalement
+          marginBottom : "20px",
           display: 'block',
       }}
     >
