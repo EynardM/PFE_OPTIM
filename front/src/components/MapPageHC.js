@@ -55,7 +55,7 @@ const WaitingPage = () => (
   </html>
 );
 
-const MapPage = () => {
+const MapPageHC = () => {
   const [result, setResult] = useState(null);
   const [currentJourneyIndex, setCurrentJourneyIndex] = useState(0);
   const [currentJourneyIndexInList, setCurrentJourneyIndexInList] = useState(0);
@@ -80,6 +80,12 @@ const MapPage = () => {
     // Utilisez history.push pour naviguer vers la page Planning
     navigate('/planning', { state: { result }});
 
+  };
+
+  const handleNavigateToAnotherPage = () => {
+    // Navigate to the page you want
+    // For example, navigate('/another-page');
+    navigate('/sa', { state: { result }});
   };
 
   if (!result || !result.hill_climbing_results) {
@@ -122,79 +128,107 @@ const MapPage = () => {
     setCurrentJourneyIndexInList((prevIndex) => (prevIndex - 1 + currentJourney.length) % currentJourney.length);
   };  
 
+ 
+
   return (
     <div className="App">
-      <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center'}}>
-        <TankMap storehouse={result.storehouse} cycles={currentJourney[currentJourneyIndexInList].cycles} />
-  
-        <div style={{ display: 'flex', justifyContent: 'center', marginBottom: '30px', marginTop : "0px" }}>
-          <button onClick={handlePreviousJourney} style={{
-            backgroundColor: '#FF6347', // Color for "Journey Précédente"
+      <div style={{display: "flex", flexDirection: "column",  justifyContent: "center", alignItems:"center"}}>
+        <div style={{ display: 'flex', justifyContent:"space-around",flexDirection: 'row' , marginTop:"20px"}}> 
+          <h1 style={{ marginBottom: '20px', marginRight: "100px"}}>Hil Climbing Results</h1>
+          <button onClick={handleNavigateToAnotherPage} style={{
+            backgroundColor: '#000000', // Green color for the button
             color: '#fff',
             padding: '20px 15px',
             border: 'none',
             borderRadius: '19px',
             cursor: 'pointer',
-            fontSize: '16px',
-            marginRight: '20px', // Increased margin
-            marginLeft : "20px"
-          }}>Previous Journey</button>
-  
-          <button onClick={handlePreviousJourneyInList} style={{
-            backgroundColor: '#008080', // Color for "Previous Journey"
-            color: '#fff',
-            padding: '20px 15px',
-            border: 'none',
-            borderRadius: '19px',
-            cursor: 'pointer',
-            fontSize: '16px',
-            marginRight: '20px', // Increased margin
-            marginLeft : "20px"
-          }}>Suboptimal Route</button>
-          <div style={{ display: "flex", flexDirection: "column", alignItems: "center" }}>
-            <div style={{ marginBottom: '10px' }}>Opimized Journey : {currentJourneyIndexInList}</div>
-            <div>Journey Number: {extractNumberFromJourney(journeyKeys[currentJourneyIndex])}</div>
-          </div>
-          
-  
-          <button onClick={handleNextJourneyInList} style={{
-            backgroundColor: '#008080', // Color for "Next Journey"
-            color: '#fff',
-            padding: '20px 15px',
-            border: 'none',
-            borderRadius: '19px',
-            cursor: 'pointer',
-            fontSize: '16px',
-            marginRight: '20px', // Increased margin
-            marginLeft : "20px"
-          }}>Optimal Route</button>
-  
-          <button onClick={handleNextJourney} style={{
-            backgroundColor: '#FF6347', // Color for "Journey Suivante"
-            color: '#fff',
-            padding: '20px 15px',
-            border: 'none',
-            borderRadius: '19px',
-            cursor: 'pointer',
-            fontSize: '16px',
-            marginRight: '20px', // Increased margin
-            marginLeft : "20px"
-          }}>Next Journey </button>
+            fontSize: '22px',
+          }}>Go To Simmulated Annealing Results</button>
         </div>
-  
-        <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end' }}>
-          <button onClick={handleNavigate} style={{
-            backgroundColor: '#000000',
-            color: '#fff',
-            padding: '20px 15px',
-            border: 'none',
-            borderRadius: '19px',
-            cursor: 'pointer',
-            fontSize: '16px',
-            marginTop: '10px', // Align to the bottom
-            marginLeft : "10px",
+        <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center'}}>
+          <TankMap storehouse={result.storehouse} cycles={currentJourney[currentJourneyIndexInList].cycles} />
+    
+          <div style={{ display: 'flex', justifyContent: 'center', marginBottom: '30px', marginTop : "0px", height:"200px" }}>
+            <button onClick={handlePreviousJourney} style={{
+              backgroundColor: '#FF6347', // Color for "Journey Précédente"
+              color: '#fff',
+              padding: '20px 15px',
+              border: 'none',
+              borderRadius: '19px',
+              cursor: 'pointer',
+              fontSize: '22px',
+              marginRight: '20px', // Increased margin
+              marginLeft : "20px",
+              marginTop: "30px",
+              marginBottom: "100px"
+            }}>Previous Journey</button>
+    
+            <button onClick={handlePreviousJourneyInList} style={{
+              backgroundColor: '#008080', // Color for "Previous Journey"
+              color: '#fff',
+              padding: '20px 15px',
+              border: 'none',
+              borderRadius: '19px',
+              cursor: 'pointer',
+              fontSize: '22px',
+              marginRight: '20px', // Increased margin
+              marginLeft : "20px",
+              marginTop: "30px",
+              marginBottom: "100px",
+              marginRight: "100px"
+            }}>Suboptimal Route</button>
+            <div style={{ display: "flex", flexDirection: "column", alignItems: "center" }}>
+              <div style={{ marginBottom: '10px',fontSize: '22px' }}>Opimized Journey : {currentJourneyIndexInList}</div>
+              <div style={{fontSize: '22px'}}>Journey Number: {extractNumberFromJourney(journeyKeys[currentJourneyIndex])}</div>
+              <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end' }}>
+                <button onClick={handleNavigate} style={{
+                  backgroundColor: '#000000',
+                  color: '#fff',
+                  padding: '20px 15px',
+                  border: 'none',
+                  borderRadius: '19px',
+                  cursor: 'pointer',
+                  fontSize: '22px',
+                  marginTop: '50px', // Align to the bottom
+                  
+
+                  
+                }}>Schedule</button>
+              </div>
+            </div>
             
-          }}>Emploi du Temps</button>
+    
+            <button onClick={handleNextJourneyInList} style={{
+              backgroundColor: '#008080', // Color for "Next Journey"
+              color: '#fff',
+              padding: '20px 15px',
+              border: 'none',
+              borderRadius: '19px',
+              cursor: 'pointer',
+              fontSize: '22px',
+              marginRight: '20px', // Increased margin
+              marginLeft : "100px",
+              marginTop: "30px",
+              marginBottom: "100px",
+
+            }}>Optimal Route</button>
+    
+            <button onClick={handleNextJourney} style={{
+              backgroundColor: '#FF6347', // Color for "Journey Suivante"
+              color: '#fff',
+              padding: '20px 15px',
+              border: 'none',
+              borderRadius: '19px',
+              cursor: 'pointer',
+              fontSize: '22px',
+              marginRight: '20px', // Increased margin
+              marginLeft : "20px",
+              marginTop: "30px",
+              marginBottom: "100px"
+            }}>Next Journey </button>
+          </div>
+    
+          
         </div>
       </div>
     </div>
@@ -202,4 +236,4 @@ const MapPage = () => {
   
   
 }
-export default MapPage;
+export default MapPageHC;

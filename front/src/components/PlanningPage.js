@@ -9,10 +9,20 @@ const PlanningPage = () => {
   const [currentHillClimbingJourney, setCurrentHillClimbingJourney] = useState(0);
   const [currentSimulatedAnnealingJourney, setCurrentSimulatedAnnealingJourney] = useState(0);
 
-  const handleNavigate = () => {
-    // Utilisez history.push pour naviguer vers la page MapPage
-    navigate('/');
+
+  const handleNavigateToMapPageHC = () => {
+    // Navigate to the page you want
+    // For example, navigate('/another-page');
+    navigate('/', { state: { result }});
   };
+
+  const handleNavigateToMapPageSA = () => {
+    // Navigate to the page you want
+    // For example, navigate('/another-page');
+    navigate('/sa', { state: { result }});
+  };
+
+
 
   const goToPreviousHillClimbingJourney = () => {
     setCurrentHillClimbingJourney(prevIndex => Math.max(prevIndex - 1, 0));
@@ -37,12 +47,12 @@ const PlanningPage = () => {
   return (
     <div className="container">
       <div style={{ marginTop: '20px', textAlign: 'center' }}>
-        <h1 style={{ color: '#fff' }}>Emplois du temps</h1>
+        <h1 style={{ color: 'black', fontSize: '40px', }}>Schedule</h1>
       </div>
 
       <div style={{ display: 'flex', justifyContent: 'space-between', margin: '20px'}}>
         <div style={{ flex: 1}}>
-          <h2 style={{ color: 'black', textAlign: 'center' }}>Hill Climbing</h2>
+          <h1 style={{ color: 'black', textAlign: 'center' }}>Hill Climbing</h1>
           <div style={{ backgroundColor: '#333', color: '#fff', padding: '20px',borderRadius : "19px"  }}>
             {result && result.hill_climbing_results && result.hill_climbing_results.journey_1 && (
               result.hill_climbing_results.journey_1[currentHillClimbingJourney].cycles.map((cycle, cycleIndex) => (
@@ -90,10 +100,10 @@ const PlanningPage = () => {
                         borderRadius: '15px',
                         cursor: 'pointer',
                         margin: '0 10px',
-                        fontSize: '16px',
+                        fontSize: '22px',
                     }}
                 >
-                    Précédent
+                    Previous
                 </button>
                 <button
                     onClick={goToNextHillClimbingJourney}
@@ -105,10 +115,10 @@ const PlanningPage = () => {
                         borderRadius: '15px',
                         cursor: 'pointer',
                         margin: '0 10px',
-                        fontSize: '16px',
+                        fontSize: '22px',
                     }}
                 >
-                    Suivant
+                    Next
                 </button>
             </div>
 
@@ -116,7 +126,7 @@ const PlanningPage = () => {
         </div>
 
         <div style={{ flex: 1, marginLeft: '20px'   }}>
-          <h2 style={{ color: 'black', textAlign: 'center' }}>Recuit Simulé</h2>
+          <h1 style={{ color: 'black', textAlign: 'center' }}>Recuit Simulé</h1>
           <div style={{ backgroundColor: '#333', color: '#fff', padding: '20px',borderRadius : "19px"  }}>
             {result && result.simulated_annealing_results && result.simulated_annealing_results.journey_1 && (
               result.simulated_annealing_results.journey_1[currentSimulatedAnnealingJourney].cycles.map((cycle, cycleIndex) => (
@@ -164,10 +174,10 @@ const PlanningPage = () => {
                         borderRadius: '15px',
                         cursor: 'pointer',
                         margin: '0 10px',
-                        fontSize: '16px',
+                        fontSize: '22px',
                     }}
                 >
-                    Précédent
+                    Previous
                 </button>
                 <button
                     onClick={goToNextSimulatedAnnealingJourney}
@@ -179,10 +189,10 @@ const PlanningPage = () => {
                         borderRadius: '15px',
                         cursor: 'pointer',
                         margin: '0 10px',
-                        fontSize: '16px',
+                        fontSize: '22px',
                     }}
                 >
-                    Suivant
+                    Next
                 </button>
             </div>
           </div>
@@ -190,7 +200,7 @@ const PlanningPage = () => {
       </div>
 
       <button
-        onClick={handleNavigate}
+        onClick={handleNavigateToMapPageHC}
         style={{
           backgroundColor: '#000000',
           color: '#fff',
@@ -198,14 +208,31 @@ const PlanningPage = () => {
           border: 'none',
           borderRadius: '19px',
           cursor: 'pointer',
-          fontSize: '16px',
+          fontSize: '22px',
           marginTop: '50px',
           margin: '50px auto 0',  // Ajout de cette ligne pour centrer le bouton horizontalement
           display: 'block',
         }}
       >
-        Retour à la carte
+        Go To Hill Climbing Results
       </button>
+      <button
+        onClick={handleNavigateToMapPageSA}
+        style={{
+          backgroundColor: '#000000',
+          color: '#fff',
+          padding: '20px 15px',
+          border: 'none',
+          borderRadius: '19px',
+          cursor: 'pointer',
+          fontSize: '22px',
+          marginTop: '20px',  // Adjusted margin for the duplicated button
+          margin: '20px auto 0',  // Ajout de cette ligne pour centrer le bouton horizontalement
+          display: 'block',
+      }}
+    >
+      Go To Simulated Annealing
+    </button>
     </div>
   );
 };

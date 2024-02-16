@@ -2,7 +2,8 @@
 
 import React from 'react';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
-import MapPage from './components/MapPage';
+import MapPageHC from './components/MapPageHC';
+import MapPageSA from './components/MapPageSA';
 import PlanningPage from './components/PlanningPage';
 
 function App() {
@@ -10,7 +11,8 @@ function App() {
     <Router>
       <div>
         <Routes>
-          <Route path="/" element={<MapPage />} />
+          <Route path="/" element={<MapPageHC />} />
+          <Route path="/sa" element={<MapPageSA />} />
           <Route path="/planning" element={<PlanningPage />} />
         </Routes>
       </div>
