@@ -102,6 +102,8 @@ def hill_climbing(journey: Journey, tanks: List[Tank], optimization_parameters: 
     if maximum_complexity:
         iter = 0
         progress = True
+        progress_score = [journey.evaluation(tanks=tanks)]
+        progress_iter = [iter]
         while(progress):
             best_journey = best_journeys[-1]
             new_journeys = get_neighbors(best_journey=best_journey, tanks=tanks,
@@ -113,10 +115,15 @@ def hill_climbing(journey: Journey, tanks: List[Tank], optimization_parameters: 
                     progress = True
                     best_journey = new_journey
                     best_journeys.append(best_journey)
+                    progress_score.append(best_journey.evaluation(tanks=tanks))
+                    progress_iter.append(iter+1)
             if progress:
                 tqdm.write(f'Progress at iter {iter}')
             iter += 1
         tqdm.write('Hill climbing finished.')
+        generate_progress_graph(progress_iter=progress_iter, progress_score=progress_score,
+                        journey_id=journey_id, itermax=progress_iter[-1],
+                        folder_path=MAXIMUM_COMPLEXITY_RESULTS_PATH)
 
     else:
         progress_score = [journey.evaluation(tanks=tanks)]
@@ -201,7 +208,7 @@ def simulated_annealing(initial_solution, tanks: List[Tank], optimization_parame
     return best_solutions
 
 @timeit
-def main(maximum_complexity, example):
+def main(lower_complexity, maximum_complexity, example):
     """
     Main function to execute optimization algorithms.
 
@@ -211,13 +218,10 @@ def main(maximum_complexity, example):
     measurements, tanks, makers = get_data()
 
     solutions, journeys, parameters = get_basic_journeys(tanks=tanks, delta_days=1)
-        
-    hill_climbing_results = []
-    simulated_annealing_results = []
-    
+            
     if example:
         for i in range(example):
-            print(f'\n#---------- Example : Journey n°{i} ----------#\n')
+            print(f'\n#---------- Example : Journey n°{i}/{example} ----------#\n')
             journey = journeys[i]
             parameter = parameters[i]
 
@@ -225,6 +229,10 @@ def main(maximum_complexity, example):
                                                                                 optimization_parameters=parameter,
                                                                                     maximum_complexity=True, example=True)
             solutions = []
+            solutions.append({"method": "Base", "score": journey.evaluation(tanks=tanks),
+                "volume": journey.journey_volume, "distance": journey.journey_distance,
+                "emergency": journey.journey_global_emergency})
+            
             for journey in permutation_journeys:
                 solutions.append({"method": "Permutation", "score": journey.evaluation(tanks=tanks),
                             "volume": journey.journey_volume, "distance": journey.journey_distance,
@@ -240,33 +248,52 @@ def main(maximum_complexity, example):
                             "volume": journey.journey_volume, "distance": journey.journey_distance,
                             "emergency": journey.journey_global_emergency})
 
-            plot_pareto_front(solutions=solutions, journey_id=i)       
-""" 
-    make_empty(folder=HILL_CLIMBING_RESULTS_PATH)
-    make_empty(folder=SIMULATED_ANNEALING_PATH)   
-    for i, journey in enumerate(journeys):
-        print(f'\n#---------- Journey n°{i}/{len(journeys)} ----------#\n')
-        parameter = parameters[i]
-        
-        hill_climbing_journeys = hill_climbing(journey=journey, tanks=tanks, optimization_parameters=parameter,
-                                               maximum_complexity=maximum_complexity, journey_id=i)
-        
-        simulated_annealing_journeys = simulated_annealing(initial_solution=journey, tanks=tanks,
-                                                           optimization_parameters=parameter,
-                                                           maximum_complexity=maximum_complexity, journey_id=i)
-        
-        hill_climbing_results.append(hill_climbing_journeys)
-        simulated_annealing_results.append(simulated_annealing_journeys)
+            save_solutions(journey_id=i, solutions=solutions)
+            plot_pareto_front(solutions=solutions, journey_id=i)
 
-    save_results_to_path(results=hill_climbing_results, folder_path=HILL_CLIMBING_RESULTS_PATH)
-    save_results_to_path(results=simulated_annealing_results, folder_path=SIMULATED_ANNEALING_PATH)"""
+        for filename in os.listdir(NEIGHBORS_PATH):
+            if filename.endswith('.xlsx'):
+                generate_box_plot(os.path.join(NEIGHBORS_PATH, filename), NEIGHBORS_PATH, filename)
+        
+    if maximum_complexity:
+        for i in range(maximum_complexity):
+            print(f'\n#---------- Maximum complexity : Journey n°{i}/{maximum_complexity} ----------#\n')
+            journey = journeys[i]
+            parameter = parameters[i]
+            hill_climbing_journeys = hill_climbing(journey=journey, tanks=tanks, optimization_parameters=parameter,
+                                                maximum_complexity=True, journey_id=i)
+            
+    if lower_complexity:
+        hill_climbing_results = []
+        simulated_annealing_results = []
+        for i in range(lower_complexity):
+            print(f'\n#---------- Lower complexity : Journey n°{i}/{lower_complexity} ----------#\n')
+            journey = journeys[i]
+            parameter = parameters[i]
+            
+            hill_climbing_journeys = hill_climbing(journey=journey, tanks=tanks, optimization_parameters=parameter,
+                                                maximum_complexity=False, journey_id=i)
+            
+            simulated_annealing_journeys = simulated_annealing(initial_solution=journey, tanks=tanks,
+                                                            optimization_parameters=parameter,
+                                                            maximum_complexity=False, journey_id=i)
+            
+            hill_climbing_results.append(hill_climbing_journeys)
+            simulated_annealing_results.append(simulated_annealing_journeys)
+
+        save_results_to_path(results=hill_climbing_results, folder_path=HILL_CLIMBING_RESULTS_PATH)
+        save_results_to_path(results=simulated_annealing_results, folder_path=SIMULATED_ANNEALING_PATH)
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Run the main function with optional flags.")
-    parser.add_argument("--maximum-complexity", action="store_true", help="Run with maximum complexity flag.")
-    parser.add_argument("--example", nargs='?', type=int, const=1, help="Run the example flag (all permutations, all swaps, all transfers).")
-
+    parser.add_argument("--example", type=int, help="Value for example flag (neighbors test).")
+    parser.add_argument("--lower-complexity", type=int, help="Value for lower complexity flag.")
+    parser.add_argument("--maximum-complexity", type=int, help="Value for maximum complexity flag.")
     args = parser.parse_args()
-    
-    main(args.maximum_complexity, args.example)
+
+    example_flag = args.example if args.example else 1
+    lower_complexity = args.lower_complexity if args.lower_complexity else 1
+    maximum_complexity = args.maximum_complexity if args.maximum_complexity else 1
+
+    main(lower_complexity=lower_complexity, maximum_complexity=maximum_complexity, example=example_flag)
 

@@ -152,11 +152,12 @@ def plot_pareto_front(solutions, journey_id, FOLDER_PATH=NEIGHBORS_PATH):
                                     label=method)
         scatter_handles.append(scatter_handle)
 
-    # Plot Pareto front layer
-    pareto_front_volume = np.array([sol['volume'] for sol in pareto_front])
-    pareto_front_distance = np.array([sol['distance'] for sol in pareto_front])
-    pareto_front_emergency = np.array([sol['emergency'] for sol in pareto_front])
-    ax.plot_trisurf(pareto_front_volume, pareto_front_distance, pareto_front_emergency, color='red', alpha=0.5)
+    # Plot Pareto front layer if there are at least three points
+    if len(pareto_front) > 3:
+        pareto_front_volume = np.array([sol['volume'] for sol in pareto_front])
+        pareto_front_distance = np.array([sol['distance'] for sol in pareto_front])
+        pareto_front_emergency = np.array([sol['emergency'] for sol in pareto_front])
+        ax.plot_trisurf(pareto_front_volume, pareto_front_distance, pareto_front_emergency, color='red', alpha=0.5)
 
     # Calculate percentage of each method in Pareto front
     method_percentage = {}
@@ -292,3 +293,41 @@ def save_results_to_path(results, folder_path):
         result_filename = os.path.join(folder_path, f"journey_{index}.pickle")
         with open(result_filename, "wb") as file:
             pickle.dump(result, file)
+
+def save_solutions(journey_id, solutions):
+    data = []
+
+    for solution in solutions:
+        data.append({
+            "Method": solution["method"],
+            "Score": solution["score"],
+            "Volume": solution["volume"],
+            "Distance": solution["distance"],
+            "Emergency": solution["emergency"]
+        })
+
+    df = pd.DataFrame(data)
+    
+    if not os.path.exists(NEIGHBORS_PATH):
+        os.makedirs(NEIGHBORS_PATH)
+
+    df.to_excel(os.path.join(NEIGHBORS_PATH, f"journey_{journey_id}_solutions.xlsx"), index=False)
+
+def generate_box_plot(input_xlsx, folder_path, filename):
+    name = 'journey_'+filename.split('.')[0].split('_')[1]+'_boxplot'
+    df = pd.read_excel(input_xlsx)
+
+    plt.figure(figsize=(10, 6))
+    for i, column in enumerate(['Score', 'Volume', 'Distance', 'Emergency'], start=1):
+        plt.subplot(2, 2, i)
+        bp = df.boxplot(column=column, by='Method', ax=plt.gca())
+        plt.title(f'Boxplot {column}')
+        plt.xlabel('Method')
+        plt.ylabel(column)
+        plt.xticks(rotation=45)
+        plt.xticks(range(1, len(df['Method'].unique()) + 1), sorted(df['Method'].unique()))
+
+    plt.suptitle('')
+    plt.tight_layout()
+    plt.savefig(os.path.join(folder_path, f"{name}.png"))
+    plt.close()
