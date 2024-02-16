@@ -64,7 +64,7 @@ function TankMap({ storehouse, cycles }) {
   }, [cycles, storehousePosition]);
 
   return (
-    <MapContainer center={storehousePosition} zoom={13} style={{ height: "800px", width: "2000px", margin: '30px 50px 30px 0px', justifiyContent:"center" ,borderRadius: '19px',}}>
+    <MapContainer center={storehousePosition} zoom={13} style={{ height: "800px", width: "100%", margin: '30px 50px 30px 0px', justifiyContent:"center" ,borderRadius: '19px'}}>
       <TileLayer
         url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
       />

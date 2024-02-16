@@ -158,7 +158,6 @@ const MapPageHC = () => {
               cursor: 'pointer',
               fontSize: '22px',
               marginRight: '20px', // Increased margin
-              marginLeft : "20px",
               marginTop: "30px",
               marginBottom: "100px"
             }}>Previous Journey</button>
@@ -178,8 +177,37 @@ const MapPageHC = () => {
               marginRight: "100px"
             }}>Suboptimal Route</button>
             <div style={{ display: "flex", flexDirection: "column", alignItems: "center" }}>
-              <div style={{ marginBottom: '10px',fontSize: '22px' }}>Opimized Journey : {currentJourneyIndexInList}</div>
-              <div style={{fontSize: '22px'}}>Journey Number: {extractNumberFromJourney(journeyKeys[currentJourneyIndex])}</div>
+              <div style={{ display:"flex",flexDirection: "row"}}>
+                {/* <div>
+                  <div style={{ marginBottom: '10px',fontSize: '22px' }}>Opimized Journey : {currentJourneyIndexInList}</div>
+                  <div style={{fontSize: '22px'}}>Journey Number: {extractNumberFromJourney(journeyKeys[currentJourneyIndex])}</div>
+                </div> */}
+                <table style={{ borderCollapse: 'collapse', borderRadius: '19px', backgroundColor: "#f2f2f2" }}>
+                  <thead>
+                    <tr>
+                      <th style={{ border: 'none', padding: '10px', textAlign: 'center', verticalAlign: 'middle' }}>Journey Number</th>
+                      <th style={{ border: 'none', padding: '10px', textAlign: 'center', verticalAlign: 'middle' }}>Optimized Journey</th>
+                      <th style={{ border: 'none', padding: '10px', textAlign: 'center', verticalAlign: 'middle' }}>Journey Time</th>
+                      <th style={{ border: 'none', padding: '10px', textAlign: 'center', verticalAlign: 'middle' }}>Journey Volume</th>
+                      <th style={{ border: 'none', padding: '10px', textAlign: 'center', verticalAlign: 'middle' }}>Journey Distance</th>
+                      {/* Add more headers as needed */}
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {/* Add rows with empty cells */}
+                    <tr>
+                      <td style={{ border: 'none', padding: '10px', textAlign: 'center', verticalAlign: 'middle' }}>{extractNumberFromJourney(journeyKeys[currentJourneyIndex])}</td>
+                      <td style={{ border: 'none', padding: '10px', textAlign: 'center', verticalAlign: 'middle' }}>{currentJourneyIndexInList}</td>
+                      <td style={{ border: 'none', padding: '10px', textAlign: 'center', verticalAlign: 'middle' }}>{currentJourney[currentJourneyIndexInList].journey_time.toFixed(2)}</td>
+                      <td style={{ border: 'none', padding: '10px', textAlign: 'center', verticalAlign: 'middle' }}>{currentJourney[currentJourneyIndexInList].journey_volume.toFixed(2)}</td>
+                      <td style={{ border: 'none', padding: '10px', textAlign: 'center', verticalAlign: 'middle' }}>{currentJourney[currentJourneyIndexInList].journey_distance.toFixed(2)}</td>
+                      {/* Add more cells as needed */}
+                    </tr>
+                  </tbody>
+                </table>
+
+
+              </div>
               <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end' }}>
                 <button onClick={handleNavigate} style={{
                   backgroundColor: '#000000',
@@ -189,12 +217,13 @@ const MapPageHC = () => {
                   borderRadius: '19px',
                   cursor: 'pointer',
                   fontSize: '22px',
-                  marginTop: '50px', // Align to the bottom
+                  marginTop: '40px', // Align to the bottom
                   
 
                   
                 }}>Schedule</button>
               </div>
+
             </div>
             
     
@@ -221,13 +250,13 @@ const MapPageHC = () => {
               borderRadius: '19px',
               cursor: 'pointer',
               fontSize: '22px',
-              marginRight: '20px', // Increased margin
+              marginRight: '50px', // Increased margin
               marginLeft : "20px",
               marginTop: "30px",
               marginBottom: "100px"
             }}>Next Journey </button>
           </div>
-    
+          
           
         </div>
       </div>
