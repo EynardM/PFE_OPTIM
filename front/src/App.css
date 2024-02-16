@@ -1,6 +1,7 @@
 /* Center align text */
 .App {
   text-align: center;
+
 }
 
 /* App logo */
@@ -9,6 +10,20 @@
   pointer-events: none;
 }
 
+/* To make the button previous and next with a style */
+/* .App-button{
+   background-color: #000000;
+  color: #fff;
+  padding: 20px 15px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 16px;
+  margin-top: -155px;
+  margin-left: 30%;
+  display: block;
+}
+} */
 /* Animation for App logo */
 @media (prefers-reduced-motion: no-preference) {
   .App-logo {
