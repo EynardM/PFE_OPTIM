@@ -134,7 +134,7 @@ const MapPageHC = () => {
       </style>
       <div style={{display: "flex", flexDirection: "column",  justifyContent: "center", alignItems:"center"}}>
         <div style={{ display: 'flex', justifyContent:"space-around",flexDirection: 'row' , marginTop:"20px"}}> 
-          <h1 style={{ marginBottom: '20px', marginRight: "100px"}}>Hil Climbing Results</h1>
+          <h1 style={{ marginBottom: '20px', marginRight: "100px"}}>Hill Climbing Results</h1>
           <button onClick={handleNavigateToAnotherPage} style={{
             backgroundColor: '#000000', // Green color for the button
             color: '#fff',
@@ -143,7 +143,7 @@ const MapPageHC = () => {
             borderRadius: '19px',
             cursor: 'pointer',
             fontSize: '22px',
-          }}>Go To Simmulated Annealing Results</button>
+          }}>Go To Simulated Annealing Results</button>
         </div>
         <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center'}}>
           <TankMap storehouse={result.storehouse} cycles={currentJourney[currentJourneyIndexInList].cycles} />
