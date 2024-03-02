@@ -5,6 +5,15 @@ from util.common import *
 from util.variables import *
 
 def parse_config(filename: str) -> tuple:
+    """
+    Parse configuration from a JSON file and create instances of Constraints, Vehicle, Storehouse, and Agent.
+
+    Parameters:
+    - filename (str): The name of the JSON file containing configuration data.
+
+    Returns:
+    tuple: A tuple containing instances of Constraints, Vehicle, Storehouse, and Agent.
+    """
     with open(filename, 'r') as file:
         config_data = json.load(file)
 
@@ -21,6 +30,15 @@ def parse_config(filename: str) -> tuple:
     return constraints, vehicle, storehouse, agent
 
 def create_maker_objects_from_dataframe(df):
+    """
+    Create a list of Maker objects from a DataFrame.
+
+    Parameters:
+    - df (pd.DataFrame): The DataFrame containing maker data.
+
+    Returns:
+    list: A list of Maker objects.
+    """
     makers_list = []
     for index, row in df.iterrows():
         maker = Maker(
@@ -44,6 +62,15 @@ def create_maker_objects_from_dataframe(df):
     return makers_list
 
 def create_tank_objects_from_dataframe(df):
+    """
+    Create a list of Tank objects from a DataFrame.
+
+    Parameters:
+    - df (pd.DataFrame): The DataFrame containing tank data.
+
+    Returns:
+    list: A list of Tank objects.
+    """
     tanks_list = []
     for index, row in df.iterrows():
         tank = Tank(
@@ -68,6 +95,15 @@ def create_tank_objects_from_dataframe(df):
     return tanks_list
 
 def create_measurement_objects_from_dataframe(df):
+    """
+    Create a list of Measurement objects from a DataFrame.
+
+    Parameters:
+    - df (pd.DataFrame): The DataFrame containing measurement data.
+
+    Returns:
+    list: A list of Measurement objects.
+    """
     measurement_list = []
     for index, row in df.iterrows():
         measurement = Measurement(
@@ -92,6 +128,16 @@ def create_measurement_objects_from_dataframe(df):
     return measurement_list
 
 def filter_days(tanks : List[Tank], delta_days: int) -> List[Tank]:
+    """
+    Filter tanks based on the working days of the associated makers.
+
+    Parameters:
+    - tanks (List[Tank]): List of Tank objects to be filtered.
+    - delta_days (int): The number of days to look back.
+
+    Returns:
+    List[Tank]: List of filtered Tank objects.
+    """
     now = datetime.now() - timedelta(days=delta_days)
     day = now.strftime("%A")
     day_index = {calendar.day_name[i]: i for i in range(7)}[day]
@@ -103,6 +149,16 @@ def filter_days(tanks : List[Tank], delta_days: int) -> List[Tank]:
     return tanks_filtered_by_days
 
 def filter_quantities(tanks : List[Tank], constraints: Constraints) -> List[Tank]:
+    """
+    Filter tanks based on the percentage volume threshold.
+
+    Parameters:
+    - tanks (List[Tank]): List of Tank objects to be filtered.
+    - constraints (Constraints): Constraints object containing percentage_volume_threshold.
+
+    Returns:
+    List[Tank]: List of filtered Tank objects.
+    """
     tanks_filtered_by_quantity = []
     for tank in tanks: 
         if tank.current_volume / tank.overflow_capacity >= constraints.percentage_volume_threshold:
@@ -110,6 +166,15 @@ def filter_quantities(tanks : List[Tank], constraints: Constraints) -> List[Tank
     return tanks_filtered_by_quantity
 
 def get_eval_weights(journeys: List[Journey]):
+    """
+    Calculate evaluation weights based on the maximum volume, distance, and emergency in a list of journeys.
+
+    Parameters:
+    - journeys (List[Journey]): List of Journey objects.
+
+    Returns:
+    tuple: A tuple containing weights for volume, distance, and emergency.
+    """
     max_volume = float('-inf')
     max_distance = float('-inf')
     max_emergency = float('-inf')
@@ -131,6 +196,15 @@ def get_eval_weights(journeys: List[Journey]):
     return weight_Q, weight_D, weight_E
     
 def get_pareto_front(solutions):
+    """
+    Identify the Pareto front from a list of solutions.
+
+    Parameters:
+    - solutions (list): List of dictionaries representing solutions.
+
+    Returns:
+    list: List of dictionaries representing the Pareto front solutions.
+    """
     pareto_front = []
     for sol in solutions:
         is_pareto = True
@@ -145,6 +219,14 @@ def get_pareto_front(solutions):
     return pareto_front
 
 def plot_pareto_front(solutions, journey_id, FOLDER_PATH=NEIGHBORS_PARETO_FRONTS_PATH):
+    """
+    Plot and save the Pareto front for a specific journey.
+
+    Parameters:
+    - solutions (list): List of dictionaries representing solutions.
+    - journey_id (int): ID of the journey.
+    - FOLDER_PATH (str): Path to the folder where the plots will be saved.
+    """
     fig = plt.figure()
     ax = fig.add_subplot(111, projection='3d')
 
@@ -196,37 +278,16 @@ def plot_pareto_front(solutions, journey_id, FOLDER_PATH=NEIGHBORS_PARETO_FRONTS
     plt.savefig(filename)
     plt.close('all')
 
-def generate_box_plots(input_xlsx):
-    # Lire le fichier Excel avec pandas
-    xls = pd.ExcelFile(input_xlsx)
-
-    # Boucler sur chaque feuille Excel
-    for sheet_name in xls.sheet_names:
-        df = pd.read_excel(input_xlsx, sheet_name=sheet_name)
-
-        # Créer le chemin complet du fichier de sortie
-        output_filename = f"{sheet_name}.png"
-        output_filepath = os.path.join(BOX_PLOTS_PATH, output_filename)
-
-        # Générer le boxplot pour chaque colonne
-        plt.figure(figsize=(10, 6))
-        for i, column in enumerate(['Score', 'Volume', 'Distance', 'Emergency'], start=1):
-            plt.subplot(2, 2, i)
-            bp = df.boxplot(column=column, by='Method', ax=plt.gca())
-            plt.title(f'Boxplot {column}')
-            plt.xlabel('Method')
-            plt.ylabel(column)
-            plt.xticks(rotation=45)
-            plt.xticks(range(1, len(df['Method'].unique()) + 1), sorted(df['Method'].unique()))
-
-        plt.suptitle(f'Boxplots - {sheet_name}')
-        plt.tight_layout()
-
-        # Sauvegarder le boxplot dans le dossier de sortie
-        plt.savefig(output_filepath)
-        plt.close()
 
 def get_results(solutions, delta_days: int, folder_path):
+    """
+    Analyze and save results based on solutions, delta_days, and folder_path.
+
+    Parameters:
+    - solutions (list): List of dictionaries representing solutions.
+    - delta_days (int): Number of days to look back.
+    - folder_path (str): Path to the folder where results will be saved.
+    """
     fig = plt.figure()
     ax = fig.add_subplot(111, projection='3d')
 
@@ -320,6 +381,16 @@ def get_results(solutions, delta_days: int, folder_path):
     generate_box_plot(input_xlsx=os.path.join(folder_path, 'values.xlsx'), folder_path=folder_path)
 
 def generate_progress_graph(progress_iter, progress_score, journey_id, itermax, folder_path):
+    """
+    Generate and save a progress graph based on optimization progress.
+
+    Parameters:
+    - progress_iter (list): List of iteration numbers.
+    - progress_score (list): List of corresponding scores.
+    - journey_id (int): ID of the journey.
+    - itermax (int): Maximum number of iterations.
+    - folder_path (str): Path to the folder where the graph will be saved.
+    """
     # Création des listes pour les itérations et les scores
     iterations = []
     scores = []
@@ -353,12 +424,26 @@ def generate_progress_graph(progress_iter, progress_score, journey_id, itermax, 
     plt.close()
 
 def save_results_to_path(results, folder_path):
+    """
+    Save optimization results to pickle files in the specified folder.
+
+    Parameters:
+    - results (list): List of optimization results.
+    - folder_path (str): Path to the folder where results will be saved.
+    """
     for index, result in enumerate(results, start=1):
         result_filename = os.path.join(folder_path, f"journey_{index}.pickle")
         with open(result_filename, "wb") as file:
             pickle.dump(result, file)
 
 def save_solutions(journey_id, solutions):
+    """
+    Save optimization solutions to an Excel file.
+
+    Parameters:
+    - journey_id (int): ID of the journey.
+    - solutions (list): List of dictionaries representing solutions.
+    """
     data = []
 
     for solution in solutions:
@@ -378,6 +463,14 @@ def save_solutions(journey_id, solutions):
     df.to_excel(os.path.join(NEIGHBORS_SOLUTIONS_PATH, f"journey_{journey_id}.xlsx"), index=False)
 
 def generate_box_plot(input_xlsx, folder_path, filename=None):
+    """
+    Generate and save box plots from an Excel file.
+
+    Parameters:
+    - input_xlsx (str): Path to the input Excel file.
+    - folder_path (str): Path to the folder where plots will be saved.
+    - filename (str, optional): Name to use for the output files. If None, a default name is used.
+    """
     if filename is not None:
         name = 'journey_'+filename.split('.')[0].split('_')[1]
     else:
@@ -400,6 +493,17 @@ def generate_box_plot(input_xlsx, folder_path, filename=None):
     plt.close()
 
 def get_journeys(folder_path):
+    """
+    Reads pickle files from a specified folder, loads the pickled objects,
+    and organizes them into a dictionary where keys are filenames (excluding extension)
+    and values are lists of journeys.
+
+    Parameters:
+    - folder_path (str): The path to the folder containing pickle files.
+
+    Returns:
+    - dict: A dictionary where keys are filenames and values are lists of journeys.
+    """
     results_dict = {}
     for file in os.listdir(folder_path):
         if file.endswith(".pickle"):
@@ -418,7 +522,21 @@ def get_journeys(folder_path):
     return results_dict
 
 def plot_comp_optim_methods(tanks: List[Tank], basic_journeys: List[Journey], filename1="evolution_scores_optim.png", filename2="final_pareto_front.png"):
+    """
+    Compares the optimization results of different methods (Hill Climbing, Simulated Annealing, and a base method)
+    by plotting their scores over the course of multiple journeys. It also generates a 3D scatter plot of the Pareto front
+    for the final solutions obtained by each method.
 
+    Parameters:
+    - tanks (List[Tank]): List of Tank objects.
+    - basic_journeys (List[Journey]): List of basic Journey objects.
+    - filename1 (str): The filename for the line plot image.
+    - filename2 (str): The filename for the Pareto front 3D scatter plot image.
+
+    Returns:
+    - None
+    """
+     # Data Preparation
     hill_climbing_results = get_journeys(folder_path=HILL_CLIMBING_PICKLES_LOWER_COMPLEXITY_PATH)
     simulated_annealing_results = get_journeys(folder_path=SIMULATED_ANNEALING_PICKLES_PATH)
 
@@ -428,8 +546,8 @@ def plot_comp_optim_methods(tanks: List[Tank], basic_journeys: List[Journey], fi
 
     x_values = list(range(1, len(hill_climbing_results.keys()) + 1))
 
+    # Plotting Scores
     fig = go.Figure()
-
     fig.add_trace(go.Scatter(x=x_values, y=best_scores_hc,
                         mode='lines',
                         line=dict(color='green', width=1),
@@ -454,6 +572,7 @@ def plot_comp_optim_methods(tanks: List[Tank], basic_journeys: List[Journey], fi
     filepath = os.path.join(OPTIM_RESULTS_PATH, filename1)
     fig.write_image(filepath)
     
+    # Plotting Pareto Front
     fig = plt.figure()
     ax = fig.add_subplot(111, projection='3d')
 

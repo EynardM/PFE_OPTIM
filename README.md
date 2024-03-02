@@ -128,7 +128,6 @@ The maximum complexity flag is included in case we want to generate all possible
 
 ## Config
 
-## Config
 
 In the **`config.json`** file, you have the flexibility to customize configurations for various entities related to the optimization problem:
 
@@ -137,6 +136,82 @@ In the **`config.json`** file, you have the flexibility to customize configurati
 - **storehouse**: Specifies the location of the storehouse, where the agent unloads their cargo.
 - **agent**: Provides details about the agent, including their name and working days and hours.
 
+## Util
+
+In the **util** folder there are some interesting things.
+### Objects
+In **`object.py`**, there are all the classes that we have manipulated through this project: 
+- **`Constraints`**: Represents constraints for the optimization problem, such as maximum working time, minimum draining volume, maximum simulation depth, and percentage volume threshold.
+
+- **`Vehicle`**: Describes attributes of a vehicle, including its ID, name, capacity, speed, loading time, draining speed, and pumping speed.
+
+- **`Storehouse`**: Represents a storehouse with properties like ID, latitude, longitude, and collector information.
+
+- **`Agent`**: Represents an agent with details like ID, name, surname, working days, begin hour, and daily working slot.
+
+- **`OptimizationParameters`**: Encapsulates parameters for optimization, including an agent, storehouse, date, tanks, constraints, vehicle, collector, and method.
+
+- **`Measurement`**: Represents a measurement with various attributes such as ID, drainage, event type, fill level, filling, key maker, key tank, measured height, and volume.
+
+- **`Tank`**: Describes a tank with properties like barcode, collector, overflow capacity, last reading date, tank type, nominal capacity, current volume, and fill level.
+
+- **`Maker`**: Represents a maker with information like keys to tanks, collector, vacation details, address, hours, and geographical coordinates.
+
+- **`Cycle`**: Represents a cycle in the optimization process, including starting and ending times, selected tanks, collected quantities, travel distances, and cycle statistics.
+    
+- **`Journey`**: Encapsulates a journey composed of cycles, including starting and ending times, journey time, journey volume, journey distance, and break time.
+
+
+
+### Helper
+In `helpers.py`, we've gathered various utility functions used for plotting, generating, obtaining, and saving results throughout the project:
+- **parse_config**: Parse configuration from a JSON file and create instances of Constraints, Vehicle, Storehouse, and Agent.
+
+- **create_maker_objects_from_dataframe**: Create a list of Maker objects from a DataFrame.
+
+- **create_tank_objects_from_dataframe**: Create a list of Tank objects from a DataFrame.
+
+- **create_measurement_objects_from_dataframe**: Create a list of Measurement objects from a DataFrame.
+
+- **filter_days**: Filter tanks based on the working days of the associated makers.
+
+- **filter_quantities**: Filter tanks based on the percentage volume threshold.
+
+- **get_eval_weights**: Calculate evaluation weights based on the maximum volume, distance, and emergency in a list of journeys.
+
+- **get_pareto_front**: Identify the Pareto front from a list of solutions.
+
+- **plot_pareto_front**: Plot and save the Pareto front for a specific journey.
+
+- **get_results**: Analyze and save results based on solutions, delta_days, and folder_path.
+
+- **generate_progress_graph**: Generate and save a progress graph based on optimization progress.
+
+- **save_results_to_path**: Save optimization results to pickle files in the specified folder.
+
+- **save_solutions**: Save optimization solutions to an Excel file.
+
+- **generate_box_plot**: Generate and save box plots from an Excel file.
+
+- **get_journeys**: Reads pickle files from a specified folder, loads the pickled objects, and organizes them into a dictionary.
+
+- **plot_comp_optim_methods**: Compares the optimization results of different methods by plotting their scores and generating a 3D scatter plot of the Pareto front.
+
+
+### Reamaining files
+- `datamodule.py` contains a function responsible for extracting data from a CSV file located in the data folder.
+
+- The `variables.py` file defines constants, including choices for different methods used in the project.
+
+- `locations.py` initializes file paths necessary for the project, providing a centralized place for managing file locations.
+
+- `import.py` includes all the Python packages imported and utilized in this project.
+
+- Within `decorator.py`, you'll find a function designed to calculate the execution time of another function. This can be useful for profiling and performance analysis.
+
+
 
 ## Result
+
+
 ## Front
