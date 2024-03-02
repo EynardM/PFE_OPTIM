@@ -25,4 +25,5 @@ from tqdm import tqdm
 import pickle
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
+import plotly.graph_objects as go
 init(autoreset=True)

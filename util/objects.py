@@ -394,7 +394,7 @@ class Journey:
             self.cycles.append(cycle)
             self.journey_volume += cycle.cycle_volume
             self.journey_distance += cycle.cycle_distance
-
+    
     def evaluation(self, tanks: List[Tank]):
         global weight_Q, weight_D, weight_E
         tanks_copy = deepcopy(tanks)

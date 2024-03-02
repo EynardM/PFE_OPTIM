@@ -203,7 +203,7 @@ def filter_enough_filled(tanks: List[Tank], cycle: Cycle, optimization_parameter
 
     # Iterate over tanks and filter based on fill level and capacity
     for tank in tanks:
-        if tank.current_volume <= optimization_parameters.vehicle.capacity - cycle.cycle_volume:
+        if tank.current_volume <= optimization_parameters.vehicle.capacity - cycle.cycle_volume: 
             tank.collectable_volume = tank.current_volume
             filled_enough_tanks.append(tank)
         else:

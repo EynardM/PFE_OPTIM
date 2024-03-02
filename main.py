@@ -47,7 +47,6 @@ def get_basic_journeys(tanks: List[Tank], delta_days: int):
     optimization_parameters_list = generate_optimization_paremeters(tanks=tanks, constraints=constraints,
                                                                     vehicle=vehicle, storehouse=storehouse,
                                                                     agent=agent, time_slots=time_slots)
-
     # Generate journeys for each set of optimization parameters
     for optimization_parameters in optimization_parameters_list:
         journey = run(optimization_parameters=optimization_parameters)
@@ -123,7 +122,7 @@ def hill_climbing(journey: Journey, tanks: List[Tank], optimization_parameters: 
         tqdm.write('Hill climbing finished.')
         generate_progress_graph(progress_iter=progress_iter, progress_score=progress_score,
                         journey_id=journey_id, itermax=progress_iter[-1],
-                        folder_path=MAXIMUM_COMPLEXITY_RESULTS_PATH)
+                        folder_path=HILL_CLIMBING_PROGRESS_MAXIMUM_COMPLEXITY_PATH)
 
     else:
         progress_score = [journey.evaluation(tanks=tanks)]
@@ -143,7 +142,7 @@ def hill_climbing(journey: Journey, tanks: List[Tank], optimization_parameters: 
                 pbar.update(1)
         generate_progress_graph(progress_iter=progress_iter, progress_score=progress_score,
                                 journey_id=journey_id, itermax=ITERMAX_HC,
-                                folder_path=HILL_CLIMBING_RESULTS_PATH)
+                                folder_path=HILL_CLIMBING_PROGRESS_LOWER_COMPLEXITY_PATH)
         tqdm.write('Hill climbing finished.')
     return best_journeys
 
@@ -204,7 +203,7 @@ def simulated_annealing(initial_solution, tanks: List[Tank], optimization_parame
     tqdm.write('Simulated annealing finished.')
     generate_progress_graph(progress_iter=progress_iter, progress_score=progress_score,
                             journey_id=journey_id, itermax=ITERMAX_SA,
-                            folder_path=SIMULATED_ANNEALING_PATH)
+                            folder_path=SIMULATED_ANNEALING_PROGRESS_PATH)
     return best_solutions
 
 @timeit
@@ -218,16 +217,23 @@ def main(lower_complexity, maximum_complexity, example):
     measurements, tanks, makers = get_data()
 
     solutions, journeys, parameters = get_basic_journeys(tanks=tanks, delta_days=1)
-            
+    plot_comp_optim_methods(tanks=tanks, basic_journeys=journeys) # use this function to compare optimisation methods if pickles are saved already from a past run
+    # print(get_eval_weights(journeys)) # to get the weights to be putted in "util/variables.py", use this line once before using any flag
+    
     if example:
+        make_empty(folder=NEIGHBORS_SOLUTIONS_PATH)
+        make_empty(folder=NEIGHBORS_PARETO_FRONTS_PATH)
+        make_empty(folder=NEIGHBORS_BOX_PLOTS_PATH)
         for i in range(example):
             print(f'\n#---------- Example : Journey n°{i}/{example} ----------#\n')
             journey = journeys[i]
             parameter = parameters[i]
 
+            print(f'Generating neighbors with all techniques (permutation, swap, transfer) ...')
             permutation_journeys, swap_journeys, transfer_journeys = get_neighbors(best_journey=journey, tanks=tanks, 
                                                                                 optimization_parameters=parameter,
                                                                                     maximum_complexity=True, example=True)
+            print(f'Calculating solutions ...')
             solutions = []
             solutions.append({"method": "Base", "score": journey.evaluation(tanks=tanks),
                 "volume": journey.journey_volume, "distance": journey.journey_distance,
@@ -248,41 +254,66 @@ def main(lower_complexity, maximum_complexity, example):
                             "volume": journey.journey_volume, "distance": journey.journey_distance,
                             "emergency": journey.journey_global_emergency})
 
+            
             save_solutions(journey_id=i, solutions=solutions)
             plot_pareto_front(solutions=solutions, journey_id=i)
+            print('Results saved.')
 
-        for filename in os.listdir(NEIGHBORS_PATH):
+        for filename in os.listdir(NEIGHBORS_SOLUTIONS_PATH):
             if filename.endswith('.xlsx'):
-                generate_box_plot(os.path.join(NEIGHBORS_PATH, filename), NEIGHBORS_PATH, filename)
-        
+                generate_box_plot(os.path.join(NEIGHBORS_SOLUTIONS_PATH, filename), NEIGHBORS_BOX_PLOTS_PATH, filename)
+        print('\nBox plots saved.')
+
     if maximum_complexity:
+        hill_climbing_results = []
         for i in range(maximum_complexity):
             print(f'\n#---------- Maximum complexity : Journey n°{i}/{maximum_complexity} ----------#\n')
             journey = journeys[i]
             parameter = parameters[i]
             hill_climbing_journeys = hill_climbing(journey=journey, tanks=tanks, optimization_parameters=parameter,
                                                 maximum_complexity=True, journey_id=i)
-            
-    if lower_complexity:
-        hill_climbing_results = []
-        simulated_annealing_results = []
-        for i in range(lower_complexity):
-            print(f'\n#---------- Lower complexity : Journey n°{i}/{lower_complexity} ----------#\n')
-            journey = journeys[i]
-            parameter = parameters[i]
-            
-            hill_climbing_journeys = hill_climbing(journey=journey, tanks=tanks, optimization_parameters=parameter,
-                                                maximum_complexity=False, journey_id=i)
-            
-            simulated_annealing_journeys = simulated_annealing(initial_solution=journey, tanks=tanks,
-                                                            optimization_parameters=parameter,
-                                                            maximum_complexity=False, journey_id=i)
-            
             hill_climbing_results.append(hill_climbing_journeys)
-            simulated_annealing_results.append(simulated_annealing_journeys)
+        save_results_to_path(results=hill_climbing_results, folder_path=HILL_CLIMBING_PICKLES_MAXIMUM_COMPLEXITY_PATH)
+    # if lower_complexity:
+    #     hill_climbing_results = []
+    #     simulated_annealing_results = []
+    #     for i in range(lower_complexity):
+    #         print(f'\n#---------- Lower complexity : Journey n°{i}/{lower_complexity} ----------#\n')
+    #         journey = journeys[i]
+    #         parameter = parameters[i]
+            
+    #         hill_climbing_journeys = hill_climbing(journey=journey, tanks=tanks, optimization_parameters=parameter,
+    #                                             maximum_complexity=False, journey_id=i)
+            
+    #         simulated_annealing_journeys = simulated_annealing(initial_solution=journey, tanks=tanks,
+    #                                                         optimization_parameters=parameter,
+    #                                                         maximum_complexity=False, journey_id=i)
+            
+    #         hill_climbing_results.append(hill_climbing_journeys)
+    #         simulated_annealing_results.append(simulated_annealing_journeys)
 
-        save_results_to_path(results=hill_climbing_results, folder_path=HILL_CLIMBING_RESULTS_PATH)
-        save_results_to_path(results=simulated_annealing_results, folder_path=SIMULATED_ANNEALING_PATH)
+    #     save_results_to_path(results=hill_climbing_results, folder_path=HILL_CLIMBING_PICKLES_LOWER_COMPLEXITY_PATH)
+    #     save_results_to_path(results=simulated_annealing_results, folder_path=SIMULATED_ANNEALING_PICKLES_PATH)
+            
+    hill_climbing_results = []
+    simulated_annealing_results = []
+    for i in range(len(journeys)):
+        print(f'\n#---------- Lower complexity : Journey n°{i}/{lower_complexity} ----------#\n')
+        journey = journeys[i]
+        parameter = parameters[i]
+        
+        hill_climbing_journeys = hill_climbing(journey=journey, tanks=tanks, optimization_parameters=parameter,
+                                            maximum_complexity=False, journey_id=i)
+        
+        simulated_annealing_journeys = simulated_annealing(initial_solution=journey, tanks=tanks,
+                                                        optimization_parameters=parameter,
+                                                        maximum_complexity=False, journey_id=i)
+        
+        hill_climbing_results.append(hill_climbing_journeys)
+        simulated_annealing_results.append(simulated_annealing_journeys)
+
+    save_results_to_path(results=hill_climbing_results, folder_path=HILL_CLIMBING_PICKLES_LOWER_COMPLEXITY_PATH)
+    save_results_to_path(results=simulated_annealing_results, folder_path=SIMULATED_ANNEALING_PICKLES_PATH)
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Run the main function with optional flags.")
@@ -291,9 +322,9 @@ if __name__ == "__main__":
     parser.add_argument("--maximum-complexity", type=int, help="Value for maximum complexity flag.")
     args = parser.parse_args()
 
-    example_flag = args.example if args.example else 1
-    lower_complexity = args.lower_complexity if args.lower_complexity else 1
-    maximum_complexity = args.maximum_complexity if args.maximum_complexity else 1
+    example_flag = args.example if args.example else 0
+    lower_complexity = args.lower_complexity if args.lower_complexity else 0
+    maximum_complexity = args.maximum_complexity if args.maximum_complexity else 0
 
     main(lower_complexity=lower_complexity, maximum_complexity=maximum_complexity, example=example_flag)
 

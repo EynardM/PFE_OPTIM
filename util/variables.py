@@ -1,8 +1,14 @@
-K = 2 
-weight_Q = 1 
-weight_D = -1 
-weight_E = -1  
+# Agent
 BREAK_TIME = 2
+
+# Distance
+K = 2 
+
+# Score
+alpha_Q = 1
+alpha_D = -1 
+alpha_E = -1  
+weight_Q, weight_D, weight_E = (0.25236593059936907, -3.603972606283567, -171.95842969520817)
 
 # Hill Climbing
 ITERMAX_HC = 150

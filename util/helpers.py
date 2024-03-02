@@ -2,6 +2,7 @@ from util.imports import *
 from util.objects import *
 from util.locations import *
 from util.common import *
+from util.variables import *
 
 def parse_config(filename: str) -> tuple:
     with open(filename, 'r') as file:
@@ -108,6 +109,27 @@ def filter_quantities(tanks : List[Tank], constraints: Constraints) -> List[Tank
             tanks_filtered_by_quantity.append(tank)
     return tanks_filtered_by_quantity
 
+def get_eval_weights(journeys: List[Journey]):
+    max_volume = float('-inf')
+    max_distance = float('-inf')
+    max_emergency = float('-inf')
+
+    for journey in journeys:
+        if journey.journey_volume > max_volume:
+            max_volume = journey.journey_volume
+        
+        if journey.journey_distance > max_distance:
+            max_distance = journey.journey_distance
+        
+        if journey.journey_global_emergency > max_emergency:
+            max_emergency = journey.journey_global_emergency
+
+    weight_Q = alpha_Q/max_volume
+    weight_D = alpha_D/max_distance
+    weight_E = alpha_E/max_emergency
+
+    return weight_Q, weight_D, weight_E
+    
 def get_pareto_front(solutions):
     pareto_front = []
     for sol in solutions:
@@ -122,7 +144,7 @@ def get_pareto_front(solutions):
             pareto_front.append(sol)
     return pareto_front
 
-def plot_pareto_front(solutions, journey_id, FOLDER_PATH=NEIGHBORS_PATH):
+def plot_pareto_front(solutions, journey_id, FOLDER_PATH=NEIGHBORS_PARETO_FRONTS_PATH):
     fig = plt.figure()
     ax = fig.add_subplot(111, projection='3d')
 
@@ -170,9 +192,39 @@ def plot_pareto_front(solutions, journey_id, FOLDER_PATH=NEIGHBORS_PATH):
     ax.legend(handles=scatter_handles, labels=legend_labels)
 
     # Save figure
-    filename = os.path.join(FOLDER_PATH, f"example_journey_{journey_id}.png")
+    filename = os.path.join(FOLDER_PATH, f"journey_{journey_id}.png")
     plt.savefig(filename)
     plt.close('all')
+
+def generate_box_plots(input_xlsx, folder_path):
+    # Lire le fichier Excel avec pandas
+    xls = pd.ExcelFile(input_xlsx)
+
+    # Boucler sur chaque feuille Excel
+    for sheet_name in xls.sheet_names:
+        df = pd.read_excel(input_xlsx, sheet_name=sheet_name)
+
+        # Créer le chemin complet du fichier de sortie
+        output_filename = f"boxplot_{sheet_name}.png"
+        output_filepath = os.path.join(folder_path, output_filename)
+
+        # Générer le boxplot pour chaque colonne
+        plt.figure(figsize=(10, 6))
+        for i, column in enumerate(['Score', 'Volume', 'Distance', 'Emergency'], start=1):
+            plt.subplot(2, 2, i)
+            bp = df.boxplot(column=column, by='Method', ax=plt.gca())
+            plt.title(f'Boxplot {column}')
+            plt.xlabel('Method')
+            plt.ylabel(column)
+            plt.xticks(rotation=45)
+            plt.xticks(range(1, len(df['Method'].unique()) + 1), sorted(df['Method'].unique()))
+
+        plt.suptitle(f'Boxplots - {sheet_name}')
+        plt.tight_layout()
+
+        # Sauvegarder le boxplot dans le dossier de sortie
+        plt.savefig(output_filepath)
+        plt.close()
 
 def get_results(solutions, delta_days: int, folder_path):
     fig = plt.figure()
@@ -191,6 +243,15 @@ def get_results(solutions, delta_days: int, folder_path):
     colormap = plt.cm.get_cmap('tab10', len(unique_methods))
 
     # Plot all solutions
+    # Calculate method percentages in Pareto front
+    method_percentages = {}
+    total_pareto_count = len(pareto_front)
+    for method_index, method in enumerate(unique_methods):
+        method_solutions_in_pareto = [sol for sol in pareto_front if sol['method'] == method]
+        method_pareto_count = len(method_solutions_in_pareto)
+        method_percentages[method] = (method_pareto_count / total_pareto_count) * 100
+
+    # Plot all solutions
     scatter_handles = []
     for method_index, method in enumerate(unique_methods):
         method_solutions = [sol for sol in solutions if sol['method'] == method]
@@ -201,7 +262,7 @@ def get_results(solutions, delta_days: int, folder_path):
                                     [sol['distance'] for sol in method_solutions],
                                     [sol['emergency'] for sol in method_solutions],
                                     c=[method_color] * len(method_solutions),
-                                    label=method)
+                                    label=f"{method} ({method_percentages[method]:.2f}%)")
         scatter_handles.append(scatter_handle)
 
     # Plot Pareto front layer
@@ -211,7 +272,7 @@ def get_results(solutions, delta_days: int, folder_path):
     ax.plot_trisurf(pareto_front_volume, pareto_front_distance, pareto_front_emergency, color='red', alpha=0.5)
 
     ax.legend(handles=scatter_handles)
-    plt.show()
+    plt.savefig(os.path.join(folder_path, f'pareto_front.png'))
     plt.close('all')
 
     # Initialize an empty DataFrame for values
@@ -254,6 +315,8 @@ def get_results(solutions, delta_days: int, folder_path):
     else:
         with pd.ExcelWriter(percentages_xlsx_path, engine='openpyxl', mode='a') as writer:
             percentages_df.to_excel(writer, sheet_name=f'day{delta_days}', index=False)
+
+    generate_box_plots(input_xlsx=os.path.join(folder_path, 'values.xlsx'), folder_path=folder_path)
 
 def generate_progress_graph(progress_iter, progress_score, journey_id, itermax, folder_path):
     # Création des listes pour les itérations et les scores
@@ -308,13 +371,13 @@ def save_solutions(journey_id, solutions):
 
     df = pd.DataFrame(data)
     
-    if not os.path.exists(NEIGHBORS_PATH):
-        os.makedirs(NEIGHBORS_PATH)
+    if not os.path.exists(NEIGHBORS_SOLUTIONS_PATH):
+        os.makedirs(NEIGHBORS_SOLUTIONS_PATH)
 
-    df.to_excel(os.path.join(NEIGHBORS_PATH, f"journey_{journey_id}_solutions.xlsx"), index=False)
+    df.to_excel(os.path.join(NEIGHBORS_SOLUTIONS_PATH, f"journey_{journey_id}.xlsx"), index=False)
 
 def generate_box_plot(input_xlsx, folder_path, filename):
-    name = 'journey_'+filename.split('.')[0].split('_')[1]+'_boxplot'
+    name = 'journey_'+filename.split('.')[0].split('_')[1]
     df = pd.read_excel(input_xlsx)
 
     plt.figure(figsize=(10, 6))
@@ -331,3 +394,58 @@ def generate_box_plot(input_xlsx, folder_path, filename):
     plt.tight_layout()
     plt.savefig(os.path.join(folder_path, f"{name}.png"))
     plt.close()
+
+def get_journeys(folder_path):
+    results_dict = {}
+    for file in os.listdir(folder_path):
+        if file.endswith(".pickle"):
+            chemin_file = os.path.join(folder_path, file)
+            
+            with open(chemin_file, "rb") as f:
+                pickle_objects = pickle.load(f)
+            pickle_objects
+            filename = file.split('.')[0]
+            if filename not in results_dict:
+                results_dict[filename] = []
+
+            for journey in pickle_objects:
+                results_dict[filename].append(journey) 
+                
+    return results_dict
+
+def plot_comp_optim_methods(tanks: List[Tank], basic_journeys: List[Journey], filename="scores_optim_methods.png"):
+
+    hill_climbing_results = get_journeys(folder_path=HILL_CLIMBING_PICKLES_LOWER_COMPLEXITY_PATH)
+    simulated_annealing_results = get_journeys(folder_path=SIMULATED_ANNEALING_PICKLES_PATH)
+
+    best_scores_hc = [journey[-1].evaluation(tanks=tanks) for key, journey in hill_climbing_results.items()]
+    best_scores_sa = [journey[-1].evaluation(tanks=tanks) for key, journey in simulated_annealing_results.items()]
+    scores_basic = [journey.evaluation(tanks=tanks) for journey in basic_journeys]
+
+    x_values = list(hill_climbing_results.keys())
+
+    fig = go.Figure()
+
+    fig.add_trace(go.Scatter(x=x_values, y=best_scores_hc,
+                        mode='lines',
+                        line=dict(color='green', width=2),
+                        name='Hill Climbing'))
+
+    fig.add_trace(go.Scatter(x=x_values, y=best_scores_sa,
+                        mode='lines',
+                        line=dict(color='red', width=2),
+                        name='Simulated Annealing'))
+    
+    fig.add_trace(go.Scatter(x=x_values, y=scores_basic,
+                        mode='lines',
+                        line=dict(color='red', width=2),
+                        name='Base'))
+
+    fig.update_layout(title='Scores des méthodes d\'optimisation',
+                    xaxis_title='Key',
+                    yaxis_title='Score',
+                    legend=dict(orientation='h'),
+                    margin=dict(l=50, r=50, t=50, b=50))
+
+    filepath = os.path.join(OPTIM_RESULTS_PATH, filename)
+    fig.write_image(filepath)
