@@ -18,6 +18,36 @@ The collective information from these files forms a comprehensive dataset for ef
 
 
 ## Algorithm
+
+First in **`helpers.py`** there are a lot of useful function:
+
+- **generate_time_slots**: Generates time slots based on tank availability, agent constraints, and working hours.
+
+- **generate_optimization_parameters**: Generates a list of optimization parameters for various methods and time slots.
+
+- **get_starting_time**: Determines the starting time for a journey based on tank availability and agent constraints.
+
+- **calculate_distance**: Calculates the distance between two geographical coordinates using the Haversine formula.
+
+- **filter_hours**: Filters available tanks based on distance and time constraints.
+
+- **filter_enough_filled**: Filters tanks based on their fill level and capacity.
+
+- **filter_return**: Filters tanks based on return time constraints.
+
+- **choice_function**: Selects a tank based on a specified method, which can be:
+    - **R**: Random choice among available tanks.
+    - **Q**: Quantity, choosing the fullest tank.
+    - **D**: Distance, selecting the nearest tank by the algorithm.
+    - **E**: Emergency, choosing the tank with the highest emergency level.
+    - **HQD - HQE - HDE - HQDE:** These are heuristics combining the methods above.
+    - **Random**: Chooses a random method among all the above ones to get the next tank.
+
+Then we have the implementation of those different functions in the **`run.py`**, where the objective is to create a journey:
+- **run_slot**: Creates a feasible cycle for one time slot within a journey. It utilizes various functions from **`helpers.py`** because the cycle needs to respect constraints.
+- **run**: In this function, a complete journey is created by using `run_slot` several times, generating different cycles with a good combination.
+
+
 ## Optimization
 ## Results/Main
 ## Front
