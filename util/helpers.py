@@ -196,7 +196,7 @@ def plot_pareto_front(solutions, journey_id, FOLDER_PATH=NEIGHBORS_PARETO_FRONTS
     plt.savefig(filename)
     plt.close('all')
 
-def generate_box_plots(input_xlsx, folder_path):
+def generate_box_plots(input_xlsx):
     # Lire le fichier Excel avec pandas
     xls = pd.ExcelFile(input_xlsx)
 
@@ -205,8 +205,8 @@ def generate_box_plots(input_xlsx, folder_path):
         df = pd.read_excel(input_xlsx, sheet_name=sheet_name)
 
         # Créer le chemin complet du fichier de sortie
-        output_filename = f"boxplot_{sheet_name}.png"
-        output_filepath = os.path.join(folder_path, output_filename)
+        output_filename = f"{sheet_name}.png"
+        output_filepath = os.path.join(BOX_PLOTS_PATH, output_filename)
 
         # Générer le boxplot pour chaque colonne
         plt.figure(figsize=(10, 6))
@@ -273,6 +273,7 @@ def get_results(solutions, delta_days: int, folder_path):
 
     ax.legend(handles=scatter_handles)
     plt.savefig(os.path.join(folder_path, f'pareto_front.png'))
+
     plt.close('all')
 
     # Initialize an empty DataFrame for values
@@ -316,7 +317,7 @@ def get_results(solutions, delta_days: int, folder_path):
         with pd.ExcelWriter(percentages_xlsx_path, engine='openpyxl', mode='a') as writer:
             percentages_df.to_excel(writer, sheet_name=f'day{delta_days}', index=False)
 
-    generate_box_plots(input_xlsx=os.path.join(folder_path, 'values.xlsx'), folder_path=folder_path)
+    generate_box_plot(input_xlsx=os.path.join(folder_path, 'values.xlsx'), folder_path=folder_path)
 
 def generate_progress_graph(progress_iter, progress_score, journey_id, itermax, folder_path):
     # Création des listes pour les itérations et les scores
@@ -376,8 +377,11 @@ def save_solutions(journey_id, solutions):
 
     df.to_excel(os.path.join(NEIGHBORS_SOLUTIONS_PATH, f"journey_{journey_id}.xlsx"), index=False)
 
-def generate_box_plot(input_xlsx, folder_path, filename):
-    name = 'journey_'+filename.split('.')[0].split('_')[1]
+def generate_box_plot(input_xlsx, folder_path, filename=None):
+    if filename is not None:
+        name = 'journey_'+filename.split('.')[0].split('_')[1]
+    else:
+        name = 'boxplot'
     df = pd.read_excel(input_xlsx)
 
     plt.figure(figsize=(10, 6))
@@ -413,7 +417,7 @@ def get_journeys(folder_path):
                 
     return results_dict
 
-def plot_comp_optim_methods(tanks: List[Tank], basic_journeys: List[Journey], filename="scores_optim_methods.png"):
+def plot_comp_optim_methods(tanks: List[Tank], basic_journeys: List[Journey], filename="evolution_scores_optim.png"):
 
     hill_climbing_results = get_journeys(folder_path=HILL_CLIMBING_PICKLES_LOWER_COMPLEXITY_PATH)
     simulated_annealing_results = get_journeys(folder_path=SIMULATED_ANNEALING_PICKLES_PATH)
@@ -422,27 +426,27 @@ def plot_comp_optim_methods(tanks: List[Tank], basic_journeys: List[Journey], fi
     best_scores_sa = [journey[-1].evaluation(tanks=tanks) for key, journey in simulated_annealing_results.items()]
     scores_basic = [journey.evaluation(tanks=tanks) for journey in basic_journeys]
 
-    x_values = list(hill_climbing_results.keys())
+    x_values = list(range(1, len(hill_climbing_results.keys()) + 1))
 
     fig = go.Figure()
 
     fig.add_trace(go.Scatter(x=x_values, y=best_scores_hc,
                         mode='lines',
-                        line=dict(color='green', width=2),
+                        line=dict(color='green', width=1),
                         name='Hill Climbing'))
 
     fig.add_trace(go.Scatter(x=x_values, y=best_scores_sa,
                         mode='lines',
-                        line=dict(color='red', width=2),
+                        line=dict(color='red', width=1),
                         name='Simulated Annealing'))
     
     fig.add_trace(go.Scatter(x=x_values, y=scores_basic,
                         mode='lines',
-                        line=dict(color='red', width=2),
+                        line=dict(color='blue', width=1),
                         name='Base'))
 
     fig.update_layout(title='Scores des méthodes d\'optimisation',
-                    xaxis_title='Key',
+                    xaxis_title='Voyage ID',
                     yaxis_title='Score',
                     legend=dict(orientation='h'),
                     margin=dict(l=50, r=50, t=50, b=50))

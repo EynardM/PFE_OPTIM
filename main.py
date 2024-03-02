@@ -215,9 +215,8 @@ def main(lower_complexity, maximum_complexity, example):
         maximum_complexity (bool): Flag indicating whether to run with maximum complexity or not.
     """
     measurements, tanks, makers = get_data()
-
     solutions, journeys, parameters = get_basic_journeys(tanks=tanks, delta_days=1)
-    plot_comp_optim_methods(tanks=tanks, basic_journeys=journeys) # use this function to compare optimisation methods if pickles are saved already from a past run
+    # plot_comp_optim_methods(tanks=tanks, basic_journeys=journeys) # use this function to compare optimisation methods if pickles are saved already from a past run
     # print(get_eval_weights(journeys)) # to get the weights to be putted in "util/variables.py", use this line once before using any flag
     
     if example:
@@ -274,47 +273,28 @@ def main(lower_complexity, maximum_complexity, example):
                                                 maximum_complexity=True, journey_id=i)
             hill_climbing_results.append(hill_climbing_journeys)
         save_results_to_path(results=hill_climbing_results, folder_path=HILL_CLIMBING_PICKLES_MAXIMUM_COMPLEXITY_PATH)
-    # if lower_complexity:
-    #     hill_climbing_results = []
-    #     simulated_annealing_results = []
-    #     for i in range(lower_complexity):
-    #         print(f'\n#---------- Lower complexity : Journey n°{i}/{lower_complexity} ----------#\n')
-    #         journey = journeys[i]
-    #         parameter = parameters[i]
-            
-    #         hill_climbing_journeys = hill_climbing(journey=journey, tanks=tanks, optimization_parameters=parameter,
-    #                                             maximum_complexity=False, journey_id=i)
-            
-    #         simulated_annealing_journeys = simulated_annealing(initial_solution=journey, tanks=tanks,
-    #                                                         optimization_parameters=parameter,
-    #                                                         maximum_complexity=False, journey_id=i)
-            
-    #         hill_climbing_results.append(hill_climbing_journeys)
-    #         simulated_annealing_results.append(simulated_annealing_journeys)
 
-    #     save_results_to_path(results=hill_climbing_results, folder_path=HILL_CLIMBING_PICKLES_LOWER_COMPLEXITY_PATH)
-    #     save_results_to_path(results=simulated_annealing_results, folder_path=SIMULATED_ANNEALING_PICKLES_PATH)
+    if lower_complexity:
+        hill_climbing_results = []
+        simulated_annealing_results = []
+        for i in range(lower_complexity):
+            print(f'\n#---------- Lower complexity : Journey n°{i}/{lower_complexity} ----------#\n')
+            journey = journeys[i]
+            parameter = parameters[i]
             
-    hill_climbing_results = []
-    simulated_annealing_results = []
-    for i in range(len(journeys)):
-        print(f'\n#---------- Lower complexity : Journey n°{i}/{lower_complexity} ----------#\n')
-        journey = journeys[i]
-        parameter = parameters[i]
-        
-        hill_climbing_journeys = hill_climbing(journey=journey, tanks=tanks, optimization_parameters=parameter,
-                                            maximum_complexity=False, journey_id=i)
-        
-        simulated_annealing_journeys = simulated_annealing(initial_solution=journey, tanks=tanks,
-                                                        optimization_parameters=parameter,
-                                                        maximum_complexity=False, journey_id=i)
-        
-        hill_climbing_results.append(hill_climbing_journeys)
-        simulated_annealing_results.append(simulated_annealing_journeys)
+            hill_climbing_journeys = hill_climbing(journey=journey, tanks=tanks, optimization_parameters=parameter,
+                                                maximum_complexity=False, journey_id=i)
+            
+            simulated_annealing_journeys = simulated_annealing(initial_solution=journey, tanks=tanks,
+                                                            optimization_parameters=parameter,
+                                                            maximum_complexity=False, journey_id=i)
+            
+            hill_climbing_results.append(hill_climbing_journeys)
+            simulated_annealing_results.append(simulated_annealing_journeys)
 
-    save_results_to_path(results=hill_climbing_results, folder_path=HILL_CLIMBING_PICKLES_LOWER_COMPLEXITY_PATH)
-    save_results_to_path(results=simulated_annealing_results, folder_path=SIMULATED_ANNEALING_PICKLES_PATH)
-
+        save_results_to_path(results=hill_climbing_results, folder_path=HILL_CLIMBING_PICKLES_LOWER_COMPLEXITY_PATH)
+        save_results_to_path(results=simulated_annealing_results, folder_path=SIMULATED_ANNEALING_PICKLES_PATH)
+            
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Run the main function with optional flags.")
     parser.add_argument("--example", type=int, help="Value for example flag (neighbors test).")
