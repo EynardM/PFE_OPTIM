@@ -1,6 +1,6 @@
-# Vehicle routing optimization with time windowsn (PFE)
+# Vehicle Routing Optimization with Time Windows (PFE)
 
-# Data Overview
+## Data Overview
 
 The dataset comprises several CSV files, each providing essential information for managing the oil collection process:
 
@@ -43,11 +43,12 @@ First in **`helpers.py`** there are a lot of useful function:
     - **HQD - HQE - HDE - HQDE:** These are heuristics combining the methods above.
     - **Random**: Chooses a random method among all the above ones to get the next tank.
 
-Then we have the implementation of those different functions in the **`run.py`**, where the objective is to create a journey:
+Then we have the implementation of those different functions in the **`run.py`**, where the objective is to create an entire journey:
 - **run_slot**: Creates a feasible cycle for one time slot within a journey. It utilizes various functions from **`helpers.py`** because the cycle needs to respect constraints.
 - **run**: In this function, a complete journey is created by using `run_slot` several times, generating different cycles with a good combination.
 
-
 ## Optimization
+
+
 ## Results/Main
 ## Front
