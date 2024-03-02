@@ -417,7 +417,7 @@ def get_journeys(folder_path):
                 
     return results_dict
 
-def plot_comp_optim_methods(tanks: List[Tank], basic_journeys: List[Journey], filename="evolution_scores_optim.png"):
+def plot_comp_optim_methods(tanks: List[Tank], basic_journeys: List[Journey], filename1="evolution_scores_optim.png", filename2="final_pareto_front.png"):
 
     hill_climbing_results = get_journeys(folder_path=HILL_CLIMBING_PICKLES_LOWER_COMPLEXITY_PATH)
     simulated_annealing_results = get_journeys(folder_path=SIMULATED_ANNEALING_PICKLES_PATH)
@@ -451,5 +451,90 @@ def plot_comp_optim_methods(tanks: List[Tank], basic_journeys: List[Journey], fi
                     legend=dict(orientation='h'),
                     margin=dict(l=50, r=50, t=50, b=50))
 
-    filepath = os.path.join(OPTIM_RESULTS_PATH, filename)
+    filepath = os.path.join(OPTIM_RESULTS_PATH, filename1)
     fig.write_image(filepath)
+    
+    fig = plt.figure()
+    ax = fig.add_subplot(111, projection='3d')
+
+    ax.set_xlabel('Volume')
+    ax.set_ylabel('Distance')
+    ax.set_zlabel('Emergency')
+    plt.title('Pareto Front')
+
+    solutions = []
+    for journey_id in range(len(basic_journeys)):
+        best_score_hc = best_scores_hc[journey_id]
+        best_score_sa = best_scores_sa[journey_id]
+        score_basic = scores_basic[journey_id]
+        max_score = max(best_score_hc, best_score_sa, score_basic)
+
+        if max_score == best_score_hc:
+            method = "Hill Climbing"
+            best_journey = hill_climbing_results['journey_'+str(journey_id+1)]
+            solutions.append({"volume": best_journey[-1].journey_volume,
+                  "distance": best_journey[-1].journey_distance,
+                  "emergency": best_journey[-1].journey_global_emergency,
+                  "method": method,
+                  "score": max_score})
+            
+        if max_score == best_score_sa:
+            method = "Simulated Annealing"
+            best_journey = simulated_annealing_results['journey_'+str(journey_id+1)]
+            solutions.append({"volume": best_journey[-1].journey_volume,
+                  "distance": best_journey[-1].journey_distance,
+                  "emergency": best_journey[-1].journey_global_emergency,
+                  "method": method,
+                  "score": max_score})
+            
+        if max_score == score_basic:
+            method = "Base"
+            best_journey = basic_journeys[journey_id]
+            solutions.append({"volume": best_journey.journey_volume,
+                    "distance": best_journey.journey_distance,
+                    "emergency": best_journey.journey_global_emergency,
+                    "method": method,
+                    "score": max_score})
+
+    # Get Pareto Front
+    pareto_front = get_pareto_front(solutions)
+
+    # Create colormap for methods
+    unique_methods = sorted(set(sol['method'] for sol in solutions))
+    colormap = plt.cm.get_cmap('tab10', len(unique_methods))
+
+    # Plot all solutions
+    scatter_handles = []
+    for method_index, method in enumerate(unique_methods):
+        method_solutions = [sol for sol in solutions if sol['method'] == method]
+        method_solutions_sorted = sorted(method_solutions, key=lambda x: x['score'], reverse=True)
+
+        method_color = colormap(method_index / len(unique_methods))
+        scatter_handle = ax.scatter([sol['volume'] for sol in method_solutions],
+                                    [sol['distance'] for sol in method_solutions],
+                                    [sol['emergency'] for sol in method_solutions],
+                                    c=[method_color] * len(method_solutions),
+                                    label=method)
+        scatter_handles.append(scatter_handle)
+
+    # Plot Pareto front layer if there are at least three points
+    if len(pareto_front) > 3:
+        pareto_front_volume = np.array([sol['volume'] for sol in pareto_front])
+        pareto_front_distance = np.array([sol['distance'] for sol in pareto_front])
+        pareto_front_emergency = np.array([sol['emergency'] for sol in pareto_front])
+        ax.plot_trisurf(pareto_front_volume, pareto_front_distance, pareto_front_emergency, color='red', alpha=0.5)
+
+    # Calculate percentage of each method in Pareto front
+    method_percentage = {}
+    for method in unique_methods:
+        method_solutions = [sol for sol in pareto_front if sol['method'] == method]
+        method_percentage[method] = len(method_solutions) / len(pareto_front) * 100
+
+    # Create legend with method percentages
+    legend_labels = [f"{method} ({method_percentage[method]:.2f}%)" for method in unique_methods]
+    ax.legend(handles=scatter_handles, labels=legend_labels)
+
+    # Save figure
+    filepath_pareto = os.path.join(OPTIM_RESULTS_PATH, filename2)
+    plt.savefig(filepath_pareto)
+    plt.close('all')

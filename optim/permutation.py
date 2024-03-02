@@ -68,24 +68,6 @@ def get_available_cycles_positions(journey: Journey, choice: Tank, optimization_
         cycles_positions.append(cycle_positions)
     return cycles_positions
 
-def get_random_position(cycles_positions):
-    """
-    Get a random position from a list of cycle positions.
-
-    Args:
-    - cycles_positions (List[List[int]]): List of lists containing available positions for each cycle.
-
-    Returns:
-    - Tuple[int, int]: Tuple containing the index of the cycle and the chosen position.
-    """
-    cycles_positions_tmp = [(index, cycle_position) for index, cycle_position in enumerate(cycles_positions) if cycle_position]
-
-    if cycles_positions_tmp:
-        index, cycle_position_tmp = random.choice(cycles_positions_tmp)
-        position = random.choice(cycle_position_tmp)
-        return index, position
-    else:
-        return None, None
     
 def get_unchanged_cycle(cycle: Cycle, choice_position: int, optimization_parameters: OptimizationParameters) -> Cycle:
     """

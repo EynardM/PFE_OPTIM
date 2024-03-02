@@ -5,7 +5,7 @@ from util.objects import *
 
 from algorithms.helpers import *
 
-def get_couples(journey: Journey):
+def get_arrival_time(journey: Journey):
     """
     Get the arrival time of each tank in the journey.
 
@@ -222,7 +222,7 @@ def swap(journey: Journey, tanks: List[Tank], optimization_parameters: Optimizat
     Returns:
     - List[Journey]: List of optimized Journey objects.
     """
-    tank_time = get_couples(journey=journey)
+    tank_time = get_arrival_time(journey=journey)
     possible_swaps = get_possible_swaps(tank_time=tank_time)
     new_journeys = []
     if maximum_complexity:
