@@ -56,7 +56,7 @@ def get_journeys(folder_path):
 def get_results():
     storehouse = get_storehouse()  # Get storehouse coordinates
     # Retrieve journey results for hill climbing and simulated annealing
-    hill_climbing_results = get_journeys(folder_path=HILL_CLIMBING_PICKLES_MAXIMUM_COMPLEXITY_PATH)
+    hill_climbing_results = get_journeys(folder_path=HILL_CLIMBING_PICKLES_LOWER_COMPLEXITY_PATH)
     simulated_annealing_results = get_journeys(folder_path=SIMULATED_ANNEALING_PICKLES_PATH)
 
     return  {
