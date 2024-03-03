@@ -85,7 +85,7 @@ The first method we employed is **permutation**. This method entails selecting a
 - **generate_neighbour_journey**: Generates a new journey by replacing a cycle with an optimized cycle.
 
 - **permutation**: Generates new journeys by permuting tanks within cycles.
-## Swap
+### Swap
 
 The second method used in this optimization process is the **swap** method. This method involves verifying whether, within a cycle or even the entire journey, two tanks can be swapped to potentially improve the overall journey. The functions related to this method are implemented in the **`swap.py`** file.
 
