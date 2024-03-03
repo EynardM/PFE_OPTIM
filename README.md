@@ -1,6 +1,12 @@
-# Multi-Trip Vehicle Routing Problem with Time Windows 
+# <div align="center">Multi-Trip Vehicle Routing Problem with Time Windows </div>
 
-## Data Overview
+## <div align="center">First Install<div align="center">
+Before doing anything else, make sure to install the required Python packages listed in `requirements.txt`. Run this:
+```
+pip install -r requirements.txt
+```
+
+## <div align="center">Data Overview</div>
 
 The dataset comprises several CSV files, each providing essential information for managing the oil collection process:
 
@@ -17,7 +23,7 @@ The dataset comprises several CSV files, each providing essential information fo
 The collective information from these files forms a comprehensive dataset for efficiently managing the oil collection process, optimizing routes, and responding to client needs promptly.
 
 
-## Algorithm
+## <div align="center">Algorithm</div>
 
 First in **`helpers.py`** there are a lot of useful function:
 
@@ -47,7 +53,7 @@ Then we have the implementation of those different functions in the **`run.py`**
 - **run_slot**: Creates a feasible cycle for one time slot within a journey. It utilizes various functions from **`helpers.py`** because the cycle needs to respect constraints.
 - **run**: In this function, a complete journey is created by using `run_slot` several times, generating different cycles with a good combination.
 
-## Optimization
+## <div align="center">Optimization</div>
 
 To improve our algorithm, we created journey neighbors, in **`neighbors.py`** with the **get_neighbors** function. We had three different way to create neighbors. 
 
@@ -110,7 +116,7 @@ The third method employed for generating neighboring solutions is the **transfer
 - **get_reduced_tanks**: Retrieve the list of tanks with one tank removed based on the tank ID.
 - **transfer**: Transfer selected tanks to new journeys.
 
-## Main
+## <div align="center">Main</div>
 
 In the **`main.py`**, we provide details about the different optimization algorithms used:
 
@@ -127,9 +133,12 @@ The maximum complexity flag is included in case we want to generate all possible
 - **main**: The main function executes optimization algorithms. It initializes data, runs the `get_basic_journeys` function, and optionally runs examples, hill climbing with maximum complexity, and simulated annealing with both maximum and lower complexity based on the flags provided.
 
 To launch main.py you just need to be in the repo and run this command:
-`python main.py `
 
-## Config
+```
+python main.py
+```
+
+## <div align="center">Config</div>
 
 
 In the **`config.json`** file, you have the flexibility to customize configurations for various entities related to the optimization problem:
@@ -139,7 +148,7 @@ In the **`config.json`** file, you have the flexibility to customize configurati
 - **storehouse**: Specifies the location of the storehouse, where the agent unloads their cargo.
 - **agent**: Provides details about the agent, including their name and working days and hours.
 
-## Util
+## <div align="center">Util</div>
 
 In the **util** folder there are some interesting things.
 ### Objects
@@ -214,7 +223,7 @@ In `helpers.py`, we've gathered various utility functions used for plotting, gen
 
 
 
-## Results
+## <div align="center">Results</div>
 
 ### Basic Folder
 
@@ -234,7 +243,30 @@ In the `optim` folder, graphs related to the optimization of journeys using eith
 Within the `neighbors` folder, you can find Pareto fronts and box plots based on different neighbor creation methods: Permutation, Swap, and Transfer. It is observed that the permutation method allows for a greater number of possible configurations, resulting in better outcomes compared to the other two methods.
 
 
-## Front
+## <div align="center">Front</div>
 
-For the solution to be more interactive we decided to create a web interface with React and FastAPI. On this web app you can see 
+To enhance the interactivity of our solution, we have developed a web interface using `React` and `FastAPI`. This platform allows users to explore the various optimized steps of both the **`Hill Climbing`** and **`Simulated Annealing`** methods. Additionally, users can visualize the detailed planning for each optimized journey, providing a more interactive and informative experience.
 
+To launch the app you first need to launch the API, that gets the data, by this command at the root of the repo:
+```bash
+python api/api.py
+```
+If you have never launched the app before, you need to install the required packages with the following command: 
+```bash
+npm --prefix front install
+```
+Once the installation is complete, you can launch the app with: 
+```bash
+npm --prefix front start
+```
+
+## <div align="center"> Here is a brief demo of the App on my computer</div>
+<div align="center">
+<img src="video/Demo_Web_App.gif" alt="Local GIF">
+</div>
+
+
+
+## <div align="center">Contributors</div>
+
+### <div align="center">Maxime EYNARD - Yann Langlo - Amaury Peterschmitt - Florian Bergère</div>
