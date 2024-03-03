@@ -3,7 +3,7 @@ import { MapContainer, TileLayer, Marker, Popup, Polyline } from 'react-leaflet'
 import 'leaflet/dist/leaflet.css';
 import L from 'leaflet';
 
-// Icons
+// Define custom icons for markers
 var Icon1 = L.Icon.extend({
   options: {
     iconSize: [64, 64],
@@ -18,8 +18,9 @@ var Icon2 = L.Icon.extend({
   }
 });
 
+// Create instances of custom icons
 var storehouse_icon = new Icon1({
-  iconUrl: "https://img.icons8.com/external-flatart-icons-flat-flatarticons/64/external-storehouse-agriculture-flatart-icons-flat-flatarticons.png",
+  iconUrl: "https://img.icons8.com/external-flatart-icons-flat-flatarticons/104/external-storehouse-agriculture-flatart-icons-flat-flatarticons.png",
 });
 
 var tank_icon = new Icon2({
@@ -27,15 +28,17 @@ var tank_icon = new Icon2({
 });
 
 function TankMap({ storehouse, cycles }) {
+  // Get storehouse position
   const storehousePosition = [storehouse.latitude, storehouse.longitude];
+  // State to store routes for each cycle
   const [routes, setRoutes] = useState([]);
-  const colors = ['red', 'blue', 'black', 'pink', 'brown'];
+  // Define colors for cycle routes
+  const colors = ['red', 'brown', 'green', 'purple', "black"];
 
   useEffect(() => {
+    // Generate routes for each cycle based on tank coordinates
     const newRoutes = cycles.flatMap((cycle, cycleIndex) => {
-      const tankPositions = cycle.selected_tanks.map((tank) => [tank.maker.latitude, tank.maker.longitude]);
-  
-      // Ajouter le trajet du dépôt à la première cuve
+      const tankPositions = cycle.selected_tanks_coodinates.map((tank) => [tank[0], tank[1]]);
       const depotToFirstTank = [
         storehousePosition,
         [tankPositions[0][0], tankPositions[0][1]]
@@ -46,7 +49,7 @@ function TankMap({ storehouse, cycles }) {
           const nextPosition = array[index + 1];
           return [...acc, [currentPosition, nextPosition]];
         }
-        // Ajouter le trajet de la dernière cuve au dépôt
+        // Add the route from the last tank to the depot
         return [...acc, [currentPosition, storehousePosition]];
       }, [depotToFirstTank]);
   
@@ -56,26 +59,32 @@ function TankMap({ storehouse, cycles }) {
   }, [cycles, storehousePosition]);
 
   return (
-    <MapContainer center={storehousePosition} zoom={13} style={{ height: "800px", width: "70%", margin: '50px 50px 50px 50px' }}>
+    <MapContainer center={storehousePosition} zoom={13} style={{ height: "780px", width: "100%", margin: '10px 0px 30px 0px', justifiyContent: "center",border:"3px solid grey", borderRadius: '19px'}}>
+      {/* Display the map with OpenStreetMap tiles */}
       <TileLayer
         url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
       />
+      {/* Display the storehouse marker with a popup */}
       <Marker position={storehousePosition} icon={storehouse_icon}>
         <Popup>
-          Dépôt
+          Depot
         </Popup>
       </Marker>
+      {/* Display markers for each tank and popups with tank information */}
       {cycles.map((cycle, cycleIndex) => (
         <React.Fragment key={cycleIndex}>
-          {cycle.selected_tanks.map((tank, tankIndex) => (
-            <Marker key={tankIndex} position={[tank.maker.latitude, tank.maker.longitude]} icon={tank_icon}>
+          {cycle.selected_tanks_coodinates.map((tank, tankIndex) => (
+            <Marker key={tankIndex} position={[tank[0], tank[1]]} icon={tank_icon}>
               <Popup>
-                Réservoir {tank.id} - Cycle {cycleIndex + 1}
+                <p>Tank: {cycle.selected_tanks_ids[tankIndex]} </p>
+                <p>Cycle: {cycleIndex + 1}</p>
+                <p>Coordinates: {cycle.selected_tanks_coodinates[tankIndex][0]}, {cycle.selected_tanks_coodinates[tankIndex][1]}</p>
               </Popup>
             </Marker>
           ))}
         </React.Fragment>
       ))}
+      {/* Display polylines for each cycle route */}
       {routes.map(({ cycleRoutes, cycleIndex }) => (
         <Polyline key={cycleIndex} positions={cycleRoutes} color={colors[cycleIndex % colors.length]} />
       ))}

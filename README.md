@@ -126,6 +126,9 @@ The maximum complexity flag is included in case we want to generate all possible
 
 - **main**: The main function executes optimization algorithms. It initializes data, runs the `get_basic_journeys` function, and optionally runs examples, hill climbing with maximum complexity, and simulated annealing with both maximum and lower complexity based on the flags provided.
 
+To launch main.py you just need to be in the repo and run this command:
+`python main.py `
+
 ## Config
 
 
@@ -211,7 +214,27 @@ In `helpers.py`, we've gathered various utility functions used for plotting, gen
 
 
 
-## Result
+## Results
+
+### Basic Folder
+
+In the `basic` folder, you can find box plots and Pareto fronts for six different days, representing distinct journeys. Each day corresponds to a journey made during workday hours by an agent. The scores obtained by different choice methods are available in `values.xlsx`, and the percentage of the journey on the Pareto front following each choice method is provided in `percentages_on_pareto_front.xlsx`.
+
+### Current_run Folder
+
+The `current_run` folder contains similar information but only for the current journey.
+
+### Optim Folder
+
+#### Hill Climbing and Simulated Annealing
+In the `optim` folder, graphs related to the optimization of journeys using either hill climbing or simulated annealing are available. Corresponding scores and metrics are stored in pickle files.
+
+#### Neighbors Folder
+
+Within the `neighbors` folder, you can find Pareto fronts and box plots based on different neighbor creation methods: Permutation, Swap, and Transfer. It is observed that the permutation method allows for a greater number of possible configurations, resulting in better outcomes compared to the other two methods.
 
 
 ## Front
+
+For the solution to be more interactive we decided to create a web interface with React and FastAPI. On this web app you can see 
+

@@ -1,6 +1,13 @@
+html {
+  touch-action: pan-x pan-y; /* Enable panning on touch devices */
+  zoom: 1;
+  overflow: hidden;
+}
+
 /* Center align text */
 .App {
   text-align: center;
+
 }
 
 /* App logo */
