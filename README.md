@@ -276,4 +276,4 @@ npm --prefix front start
 
 ## <div align="center">Contributors</div>
 
-### <div align="center">Florian BERGERE - Maxime EYNARD - Yann Langlo - Amaury PETERSCHMITT</div>
+### <div align="center">Florian BERGERE - Maxime EYNARD - Yann LANGLO - Amaury PETERSCHMITT</div>
