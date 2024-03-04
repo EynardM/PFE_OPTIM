@@ -126,18 +126,25 @@ In the **`main.py`**, we provide details about the different optimization algori
 
 - **simulated_annealing**: Performs the simulated annealing optimization algorithm to find the best solution. It starts with an initial solution and iteratively explores neighboring solutions, accepting worse solutions with a certain probability. This probability decreases over time, allowing the algorithm to escape local optima. This function can run with maximum or lower complexity depending on the flag provided.
 
-### What is the maximum complexity flag?
+### Flags Used in main.py
 
-The maximum complexity flag is included in case we want to generate all possible solutions with all the neighbor methods created. This means that if there are 100 permutations possible for a journey, the optimization will be run on all possibilities. Otherwise, it will choose one, get a new journey, and then optimize with both hill climbing and simulated annealing.
+- **Lower Complexity Flag** (`--lower-complexity`): This flag is used to specify the number of journeys for which the optimization algorithms will run with lower complexity. Lower complexity means that the optimization algorithms, hill climbing, and simulated annealing will not exhaustively explore all possible neighboring solutions but will instead stop after a certain number of iterations. This flag allows for quicker optimization runs when exhaustive search is not necessary.
 
-- **main**: The main function executes optimization algorithms. It initializes data, runs the `get_basic_journeys` function, and optionally runs examples, hill climbing with maximum complexity, and simulated annealing with both maximum and lower complexity based on the flags provided.
+- **Example Flag** (`--example`): This flag is used to specify the number of journeys for which an example demonstration will be performed. In this demonstration, the optimization algorithms will generate neighbors for the specified number of journeys using all available techniques (permutation, swap, transfer). This demonstration provides insight into how the optimization algorithms explore different solutions for a given journey.
 
-To launch main.py you just need to be in the repo and run this command:
+- **Maximum Complexity Flag** (`--maximum-complexity`): This flag is included in case we want to generate all possible solutions with all the neighbor methods created. This means that if there are 100 permutations possible for a journey, the optimization will be run on all possibilities. Otherwise, it will choose one, get a new journey, and then optimize with both hill climbing and simulated annealing.
 
+### Command Line Example:
+
+You must choose at least one flag to initiate an optimization. However, you can include multiple flags in a single command to perform different types of optimizations simultaneously. For example:
 ```
-python main.py
+python main.py --example 5 --lower-complexity 10 --maximum-complexity 20
 ```
-
+This command will run the main function with the following configurations:
+- Generate examples for 5 journeys.
+- Run optimization algorithms with lower complexity for 10 journeys.
+- Run optimization algorithms with maximum complexity for 20 journeys.
+- 
 ## <div align="center">Config</div>
 
 
@@ -269,4 +276,4 @@ npm --prefix front start
 
 ## <div align="center">Contributors</div>
 
-### <div align="center">Maxime EYNARD - Yann Langlo - Amaury Peterschmitt - Florian Bergère</div>
+### <div align="center">Florian BERGERE - Maxime EYNARD - Yann LANGLO - Amaury PETERSCHMITT</div>
