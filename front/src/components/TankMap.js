@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { MapContainer, TileLayer, Marker, Popup, Polyline } from 'react-leaflet';
 import 'leaflet/dist/leaflet.css';
 import L from 'leaflet';
@@ -29,7 +29,13 @@ var tank_icon = new Icon2({
 
 function TankMap({ storehouse, cycles }) {
   // Get storehouse position
-  const storehousePosition = [storehouse.latitude, storehouse.longitude];
+  const storehousePosition = useMemo(() => {
+    return [storehouse.latitude, storehouse.longitude];
+  }, [storehouse.latitude, storehouse.longitude]);
+
+  useEffect(() => {
+    // Your existing useEffect logic
+  }, [storehousePosition]);
   // State to store routes for each cycle
   const [routes, setRoutes] = useState([]);
   // Define colors for cycle routes
