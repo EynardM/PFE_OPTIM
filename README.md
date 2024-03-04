@@ -249,7 +249,7 @@ To enhance the interactivity of our solution, we have developed a web interface 
 
 To launch the app you first need to launch the API, that gets the data, by this command at the root of the repo:
 ```bash
-python api/api.py
+python api.py
 ```
 If you have never launched the app before, you need to install the required packages with the following command: 
 ```bash

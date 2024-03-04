@@ -1,7 +1,8 @@
 colorama==0.4.3
 fastapi==0.110.0
-matplotlib==3.8.3
-numpy==1.26.4
-pandas==2.2.1
+matplotlib>=
+numpy>=
+pandas>=
 plotly==5.19.0
 tqdm==4.66.2
+uvicorn>=
