@@ -1,5 +1,8 @@
 # <div align="center">Multi-Trip Vehicle Routing Problem with Time Windows </div>
 
+## <div align="center">Research Paper</div>
+Before diving into the project details, you may want to review the research paper that forms the basis of this project. It provides a comprehensive explanation of the methodology, use case, and results. You can find it at the root of this repository under the filename `research_paper.pdf`.
+
 ## <div align="center">First Install<div align="center">
 Before doing anything else, make sure to install the required Python packages listed in `requirements.txt`. Run this:
 ```
